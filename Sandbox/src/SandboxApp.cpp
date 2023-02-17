@@ -3,7 +3,7 @@
 class Sandbox : public PKEngine::Application {
 public:
 	Sandbox() {
-
+		
 	}
 
 	~Sandbox() {
@@ -12,5 +12,6 @@ public:
 };
 
 PKEngine::Application* PKEngine::CreateApplication() {
+	PK_INFO("Create!");
 	return new Sandbox();
 }

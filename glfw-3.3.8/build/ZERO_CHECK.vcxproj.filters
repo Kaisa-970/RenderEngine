@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\build\CMakeFiles\583e5327021c54aaa680980c8fb27329\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{EBA0FC95-A8B3-3E0E-90EA-7D444A5BB2AA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

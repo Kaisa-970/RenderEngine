@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Core.h"
+#include "GLFW/glfw3.h"
+#include "GLFW/glfw3native.h"
+#include <memory>
 
 namespace PKEngine {
 	class PKENGINE_API Application
@@ -11,6 +14,10 @@ namespace PKEngine {
 		virtual ~Application();
 
 		void Run();
+
+	private:
+		GLFWwindow* m_Window;
+		bool m_Running;
 	};
 
 	// To be defined in Client

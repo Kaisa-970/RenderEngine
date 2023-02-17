@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\tests\triangle-vulkan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\deps\glad_vulkan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\deps\glad\vulkan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\tests\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{0740E46E-0495-3D5B-9B55-BEA63D6EE9E9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{416003BB-1BFE-3EC3-9CF0-0CC14898EDDC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

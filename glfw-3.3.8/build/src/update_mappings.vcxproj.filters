@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\build\CMakeFiles\8bc8c36bd4d4ea1845a3216ad3f924cb\update_mappings.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\src\mappings.h.in">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\CMake\GenerateMappings.cmake" />
+    <None Include="E:\YPKWorkSpace\Project\VSProject\PKEngine\glfw-3.3.8\build\src\CMakeFiles\update_mappings" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{EBA0FC95-A8B3-3E0E-90EA-7D444A5BB2AA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{0740E46E-0495-3D5B-9B55-BEA63D6EE9E9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

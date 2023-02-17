@@ -1,36 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Events">
+      <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="资源文件">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="PKEngine">
+      <UniqueIdentifier>{F65F8A86-E22C-E591-0B46-D339F7711A20}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\PKEngine\Core.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="src\Events\ApplicationEvent.h">
+      <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Events\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\KeyEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\MouseEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PKEngine.h" />
     <ClInclude Include="src\PKEngine\Application.h">
-      <Filter>头文件</Filter>
+      <Filter>PKEngine</Filter>
     </ClInclude>
-    <ClInclude Include="src\PKEngine.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="src\PKEngine\Core.h">
+      <Filter>PKEngine</Filter>
     </ClInclude>
     <ClInclude Include="src\PKEngine\EntryPoint.h">
-      <Filter>头文件</Filter>
+      <Filter>PKEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PKEngine\Log.h">
+      <Filter>PKEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PKEngine\Test.h">
+      <Filter>PKEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PKEngine\Application.cpp">
-      <Filter>源文件</Filter>
+      <Filter>PKEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PKEngine\Log.cpp">
+      <Filter>PKEngine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
