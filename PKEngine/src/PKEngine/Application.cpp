@@ -1,3 +1,4 @@
+#include "pkpch.h"
 #include "Application.h"
 #include "Log.h"
 
@@ -12,7 +13,7 @@ namespace PKEngine {
 		//	PK_CORE_INFO("Init success!");
 		//}
 	}
-
+	
 	Application::~Application() {
 
 	}

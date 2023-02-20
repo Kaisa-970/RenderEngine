@@ -37,6 +37,7 @@
     <ClInclude Include="src\PKEngine\Test.h">
       <Filter>PKEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\pkpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PKEngine\Application.cpp">
@@ -45,5 +46,6 @@
     <ClCompile Include="src\PKEngine\Log.cpp">
       <Filter>PKEngine</Filter>
     </ClCompile>
+    <ClCompile Include="src\pkpch.cpp" />
   </ItemGroup>
 </Project>

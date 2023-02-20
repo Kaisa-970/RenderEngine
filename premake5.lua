@@ -18,12 +18,16 @@ project "PKEngine"
 	targetdir ("bin/"..outputdir.."/%{prj.name}")
 	objdir ("bin-int/"..outputdir.."/%{prj.name}")
 
+	pchheader "pkpch.h"
+	pchsource "PKEngine/src/pkpch.cpp"
+
 	files{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"
 	}
 
 	includedirs{
+		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/vendor/GLFW/include"
 	}

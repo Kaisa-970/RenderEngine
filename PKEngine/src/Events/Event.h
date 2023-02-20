@@ -1,10 +1,9 @@
 #pragma once
 
-//#include "Hazel/Debug/Instrumentor.h"
 #include "../PKEngine/Core.h"
 
-#include <string>
-#include <functional>
+
+#define BIT(x) 1<<x
 
 namespace PKEngine {
 
@@ -42,7 +41,7 @@ namespace PKEngine {
 	{
 	public:
 		virtual ~Event() = default;
-
+		
 		bool Handled = false;
 
 		virtual EventType GetEventType() const = 0;
