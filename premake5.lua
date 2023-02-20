@@ -10,6 +10,11 @@ workspace "PKEngine"
 
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "PKEngine/vendor/GLFW/include"
+
+include "PKEngine/vendor/GLFW"
+
 project "PKEngine"
 	location "PKEngine"
 	kind "SharedLib"
@@ -29,11 +34,12 @@ project "PKEngine"
 	includedirs{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/vendor/GLFW/include"
+		"%{IncludeDir.GLFW}"
 	}
 
-	libdirs{
-		"%{prj.name}/vendor/GLFW/lib"
+	links{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"

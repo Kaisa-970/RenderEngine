@@ -3,6 +3,7 @@
 #include "Core.h"
 #include "GLFW/glfw3.h"
 #include "GLFW/glfw3native.h"
+#include <PKEngine/Window.h>
 
 namespace PKEngine {
 	class PKENGINE_API Application
@@ -15,7 +16,7 @@ namespace PKEngine {
 		void Run();
 
 	private:
-		GLFWwindow* m_Window;
+		std::unique_ptr<Window> m_Window;
 		bool m_Running;
 	};
 

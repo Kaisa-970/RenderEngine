@@ -1,17 +1,11 @@
 #include "pkpch.h"
 #include "Application.h"
 #include "Log.h"
+#include "PKEngine/Events/ApplicationEvent.h"
 
 namespace PKEngine {
 	Application::Application() {
-		//if (glfwInit()) {
-		//	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		//	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		//	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		//	m_Window = glfwCreateWindow(1280, 720, "window", NULL, NULL);
-		//	glfwMakeContextCurrent(m_Window);
-		//	PK_CORE_INFO("Init success!");
-		//}
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 	
 	Application::~Application() {
@@ -19,7 +13,11 @@ namespace PKEngine {
 	}
 
 	void Application::Run() {
+		//WindowResizeEvent e(1280, 720);
 		while (m_Running) {
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_Window->OnUpdate();
 			if (m_Running) {
 				//glClearColor(1, 1, 0, 1);
 				//glClear(GL_COLOR_BUFFER_BIT);
