@@ -45,7 +45,7 @@ project "PKEngine"
 	filter "system:windows"
 		cppdialect "C++14"
 		staticruntime "On"
-		systemversion "10.0"
+		systemversion "latest"
 
 		defines{
 			"PK_PLATFORM_WINDOWS",
@@ -96,7 +96,7 @@ project "Sandbox"
 	filter "system:windows"
 		cppdialect "C++14"
 		staticruntime "On"
-		systemversion "10.0"
+		systemversion "latest"
 
 		defines{
 			"PK_PLATFORM_WINDOWS"

@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace PKEngine {
 
@@ -22,7 +23,7 @@ namespace PKEngine {
 // Core log macros
 #define PK_CORE_ERROR(...)	PKEngine::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define PK_CORE_WARN(...)	PKEngine::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define PK_CORE_INFO(...)	PKEngine::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define PK_CORE_INFO(...)	::PKEngine::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define PK_CORE_TRACE(...)	PKEngine::Log::GetCoreLogger()->trace(__VA_ARGS__)
 #define PK_CORE_FATAL(...)	PKEngine::Log::GetCoreLogger()->fatal(__VA_ARGS__)
 

@@ -17,7 +17,7 @@ namespace PKEngine {
 
 		inline unsigned int GetHeight() const override { return m_Data.Height; };
 
-		virtual void SetEventCallback(const EventCallbackFn& callback) override;
+		virtual void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; };
 
 		virtual void SetVSync(bool enabled) override;
 
