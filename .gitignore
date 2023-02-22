@@ -8,3 +8,4 @@ bin-int/
 *.zip
 *.sln
 *.vcxproj
+*.vcxproj.filters

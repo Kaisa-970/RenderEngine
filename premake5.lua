@@ -58,14 +58,17 @@ project "PKEngine"
 
 		filter "configurations:Debug"
 			defines "PK_DEBUG"
+			buildoptions "/MDd"
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "PK_RELEASE"
+			buildoptions "/MD"
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "PK_DIST"
+			buildoptions "/MD"
 			optimize "On"
 
 project "Sandbox"
