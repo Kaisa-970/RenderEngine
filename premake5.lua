@@ -12,8 +12,10 @@ workspace "PKEngine"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "PKEngine/vendor/GLFW/include"
+IncludeDir["Glad"] = "PKEngine/vendor/Glad/include"
 
 include "PKEngine/vendor/GLFW"
+include "PKEngine/vendor/Glad"
 
 project "PKEngine"
 	location "PKEngine"
@@ -34,11 +36,13 @@ project "PKEngine"
 	includedirs{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links{
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 

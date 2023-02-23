@@ -1,9 +1,11 @@
 #include "pkpch.h"
+#include "glad/glad.h"
 #include "WindowsWindow.h"
 #include "PKEngine/Log.h"
 #include "PKEngine/Events/ApplicationEvent.h"
 #include "PKEngine/Events/KeyEvent.h"
 #include "PKEngine/Events/MouseEvent.h"
+
 
 namespace PKEngine {
 	static bool s_GLFWInitialied = false;
@@ -65,6 +67,8 @@ namespace PKEngine {
 		}
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, props.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+		int status = gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress));
+		PK_CORE_ASSERT(status, "Failed to initialize Glad!");
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
