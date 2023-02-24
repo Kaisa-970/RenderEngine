@@ -3,7 +3,7 @@
 class Sandbox : public PKEngine::Application {
 public:
 	Sandbox() {
-		
+		PushOverlay(new PKEngine::ImGuiLayer());
 	}
 
 	~Sandbox() {

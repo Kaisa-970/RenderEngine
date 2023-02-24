@@ -4,3 +4,6 @@
 [submodule "PKEngine/vendor/GLFW"]
 	path = PKEngine/vendor/GLFW
 	url = https://github.com/Kaisa-970/glfw
+[submodule "PKEngine/vendor/imgui"]
+	path = PKEngine/vendor/imgui
+	url = https://github.com/Kaisa-970/imgui.git

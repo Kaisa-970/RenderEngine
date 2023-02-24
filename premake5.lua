@@ -13,9 +13,11 @@ workspace "PKEngine"
 IncludeDir = {}
 IncludeDir["GLFW"] = "PKEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "PKEngine/vendor/Glad/include"
+IncludeDir["imgui"] = "PKEngine/vendor/imgui"
 
 include "PKEngine/vendor/GLFW"
 include "PKEngine/vendor/Glad"
+include "PKEngine/vendor/imgui"
 
 project "PKEngine"
 	location "PKEngine"
@@ -37,13 +39,15 @@ project "PKEngine"
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.imgui}"
 	}
 
 	links{
 		"GLFW",
 		"Glad",
-		"opengl32.lib"
+		"opengl32.lib",
+		"imgui"
 	}
 
 	filter "system:windows"
