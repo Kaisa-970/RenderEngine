@@ -33,8 +33,12 @@ namespace PKEngine {
 				layer->OnUpdate();
 			}
 
-			auto mPos = Input::GetMousePosition();
-			PK_CORE_TRACE("{0},{1}", mPos.first,mPos.second);
+			//auto mPos = Input::GetMousePosition();
+			//PK_CORE_TRACE("{0},{1}", mPos.first,mPos.second);
+
+			if (Input::IsMouseButtonPressed(0)) {
+				PK_CORE_TRACE("Mouse Pressed!");
+			}
 
 			m_Window->OnUpdate();
 		}
@@ -43,7 +47,6 @@ namespace PKEngine {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-		//PK_CORE_TRACE("{0}", e);
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
 			(*--it)->OnEvent(e);
