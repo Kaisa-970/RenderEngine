@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Log.h"
 #include "PKEngine/Events/ApplicationEvent.h"
+#include "Input.h"
 
 namespace PKEngine {
 
@@ -32,6 +33,9 @@ namespace PKEngine {
 				layer->OnUpdate();
 			}
 
+			auto mPos = Input::GetMousePosition();
+			PK_CORE_TRACE("{0},{1}", mPos.first,mPos.second);
+
 			m_Window->OnUpdate();
 		}
 	}
@@ -39,7 +43,7 @@ namespace PKEngine {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-		PK_CORE_TRACE("{0}", e);
+		//PK_CORE_TRACE("{0}", e);
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
 			(*--it)->OnEvent(e);
