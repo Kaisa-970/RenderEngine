@@ -14,6 +14,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "PKEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "PKEngine/vendor/Glad/include"
 IncludeDir["imgui"] = "PKEngine/vendor/imgui"
+IncludeDir["glm"] = "PKEngine/vendor/glm"
 
 include "PKEngine/vendor/GLFW"
 include "PKEngine/vendor/Glad"
@@ -32,7 +33,9 @@ project "PKEngine"
 
 	files{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs{
@@ -40,7 +43,8 @@ project "PKEngine"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.imgui}"
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.glm}"
 	}
 
 	links{
@@ -95,7 +99,9 @@ project "Sandbox"
 	includedirs{
 		"PKEngine/vendor/spdlog/include",
 		"PKEngine/vendor/GLFW/include",
-		"PKEngine/src"
+		"PKEngine/src",
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.glm}"
 	}
 
 

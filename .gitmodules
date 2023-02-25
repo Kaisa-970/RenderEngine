@@ -7,3 +7,6 @@
 [submodule "PKEngine/vendor/imgui"]
 	path = PKEngine/vendor/imgui
 	url = https://github.com/Kaisa-970/imgui.git
+[submodule "PKEngine/vendor/glm"]
+	path = PKEngine/vendor/glm
+	url = https://github.com/g-truc/glm
