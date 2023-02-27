@@ -5,6 +5,8 @@
 #include "PKEngine/Events/ApplicationEvent.h"
 #include "PKEngine/LayerStack.h"
 
+#include "PKEngine/ImGui/ImGuiLayer.h"
+
 namespace PKEngine {
 	class PKENGINE_API Application
 	{
@@ -28,6 +30,7 @@ namespace PKEngine {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 	private:
+		std::unique_ptr<ImGuiLayer> m_ImGuiLayer;
 		std::unique_ptr<Window> m_Window;
 		bool m_Running;
 		LayerStack m_LayerStack;

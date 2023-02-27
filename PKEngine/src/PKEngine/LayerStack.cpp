@@ -4,7 +4,7 @@
 namespace PKEngine {
 	LayerStack::LayerStack()
 	{
-		m_LayerInsert = m_Layers.begin();
+		
 	}
 	LayerStack::~LayerStack()
 	{
@@ -13,7 +13,8 @@ namespace PKEngine {
 	}
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		m_LayerInsert = m_Layers.emplace(m_LayerInsert, layer);
+		m_Layers.emplace(m_Layers.begin() + m_LayerIndex, layer);
+		m_LayerIndex++;
 	}
 	void LayerStack::PushOverlay(Layer* overlay)
 	{
@@ -24,7 +25,7 @@ namespace PKEngine {
 		auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
 		if (it != m_Layers.end()) {
 			m_Layers.erase(it);
-			m_LayerInsert--;
+			m_LayerIndex--;
 		}
 	}
 	void LayerStack::PopOverlay(Layer* overlay)

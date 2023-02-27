@@ -17,6 +17,8 @@ namespace PKEngine {
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 		s_Instance = this;
+
+		m_ImGuiLayer = std::make_unique<ImGuiLayer>();
 	}
 	
 	Application::~Application() {
@@ -39,6 +41,12 @@ namespace PKEngine {
 			if (Input::IsMouseButtonPressed(0)) {
 				PK_CORE_TRACE("Mouse Pressed!");
 			}
+
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_LayerStack) {
+				layer->OnImGuiRender();
+			}
+			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
 		}
