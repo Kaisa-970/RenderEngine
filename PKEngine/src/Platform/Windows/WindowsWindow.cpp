@@ -148,7 +148,7 @@ namespace PKEngine {
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				MouseScrolledEvent e(xoffset,yoffset);
+				MouseScrolledEvent e((float)xoffset, (float)yoffset);
 				data.EventCallback(e);
 			});
 
@@ -156,7 +156,7 @@ namespace PKEngine {
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				MouseMovedEvent e(xpos, ypos);
+				MouseMovedEvent e((float)xpos, (float)ypos);
 				data.EventCallback(e);
 			});
 	}

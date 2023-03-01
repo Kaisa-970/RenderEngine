@@ -34,9 +34,9 @@ namespace PKEngine {
 
 		struct WindowData {
 			std::string Title;
-			unsigned int Width;
-			unsigned int Height;
-			bool VSync;
+			unsigned int Width = 0;
+			unsigned int Height = 0;
+			bool VSync = true;
 
 			EventCallbackFn EventCallback;
 		};

@@ -1,11 +1,15 @@
 #pragma once
 
 #ifdef PK_PLATFORM_WINDOWS
+#ifdef PK_DYNAMIC_LINK
 	#ifdef PK_BUILD_DLL
 		#define PKENGINE_API __declspec(dllexport)
 	#else
 		#define PKENGINE_API __declspec(dllimport)
 	#endif
+#else
+	#define PKENGINE_API
+#endif
 #else
 	#error PK only support windows!
 #endif

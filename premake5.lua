@@ -22,8 +22,10 @@ include "PKEngine/vendor/imgui"
 
 project "PKEngine"
 	location "PKEngine"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++14"
+	staticruntime "on"
 
 	targetdir ("bin/"..outputdir.."/%{prj.name}")
 	objdir ("bin-int/"..outputdir.."/%{prj.name}")
@@ -55,38 +57,36 @@ project "PKEngine"
 	}
 
 	filter "system:windows"
-		cppdialect "C++14"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines{
 			"PK_PLATFORM_WINDOWS",
 			"PK_BUILD_DLL",
-		}
-
-		postbuildcommands{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			"GLFW_INCLUDE_NONE",
+			#"_CRT_SECURE_NO_WARNINGS"
 		}
 
 		filter "configurations:Debug"
 			defines "PK_DEBUG"
-			buildoptions "/MDd"
+			runtime "Debug"
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "PK_RELEASE"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "PK_DIST"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++14"
+	staticruntime "on"
 
 	targetdir ("bin/"..outputdir.."/%{prj.name}")
 	objdir ("bin-int/"..outputdir.."/%{prj.name}")
@@ -111,8 +111,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++14"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines{
@@ -121,12 +119,15 @@ project "Sandbox"
 
 		filter "configurations:Debug"
 			defines "PK_DEBUG"
+			runtime "Debug"
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "PK_RELEASE"
+			runtime "Release"
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "PK_DIST"
+			runtime "Release"
 			optimize "On"
