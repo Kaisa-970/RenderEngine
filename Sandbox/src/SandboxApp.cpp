@@ -10,8 +10,8 @@ class ExampleLayer : public PKEngine::Layer {
 class Sandbox : public PKEngine::Application {
 public:
 	Sandbox() {
-		PushOverlay(new PKEngine::ImGuiLayer());
-		PushLayer(new ExampleLayer());
+		//PushOverlay(new PKEngine::ImGuiLayer());
+		//PushLayer(new ExampleLayer());
 	}
 
 	~Sandbox() {
