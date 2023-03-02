@@ -3,6 +3,7 @@
 #include "PKEngine/Window.h"
 
 #include "GLFW/glfw3.h"
+#include "PKEngine/Renderer/GraphicsContext.h"
 
 namespace PKEngine {
 	class WindowsWindow :public Window {
@@ -31,7 +32,7 @@ namespace PKEngine {
 
 	private:
 		GLFWwindow* m_Window;
-
+		GraphicsContext* m_Context;
 		struct WindowData {
 			std::string Title;
 			unsigned int Width = 0;
