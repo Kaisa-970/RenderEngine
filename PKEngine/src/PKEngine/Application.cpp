@@ -6,6 +6,24 @@
 #include "PKEngine/Events/ApplicationEvent.h"
 #include "Input.h"
 
+#define ASSERT(x) if(!(x)) __debugbreak();
+#define GLCALL(x) GLClearError(); \
+x; \
+ASSERT(GLCheck(__FILE__,#x,__LINE__));
+
+
+static void GLClearError() {
+	while (glGetError() != GL_NO_ERROR);
+}
+
+static bool GLCheck(const char* filename, const char* function, int line) {
+	while (GLenum error = glGetError()) {
+		std::cout << "OpenGL Error {" << error << "}\t" << function << " " << filename << " " << line << std::endl;
+		return false;
+	}
+	return true;
+}
+
 namespace PKEngine {
 
 #define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
@@ -22,28 +40,28 @@ namespace PKEngine {
 		PushOverlay(m_ImGuiLayer);
 
 
-		float vertices[9] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.0f,  0.5f, 0.0f
+		float vertices[6] = {
+			-0.5f, -0.5f,
+			 0.5f, -0.5f,
+			 0.0f,  0.5f
 		};
 
 		unsigned int indices[3] = {
 			0,1,2
 		};
 
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
+		GLCALL(glGenVertexArrays(1, &m_VertexArray));
+		GLCALL(glBindVertexArray(m_VertexArray));
 
-		glGenBuffers(1, &m_VertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), vertices, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		
-		glGenBuffers(1, &m_IndexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_VertexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+		GLCALL(glGenBuffers(1, &m_VertexBuffer));
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), vertices, GL_STATIC_DRAW));
+		GLCALL(glEnableVertexAttribArray(0));
+		GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0));
+
+		GLCALL(glGenBuffers(1, &m_IndexBuffer));
+		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer));
+		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 	
 		m_Shader = glCreateProgram();
 		const char* vertexS = "#version 330 core\n"
@@ -59,6 +77,7 @@ namespace PKEngine {
 			"{\n"
 			"color = vec4(1.0f,0.0f,0.0f,1.0f);\n"
 			"}; \n";
+
 
 		unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vShader, 1, &vertexS, nullptr);
@@ -84,20 +103,13 @@ namespace PKEngine {
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glUseProgram(m_Shader);
-			glBindVertexArray(m_VertexArray);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-			//glfwSwapBuffers((GLFWwindow*)m_Window->GetNativeWindow());
-			//glDrawArrays(GL_TRIANGLES, 0, 3);
+			GLCALL(glBindVertexArray(m_VertexArray));
+			GLCALL(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr));
+
+
 			for (Layer* layer : m_LayerStack) {
 				layer->OnUpdate();
 			}
-
-			//auto mPos = Input::GetMousePosition();
-			//PK_CORE_TRACE("{0},{1}", mPos.first,mPos.second);
-
-			//if (Input::IsMouseButtonPressed(0)) {
-			//	PK_CORE_TRACE("Mouse Pressed!");
-			//}
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack) {

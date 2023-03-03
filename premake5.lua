@@ -62,8 +62,6 @@ project "PKEngine"
 		defines{
 			"PK_PLATFORM_WINDOWS",
 			"PK_BUILD_DLL",
-			"GLFW_INCLUDE_NONE",
-			#"_CRT_SECURE_NO_WARNINGS"
 		}
 
 		filter "configurations:Debug"
