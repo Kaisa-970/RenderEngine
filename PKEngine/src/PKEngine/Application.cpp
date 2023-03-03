@@ -40,10 +40,10 @@ namespace PKEngine {
 		PushOverlay(m_ImGuiLayer);
 
 
-		float vertices[6] = {
-			-0.5f, -0.5f,
-			 0.5f, -0.5f,
-			 0.0f,  0.5f
+		float vertices[9] = {
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.0f,  0.5f, 0.0f
 		};
 
 		unsigned int indices[3] = {
@@ -55,42 +55,53 @@ namespace PKEngine {
 
 		GLCALL(glGenBuffers(1, &m_VertexBuffer));
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), vertices, GL_STATIC_DRAW));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), vertices, GL_STATIC_DRAW));
 		GLCALL(glEnableVertexAttribArray(0));
-		GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0));
+		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
 
 		GLCALL(glGenBuffers(1, &m_IndexBuffer));
 		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer));
 		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 	
-		m_Shader = glCreateProgram();
-		const char* vertexS = "#version 330 core\n"
-			"layout(location = 0) in vec4 position;\n"
-			"void main()\n"
-			"{\n"
-			"gl_Position =  position;\n"
-			"}; \n";
+		//m_Shader = glCreateProgram();
+		//const char* vertexS = R"(
+		//		#version 330 core
+		//		layout(location = 0) in vec3 a_Position;
+		//		void main()
+		//		{
+		//			gl_Position =  a_Position;
+		//		};
+		//	)";
 
-		const char* fragS = "#version 330 core\n"
-			"out vec4 color;\n"
-			"void main()\n"
-			"{\n"
-			"color = vec4(1.0f,0.0f,0.0f,1.0f);\n"
-			"}; \n";
+		std::string vertexS = R"(
+			#version 330 core
+			layout(location = 0) in vec4 position;
+			void main()
+			{
+			gl_Position =  position;
+			}; )";
 
+		std::string fragS = R"(#version 330 core
+			out vec4 color;
+			void main()
+			{
+			color = vec4(0.8f,0.3f,0.2f,1.0f);
+			};)";
 
-		unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vShader, 1, &vertexS, nullptr);
-		glCompileShader(vShader);
+		m_Shader.reset(new Shader(vertexS,fragS));
 
-		unsigned int fShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fShader, 1, &fragS, nullptr);
-		glCompileShader(fShader);
+		//unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
+		//glShaderSource(vShader, 1, &vertexS, nullptr);
+		//glCompileShader(vShader);
 
-		glAttachShader(m_Shader, vShader);
-		glAttachShader(m_Shader, fShader);
-		glLinkProgram(m_Shader);
-		glValidateProgram(m_Shader);
+		//unsigned int fShader = glCreateShader(GL_FRAGMENT_SHADER);
+		//glShaderSource(fShader, 1, &fragS, nullptr);
+		//glCompileShader(fShader);
+
+		//glAttachShader(m_Shader, vShader);
+		//glAttachShader(m_Shader, fShader);
+		//glLinkProgram(m_Shader);
+		//glValidateProgram(m_Shader);
 	}
 	
 	Application::~Application() {
@@ -102,7 +113,8 @@ namespace PKEngine {
 		while (m_Running) {
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
-			glUseProgram(m_Shader);
+			//glUseProgram(m_Shader);
+			m_Shader->Bind();
 			GLCALL(glBindVertexArray(m_VertexArray));
 			GLCALL(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr));
 
