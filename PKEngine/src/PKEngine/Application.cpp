@@ -30,6 +30,25 @@ namespace PKEngine {
 
 #define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
 
+	static GLenum ShaderDateTypeToOpenGLBaseType(ShaderDataType type) {
+		switch (type)
+		{
+			case PKEngine::ShaderDataType::Float:	return GL_FLOAT;
+			case PKEngine::ShaderDataType::Float2:	return GL_FLOAT;
+			case PKEngine::ShaderDataType::Float3:	return GL_FLOAT;
+			case PKEngine::ShaderDataType::Float4:	return GL_FLOAT;
+			case PKEngine::ShaderDataType::Mat3:	return GL_FLOAT;
+			case PKEngine::ShaderDataType::Mat4:	return GL_FLOAT;
+			case PKEngine::ShaderDataType::Int:		return GL_INT;
+			case PKEngine::ShaderDataType::Int2:	return GL_INT;
+			case PKEngine::ShaderDataType::Int3:	return GL_INT;
+			case PKEngine::ShaderDataType::Int4:	return GL_INT;
+			case PKEngine::ShaderDataType::Bool:	return GL_BOOL;
+		}
+		PK_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		return 0;
+	}
+
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application() {
@@ -42,10 +61,10 @@ namespace PKEngine {
 		PushOverlay(m_ImGuiLayer);
 
 
-		float vertices[9] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.0f,  0.5f, 0.0f
+		float vertices[3*7] = {
+			-0.5f, -0.5f, 0.0f, 1.0f,0.0f,1.0f,1.0f,
+			 0.5f, -0.5f, 0.0f, 0.0f,0.0f,1.0f,1.0f,
+			 0.0f,  0.5f, 0.0f,	1.0f,1.0f,0.0f,1.0f
 		};
 
 		uint32_t indices[3] = {
@@ -56,26 +75,46 @@ namespace PKEngine {
 		GLCALL(glBindVertexArray(m_VertexArray));
 
 		m_VertexBuffer.reset(VertexBuffer::Create(vertices,sizeof(vertices)));
-		GLCALL(glEnableVertexAttribArray(0));
-		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
+
+		{
+			BufferLayout layout = {
+				{ShaderDataType::Float3,"a_Position"},
+				{ShaderDataType::Float4,"a_Color",true}
+			};
+			m_VertexBuffer->SetLayout(layout);
+		}
+		const auto& layout = m_VertexBuffer->GetLayout();
+		uint32_t index = 0;
+		for (auto& element : layout) {
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, element.GetElementCount(), 
+				ShaderDateTypeToOpenGLBaseType(element.Type), 
+				element.Normalized?GL_TRUE: GL_FALSE,
+				layout.GetStride(), (void*)element.Offset);
+			index++;
+		}
 
 
 		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_IndexBuffer->Bind();
+		//m_IndexBuffer->Bind();
 	
 		std::string vertexS = R"(
 			#version 330 core
 			layout(location = 0) in vec4 position;
+			layout(location = 1) in vec4 a_Color;
+			out vec4 v_Color;
 			void main()
 			{
 			gl_Position =  position;
+			v_Color = a_Color;
 			}; )";
 
 		std::string fragS = R"(#version 330 core
 			out vec4 color;
+			in vec4 v_Color;
 			void main()
 			{
-			color = vec4(0.8f,0.3f,0.2f,1.0f);
+			color = v_Color;//vec4(0.8f,0.3f,0.2f,1.0f);
 			};)";
 
 		m_Shader.reset(new Shader(vertexS,fragS));
