@@ -7,6 +7,7 @@
 
 #include "PKEngine/ImGui/ImGuiLayer.h"
 #include <PKEngine/Renderer/Shader.h>
+#include "PKEngine/Renderer/Buffer.h"
 
 namespace PKEngine {
 	class PKENGINE_API Application
@@ -37,8 +38,10 @@ namespace PKEngine {
 		LayerStack m_LayerStack;
 		static Application* s_Instance;
 
-		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		unsigned int m_VertexArray;
 		std::unique_ptr<Shader> m_Shader;
+		std::unique_ptr<VertexBuffer> m_VertexBuffer;
+		std::unique_ptr<IndexBuffer> m_IndexBuffer;
 	};
 
 	// To be defined in Client
