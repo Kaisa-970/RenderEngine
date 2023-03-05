@@ -8,6 +8,7 @@
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
+
 #define ASSERT(x) if(!(x)) __debugbreak();
 #define GLCALL(x) GLClearError(); \
 x; \
@@ -30,24 +31,6 @@ namespace PKEngine {
 
 #define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
 
-	static GLenum ShaderDateTypeToOpenGLBaseType(ShaderDataType type) {
-		switch (type)
-		{
-			case PKEngine::ShaderDataType::Float:	return GL_FLOAT;
-			case PKEngine::ShaderDataType::Float2:	return GL_FLOAT;
-			case PKEngine::ShaderDataType::Float3:	return GL_FLOAT;
-			case PKEngine::ShaderDataType::Float4:	return GL_FLOAT;
-			case PKEngine::ShaderDataType::Mat3:	return GL_FLOAT;
-			case PKEngine::ShaderDataType::Mat4:	return GL_FLOAT;
-			case PKEngine::ShaderDataType::Int:		return GL_INT;
-			case PKEngine::ShaderDataType::Int2:	return GL_INT;
-			case PKEngine::ShaderDataType::Int3:	return GL_INT;
-			case PKEngine::ShaderDataType::Int4:	return GL_INT;
-			case PKEngine::ShaderDataType::Bool:	return GL_BOOL;
-		}
-		PK_CORE_ASSERT(false, "Unknown ShaderDataType!");
-		return 0;
-	}
 
 	Application* Application::s_Instance = nullptr;
 
@@ -60,6 +43,7 @@ namespace PKEngine {
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
+		m_VertexArray.reset(VertexArray::Create());
 
 		float vertices[3*7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f,0.0f,1.0f,1.0f,
@@ -70,34 +54,50 @@ namespace PKEngine {
 		uint32_t indices[3] = {
 			0,1,2
 		};
-
-		GLCALL(glGenVertexArrays(1, &m_VertexArray));
-		GLCALL(glBindVertexArray(m_VertexArray));
-
+		
+		std::shared_ptr<VertexBuffer> m_VertexBuffer;
 		m_VertexBuffer.reset(VertexBuffer::Create(vertices,sizeof(vertices)));
-
-		{
-			BufferLayout layout = {
+		
+		BufferLayout layout = {
 				{ShaderDataType::Float3,"a_Position"},
 				{ShaderDataType::Float4,"a_Color",true}
 			};
-			m_VertexBuffer->SetLayout(layout);
-		}
-		const auto& layout = m_VertexBuffer->GetLayout();
-		uint32_t index = 0;
-		for (auto& element : layout) {
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, element.GetElementCount(), 
-				ShaderDateTypeToOpenGLBaseType(element.Type), 
-				element.Normalized?GL_TRUE: GL_FALSE,
-				layout.GetStride(), (void*)element.Offset);
-			index++;
-		}
+		m_VertexBuffer->SetLayout(layout);
 
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
+		std::shared_ptr<IndexBuffer> m_IndexBuffer;
 		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		//m_IndexBuffer->Bind();
-	
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+
+
+		
+		m_SqureVA.reset(VertexArray::Create());
+
+		float squreVertices[4 * 3] = {
+	-0.5f, -0.5f, 0.0f, 
+	 0.5f, -0.5f, 0.0f, 
+	 0.5f,  0.5f, 0.0f,	
+	 -0.5f, 0.5f, 0.0f
+		};
+
+		uint32_t squreIndices[6] = {
+			0,1,2,
+			2,3,0
+		};
+
+		std::shared_ptr<VertexBuffer> squreVB;
+		squreVB.reset(VertexBuffer::Create(squreVertices, sizeof(squreVertices)));
+		BufferLayout squreLayout = {
+		{ShaderDataType::Float3,"a_Position"}
+		};
+		squreVB->SetLayout(squreLayout);
+		m_SqureVA->AddVertexBuffer(squreVB);
+
+		std::shared_ptr<IndexBuffer> squreIB;
+		squreIB.reset(IndexBuffer::Create(squreIndices, sizeof(squreIndices) / sizeof(uint32_t)));
+		m_SqureVA->SetIndexBuffer(squreIB);
+		
 		std::string vertexS = R"(
 			#version 330 core
 			layout(location = 0) in vec4 position;
@@ -117,7 +117,25 @@ namespace PKEngine {
 			color = v_Color;//vec4(0.8f,0.3f,0.2f,1.0f);
 			};)";
 
-		m_Shader.reset(new Shader(vertexS,fragS));
+		std::string vertexS2 = R"(
+			#version 330 core
+			layout(location = 0) in vec4 position;
+			
+			void main()
+			{
+			gl_Position =  position;
+			}; )";
+
+		std::string fragS2 = R"(#version 330 core
+			out vec4 color;
+			
+			void main()
+			{
+			color = vec4(0.8f,0.3f,0.2f,1.0f);
+			};)";
+
+		m_Shader.reset(new Shader(vertexS, fragS));
+		m_SqureShader.reset(new Shader(vertexS2,fragS2));
 	}
 	
 	Application::~Application() {
@@ -129,11 +147,15 @@ namespace PKEngine {
 		while (m_Running) {
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
-			//glUseProgram(m_Shader);
-			m_Shader->Bind();
-			GLCALL(glBindVertexArray(m_VertexArray));
-			GLCALL(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr));
+			
+			m_SqureShader->Bind();
+			m_SqureVA->Bind();
+			GLCALL(glDrawElements(GL_TRIANGLES, m_SqureVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));
 
+			m_Shader->Bind();
+			m_VertexArray->Bind();
+			GLCALL(glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));
+			
 
 			for (Layer* layer : m_LayerStack) {
 				layer->OnUpdate();

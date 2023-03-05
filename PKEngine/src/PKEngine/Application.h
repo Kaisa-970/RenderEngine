@@ -9,6 +9,8 @@
 #include <PKEngine/Renderer/Shader.h>
 #include "PKEngine/Renderer/Buffer.h"
 
+#include "PKEngine/Renderer/VertexArray.h"
+
 namespace PKEngine {
 	class PKENGINE_API Application
 	{
@@ -38,10 +40,12 @@ namespace PKEngine {
 		LayerStack m_LayerStack;
 		static Application* s_Instance;
 
-		unsigned int m_VertexArray;
-		std::unique_ptr<Shader> m_Shader;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		std::shared_ptr<VertexArray> m_VertexArray;
+		std::shared_ptr<Shader> m_Shader;
+
+
+		std::shared_ptr<VertexArray> m_SqureVA;
+		std::shared_ptr<Shader> m_SqureShader;
 	};
 
 	// To be defined in Client
