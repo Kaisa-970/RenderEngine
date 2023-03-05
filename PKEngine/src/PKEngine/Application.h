@@ -46,6 +46,8 @@ namespace PKEngine {
 
 		std::shared_ptr<VertexArray> m_SqureVA;
 		std::shared_ptr<Shader> m_SqureShader;
+
+
 	};
 
 	// To be defined in Client

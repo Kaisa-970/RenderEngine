@@ -8,12 +8,12 @@ namespace PKEngine {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:
+		case RendererAPI::API::None:
 		{
 			PK_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
 		}
-		case RendererAPI::OpenGL:
+		case RendererAPI::API::OpenGL:
 		{
 			return new OpenGLVertexArray();
 		}

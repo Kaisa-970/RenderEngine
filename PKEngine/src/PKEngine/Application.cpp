@@ -1,5 +1,4 @@
 #include "pkpch.h"
-#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Application.h"
 #include "Log.h"
@@ -7,6 +6,7 @@
 #include "Input.h"
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Renderer/Renderer.h"
 
 
 #define ASSERT(x) if(!(x)) __debugbreak();
@@ -145,17 +145,28 @@ namespace PKEngine {
 	void Application::Run() {
 		//WindowResizeEvent e(1280, 720);
 		while (m_Running) {
-			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			//glClear(GL_COLOR_BUFFER_BIT);
+			//
+			//m_SqureShader->Bind();
+			//m_SqureVA->Bind();
+			//GLCALL(glDrawElements(GL_TRIANGLES, m_SqureVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));
+
+			//m_Shader->Bind();
+			//m_VertexArray->Bind();
+			//GLCALL(glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));
 			
+			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+			RenderCommand::Clear();
+			Renderer::BeginScene();
+
 			m_SqureShader->Bind();
-			m_SqureVA->Bind();
-			GLCALL(glDrawElements(GL_TRIANGLES, m_SqureVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));
+			Renderer::Submit(m_SqureVA);
 
 			m_Shader->Bind();
-			m_VertexArray->Bind();
-			GLCALL(glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));
-			
+			Renderer::Submit(m_VertexArray);
+
+			Renderer::EndScene();
 
 			for (Layer* layer : m_LayerStack) {
 				layer->OnUpdate();
