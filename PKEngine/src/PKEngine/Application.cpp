@@ -34,7 +34,8 @@ namespace PKEngine {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() {
+	Application::Application() : m_Camera(-2.0f,2.0f,-2.0f,2.0f)
+	{
 		PK_CORE_ASSERT(!s_Instance, "Application is already exist!");
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
@@ -85,7 +86,7 @@ namespace PKEngine {
 			0,1,2,
 			2,3,0
 		};
-
+		
 		std::shared_ptr<VertexBuffer> squreVB;
 		squreVB.reset(VertexBuffer::Create(squreVertices, sizeof(squreVertices)));
 		BufferLayout squreLayout = {
@@ -102,10 +103,12 @@ namespace PKEngine {
 			#version 330 core
 			layout(location = 0) in vec4 position;
 			layout(location = 1) in vec4 a_Color;
+
+			uniform mat4 u_ViewProjectionMat;
 			out vec4 v_Color;
 			void main()
 			{
-			gl_Position =  position;
+			gl_Position =  u_ViewProjectionMat * position;
 			v_Color = a_Color;
 			}; )";
 
@@ -158,13 +161,16 @@ namespace PKEngine {
 			
 			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			RenderCommand::Clear();
-			Renderer::BeginScene();
+			Renderer::BeginScene(m_Camera);
 
-			m_SqureShader->Bind();
-			Renderer::Submit(m_SqureVA);
+			//m_Camera.SetPosition(glm::vec3(-0.5f, 0.0f, 0.0f));
+			m_Camera.SetRotation(90.0f);
+			//m_SqureShader->Bind();
+			//Renderer::Submit(m_SqureVA, m_SqureShader);
 
-			m_Shader->Bind();
-			Renderer::Submit(m_VertexArray);
+			//m_Shader->Bind();
+			//m_Shader->SetUniformMat4f("u_ViewProjectionMat",m_Camera.GetViewProjectionMatrix());
+			Renderer::Submit(m_VertexArray, m_Shader);
 
 			Renderer::EndScene();
 

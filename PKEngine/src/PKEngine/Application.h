@@ -11,6 +11,8 @@
 
 #include "PKEngine/Renderer/VertexArray.h"
 
+#include "Renderer/OrthographicCamera.h"
+
 namespace PKEngine {
 	class PKENGINE_API Application
 	{
@@ -47,7 +49,7 @@ namespace PKEngine {
 		std::shared_ptr<VertexArray> m_SqureVA;
 		std::shared_ptr<Shader> m_SqureShader;
 
-
+		OrthographicCamera m_Camera;
 	};
 
 	// To be defined in Client
