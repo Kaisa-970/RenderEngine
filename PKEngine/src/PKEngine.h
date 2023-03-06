@@ -11,6 +11,17 @@
 
 #include "PKEngine/ImGui/ImGuiLayer.h"
 
+// ---Renderer-------------------
+#include "PKEngine/Renderer/Renderer.h"
+#include "PKEngine/Renderer/RenderCommand.h"
+
+#include "PKEngine/Renderer/Buffer.h"
+#include "PKEngine/Renderer/Shader.h"
+#include "PKEngine/Renderer/VertexArray.h"
+
+#include "PKEngine/Renderer/OrthographicCamera.h"
+// ---------------------------------
+
 // ---Entry Point-------------------
 #include "PKEngine/EntryPoint.h"
 // ---------------------------------
