@@ -13,6 +13,7 @@
 
 #include "Renderer/OrthographicCamera.h"
 
+
 namespace PKEngine {
 	class PKENGINE_API Application
 	{
@@ -42,7 +43,7 @@ namespace PKEngine {
 		LayerStack m_LayerStack;
 		static Application* s_Instance;
 
-
+		float m_LastFrameTime = 0.0f;
 	};
 
 	// To be defined in Client

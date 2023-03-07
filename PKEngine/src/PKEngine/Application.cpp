@@ -7,7 +7,7 @@
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 #include "Renderer/Renderer.h"
-
+#include <PKEngine/Core/Timestep.h>
 
 #define ASSERT(x) if(!(x)) __debugbreak();
 #define GLCALL(x) GLClearError(); \
@@ -40,7 +40,7 @@ namespace PKEngine {
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 		s_Instance = this;
-
+		//m_Window->SetVSync(false);
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
@@ -53,21 +53,12 @@ namespace PKEngine {
 	void Application::Run() {
 		//WindowResizeEvent e(1280, 720);
 		while (m_Running) {
-			//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			//glClear(GL_COLOR_BUFFER_BIT);
-			//
-			//m_SqureShader->Bind();
-			//m_SqureVA->Bind();
-			//GLCALL(glDrawElements(GL_TRIANGLES, m_SqureVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));
-
-			//m_Shader->Bind();
-			//m_VertexArray->Bind();
-			//GLCALL(glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));
-			
-
+			float time = glfwGetTime();
+			Timestep ts = time - m_LastFrameTime;
+			m_LastFrameTime = time;
 
 			for (Layer* layer : m_LayerStack) {
-				layer->OnUpdate();
+				layer->OnUpdate(ts);
 			}
 
 			m_ImGuiLayer->Begin();

@@ -106,26 +106,28 @@ public:
 		
 	}
 
-	virtual void OnUpdate() override {
+	virtual void OnUpdate(PKEngine::Timestep ts) override {
+		PK_TRACE("Delta time:{0}s ({1}ms)", ts.GetSeconds(), ts.GetMillionSeconds());
+		float deltaTime = ts;
 		if (PKEngine::Input::IsKeyPressed(PK_KEY_W)) {
-			m_CameraPosition.y += m_CameraMoveSpeed;
+			m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
 		}
 		else if (PKEngine::Input::IsKeyPressed(PK_KEY_S)) {
-			m_CameraPosition.y -= m_CameraMoveSpeed;
+			m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
 		}
 
 		if (PKEngine::Input::IsKeyPressed(PK_KEY_A)) {
-			m_CameraPosition.x -= m_CameraMoveSpeed;
+			m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
 		}
 		else if (PKEngine::Input::IsKeyPressed(PK_KEY_D)) {
-			m_CameraPosition.x += m_CameraMoveSpeed;
+			m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
 		}
 
 		if (PKEngine::Input::IsMouseButtonPressed(0)) {
-			m_CameraRotation -= m_CameraRotateSpeed;
+			m_CameraRotation -= deltaTime * m_CameraRotateSpeed;
 		}
 		else if (PKEngine::Input::IsMouseButtonPressed(1)) {
-			m_CameraRotation += m_CameraRotateSpeed;
+			m_CameraRotation += deltaTime * m_CameraRotateSpeed;
 		}
 
 		PKEngine::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
@@ -175,10 +177,10 @@ private:
 
 	PKEngine::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed = 0.03f;
+	float m_CameraMoveSpeed = 1.0f;
 
 	float m_CameraRotation = 0.0f;
-	float m_CameraRotateSpeed = 2.0f;
+	float m_CameraRotateSpeed = 120.0f;
 };
 
 class Sandbox : public PKEngine::Application {
