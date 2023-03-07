@@ -1,9 +1,10 @@
 #include <PKEngine.h>
 #include <imgui.h>
+#include <glm/gtx/transform.hpp>
 
 class ExampleLayer : public PKEngine::Layer {
 public:
-	ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) , m_CameraPosition(0.0f)
+	ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) , m_CameraPosition(0.0f), m_SqurePosition(0.0f)
 	{
 		m_VertexArray.reset(PKEngine::VertexArray::Create());
 
@@ -66,10 +67,11 @@ public:
 			layout(location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjectionMat;
+			uniform mat4 u_ModelMat;
 			out vec4 v_Color;
 			void main()
 			{
-			gl_Position =  u_ViewProjectionMat * position;
+			gl_Position =  u_ViewProjectionMat * u_ModelMat * position;
 			v_Color = a_Color;
 			}; )";
 
@@ -84,10 +86,11 @@ public:
 		std::string vertexS2 = R"(
 			#version 330 core
 			layout(location = 0) in vec4 position;
-			
+			uniform mat4 u_ModelMat;
+			uniform mat4 u_ViewProjectionMat;
 			void main()
 			{
-			gl_Position =  position;
+			gl_Position = u_ViewProjectionMat * u_ModelMat * position;
 			}; )";
 
 		std::string fragS2 = R"(#version 330 core
@@ -107,7 +110,7 @@ public:
 	}
 
 	virtual void OnUpdate(PKEngine::Timestep ts) override {
-		PK_TRACE("Delta time:{0}s ({1}ms)", ts.GetSeconds(), ts.GetMillionSeconds());
+		//PK_TRACE("Delta time:{0}s ({1}ms)", ts.GetSeconds(), ts.GetMillionSeconds());
 		float deltaTime = ts;
 		if (PKEngine::Input::IsKeyPressed(PK_KEY_W)) {
 			m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
@@ -130,18 +133,27 @@ public:
 			m_CameraRotation += deltaTime * m_CameraRotateSpeed;
 		}
 
+
 		PKEngine::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		PKEngine::RenderCommand::Clear();
 		PKEngine::Renderer::BeginScene(m_Camera);
 
 		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
+		auto scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		//m_SqureShader->Bind();
-		PKEngine::Renderer::Submit(m_SqureVA, m_SqureShader);
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < 20; j++)
+			{
+				glm::vec3 pos(i * 0.11f, j * 0.11f, 0);
+				auto transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				PKEngine::Renderer::Submit(m_SqureVA, m_SqureShader, transform);
+			}
+			
+		}
 
-		//m_Shader->Bind();
-		//m_Shader->SetUniformMat4f("u_ViewProjectionMat",m_Camera.GetViewProjectionMatrix());
-		PKEngine::Renderer::Submit(m_VertexArray, m_Shader);
+
+		//PKEngine::Renderer::Submit(m_VertexArray, m_Shader);
 
 		PKEngine::Renderer::EndScene();
 	}
@@ -181,6 +193,7 @@ private:
 
 	float m_CameraRotation = 0.0f;
 	float m_CameraRotateSpeed = 120.0f;
+
 };
 
 class Sandbox : public PKEngine::Application {
