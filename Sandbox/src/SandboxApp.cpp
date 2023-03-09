@@ -1,10 +1,12 @@
 #include <PKEngine.h>
 #include <imgui.h>
 #include <glm/gtx/transform.hpp>
+#include <Platform/OpenGL/OpenGLShader.h>
+#include "glm/gtc/type_ptr.hpp"
 
 class ExampleLayer : public PKEngine::Layer {
 public:
-	ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) , m_CameraPosition(0.0f), m_SqurePosition(0.0f)
+	ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) , m_CameraPosition(0.0f), m_SqureColor(0.0f)
 	{
 		m_VertexArray.reset(PKEngine::VertexArray::Create());
 
@@ -95,18 +97,20 @@ public:
 
 		std::string fragS2 = R"(#version 330 core
 			out vec4 color;
-			
+			uniform vec3 u_Color;
 			void main()
 			{
-			color = vec4(0.8f,0.3f,0.2f,1.0f);
+			color = vec4(u_Color,1.0f);
 			};)";
 
-		m_Shader.reset(new PKEngine::Shader(vertexS, fragS));
-		m_SqureShader.reset(new PKEngine::Shader(vertexS2, fragS2));
+		m_Shader.reset(PKEngine::Shader::Create(vertexS, fragS));
+		m_SqureShader.reset(PKEngine::Shader::Create(vertexS2, fragS2));
 	}
 	~ExampleLayer() {}
 	virtual void OnImGuiRender()override {
-		
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SqureColor));
+		ImGui::End();
 	}
 
 	virtual void OnUpdate(PKEngine::Timestep ts) override {
@@ -138,6 +142,8 @@ public:
 		PKEngine::RenderCommand::Clear();
 		PKEngine::Renderer::BeginScene(m_Camera);
 
+		m_SqureShader->Bind();
+		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform3f("u_Color", m_SqureColor);
 		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
 		auto scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
@@ -151,9 +157,6 @@ public:
 			}
 			
 		}
-
-
-		//PKEngine::Renderer::Submit(m_VertexArray, m_Shader);
 
 		PKEngine::Renderer::EndScene();
 	}
@@ -186,6 +189,7 @@ private:
 
 	std::shared_ptr<PKEngine::VertexArray> m_SqureVA;
 	std::shared_ptr<PKEngine::Shader> m_SqureShader;
+	glm::vec3 m_SqureColor;
 
 	PKEngine::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;

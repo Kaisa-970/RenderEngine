@@ -1,6 +1,6 @@
 #include "pkpch.h"
 #include "Renderer.h"
-
+#include "Platform/OpenGL/OpenGLShader.h"
 namespace PKEngine {
 	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData();
 	void Renderer::BeginScene(OrthographicCamera& camera)
@@ -18,8 +18,8 @@ namespace PKEngine {
 		vertexArray->Bind();
 
 		shader->Bind();
-		shader->SetUniformMat4f("u_ViewProjectionMat", s_SceneData->ViewProjectionMatrix);
-		shader->SetUniformMat4f("u_ModelMat", transform);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetUniformMat4f("u_ViewProjectionMat", s_SceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetUniformMat4f("u_ModelMat", transform);
 		RenderCommand::DrawIndexed(vertexArray);
 	}
 }
