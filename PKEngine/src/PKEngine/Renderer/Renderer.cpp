@@ -13,7 +13,7 @@ namespace PKEngine {
 
 	}
 
-	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader,const glm::mat4& transform)
+	void Renderer::Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader,const glm::mat4& transform)
 	{
 		vertexArray->Bind();
 

@@ -20,7 +20,7 @@ public:
 			0,1,2
 		};
 
-		std::shared_ptr<PKEngine::VertexBuffer> m_VertexBuffer;
+		PKEngine::Ref<PKEngine::VertexBuffer> m_VertexBuffer;
 		m_VertexBuffer.reset(PKEngine::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		PKEngine::BufferLayout layout = {
@@ -31,7 +31,7 @@ public:
 
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
-		std::shared_ptr<PKEngine::IndexBuffer> m_IndexBuffer;
+		PKEngine::Ref<PKEngine::IndexBuffer> m_IndexBuffer;
 		m_IndexBuffer.reset(PKEngine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
@@ -51,7 +51,7 @@ public:
 			2,3,0
 		};
 
-		std::shared_ptr<PKEngine::VertexBuffer> squreVB;
+		PKEngine::Ref<PKEngine::VertexBuffer> squreVB;
 		squreVB.reset(PKEngine::VertexBuffer::Create(squreVertices, sizeof(squreVertices)));
 		PKEngine::BufferLayout squreLayout = {
 		{PKEngine::ShaderDataType::Float3,"a_Position"}
@@ -59,7 +59,7 @@ public:
 		squreVB->SetLayout(squreLayout);
 		m_SqureVA->AddVertexBuffer(squreVB);
 
-		std::shared_ptr<PKEngine::IndexBuffer> squreIB;
+		PKEngine::Ref<PKEngine::IndexBuffer> squreIB;
 		squreIB.reset(PKEngine::IndexBuffer::Create(squreIndices, sizeof(squreIndices) / sizeof(uint32_t)));
 		m_SqureVA->SetIndexBuffer(squreIB);
 
@@ -183,12 +183,12 @@ public:
 	}
 
 private:
-	std::shared_ptr<PKEngine::VertexArray> m_VertexArray;
-	std::shared_ptr<PKEngine::Shader> m_Shader;
+	PKEngine::Ref<PKEngine::VertexArray> m_VertexArray;
+	PKEngine::Ref<PKEngine::Shader> m_Shader;
 
 
-	std::shared_ptr<PKEngine::VertexArray> m_SqureVA;
-	std::shared_ptr<PKEngine::Shader> m_SqureShader;
+	PKEngine::Ref<PKEngine::VertexArray> m_SqureVA;
+	PKEngine::Ref<PKEngine::Shader> m_SqureShader;
 	glm::vec3 m_SqureColor;
 
 	PKEngine::OrthographicCamera m_Camera;
