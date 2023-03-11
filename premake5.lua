@@ -15,6 +15,7 @@ IncludeDir["GLFW"] = "PKEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "PKEngine/vendor/Glad/include"
 IncludeDir["imgui"] = "PKEngine/vendor/imgui"
 IncludeDir["glm"] = "PKEngine/vendor/glm"
+IncludeDir["stb_image"] = "PKEngine/vendor/stb_image"
 
 include "PKEngine/vendor/GLFW"
 include "PKEngine/vendor/Glad"
@@ -36,6 +37,8 @@ project "PKEngine"
 	files{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -46,7 +49,8 @@ project "PKEngine"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}",
 	}
 
 	links{

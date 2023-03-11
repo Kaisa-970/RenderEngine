@@ -20,6 +20,7 @@
 #include "PKEngine/Renderer/Buffer.h"
 #include "PKEngine/Renderer/Shader.h"
 #include "PKEngine/Renderer/VertexArray.h"
+#include "PKEngine/Renderer/Texture.h"
 
 #include "PKEngine/Renderer/OrthographicCamera.h"
 // ---------------------------------

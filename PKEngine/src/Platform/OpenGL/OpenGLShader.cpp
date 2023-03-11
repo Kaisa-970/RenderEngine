@@ -125,6 +125,30 @@ namespace PKEngine {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetUniformi(const std::string& name, int value)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::SetUniform2i(const std::string& name, const glm::ivec2& value)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform2i(location, value.x,value.y);
+	}
+
+	void OpenGLShader::SetUniform3i(const std::string& name, const glm::ivec3& value)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform3i(location, value.x,value.y,value.z);
+	}
+
+	void OpenGLShader::SetUniform4i(const std::string& name, const glm::ivec4& value)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform4i(location, value.x, value.y, value.z, value.w);
+	}
+
 	void OpenGLShader::SetUniformf(const std::string& name, float value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());

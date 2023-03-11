@@ -39,11 +39,11 @@ public:
 
 		m_SqureVA.reset(PKEngine::VertexArray::Create());
 
-		float squreVertices[4 * 3] = {
-	-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.5f,  0.5f, 0.0f,
-	 -0.5f, 0.5f, 0.0f
+		float squreVertices[] = {
+	-0.5f, -0.5f, 0.0f, 0.0f,0.0f,
+	 0.5f, -0.5f, 0.0f,	1.0f,0.0f,
+	 0.5f,  0.5f, 0.0f,	1.0f,1.0f,
+	 -0.5f, 0.5f, 0.0f,	0.0f,1.0f
 		};
 
 		uint32_t squreIndices[6] = {
@@ -54,7 +54,8 @@ public:
 		PKEngine::Ref<PKEngine::VertexBuffer> squreVB;
 		squreVB.reset(PKEngine::VertexBuffer::Create(squreVertices, sizeof(squreVertices)));
 		PKEngine::BufferLayout squreLayout = {
-		{PKEngine::ShaderDataType::Float3,"a_Position"}
+		{PKEngine::ShaderDataType::Float3,"a_Position"},
+		{PKEngine::ShaderDataType::Float2,"a_TexCoord"}
 		};
 		squreVB->SetLayout(squreLayout);
 		m_SqureVA->AddVertexBuffer(squreVB);
@@ -87,17 +88,21 @@ public:
 
 		std::string vertexS2 = R"(
 			#version 330 core
-			layout(location = 0) in vec4 position;
+			layout(location = 0) in vec4 a_position;
+			layout(location = 1) in vec2 a_TexCoord;
 			uniform mat4 u_ModelMat;
 			uniform mat4 u_ViewProjectionMat;
+			out vec2 o_TexCoord;
 			void main()
 			{
-			gl_Position = u_ViewProjectionMat * u_ModelMat * position;
+			gl_Position = u_ViewProjectionMat * u_ModelMat * a_position;
+			o_TexCoord = a_TexCoord;
 			}; )";
 
 		std::string fragS2 = R"(#version 330 core
 			out vec4 color;
 			uniform vec3 u_Color;
+			in vec2 o_TexCoord;
 			void main()
 			{
 			color = vec4(u_Color,1.0f);
@@ -105,6 +110,38 @@ public:
 
 		m_Shader.reset(PKEngine::Shader::Create(vertexS, fragS));
 		m_SqureShader.reset(PKEngine::Shader::Create(vertexS2, fragS2));
+
+		std::string vertexS3 = R"(
+			#version 330 core
+			layout(location = 0) in vec4 a_position;
+			layout(location = 1) in vec2 a_TexCoord;
+			uniform mat4 u_ModelMat;
+			uniform mat4 u_ViewProjectionMat;
+			out vec2 o_TexCoord;
+			void main()
+			{
+			gl_Position = u_ViewProjectionMat * u_ModelMat * a_position;
+			o_TexCoord = a_TexCoord;
+			}; )";
+
+		std::string fragS3 = R"(#version 330 core
+			out vec4 color;
+			uniform vec3 u_Color;
+			uniform sampler2D u_Texture;
+			in vec2 o_TexCoord;
+			void main()
+			{
+			color = texture(u_Texture,o_TexCoord);//vec4(o_TexCoord,0.0f,1.0f);
+			};)";
+
+		m_TextureShader.reset(PKEngine::Shader::Create(vertexS3, fragS3));
+
+
+		m_Texture = PKEngine::Texture2D::Create("res/textures/emotion1.png");
+
+		m_TextureShader->Bind();
+		m_Texture->Bind();
+		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_TextureShader)->SetUniformi("u_Texture", 0);
 	}
 	~ExampleLayer() {}
 	virtual void OnImGuiRender()override {
@@ -146,17 +183,20 @@ public:
 		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform3f("u_Color", m_SqureColor);
 		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
-		auto scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-		//m_SqureShader->Bind();
-		for (int i = 0; i < 20; i++) {
-			for (int j = 0; j < 20; j++)
-			{
-				glm::vec3 pos(i * 0.11f, j * 0.11f, 0);
-				auto transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				PKEngine::Renderer::Submit(m_SqureVA, m_SqureShader, transform);
-			}
-			
-		}
+		//auto scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		//for (int i = 0; i < 20; i++) {
+		//	for (int j = 0; j < 20; j++)
+		//	{
+		//		glm::vec3 pos(i * 0.11f, j * 0.11f, 0);
+		//		auto transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+		//		PKEngine::Renderer::Submit(m_SqureVA, m_SqureShader, transform);
+		//	}
+		//	
+		//}
+
+
+		auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
+		PKEngine::Renderer::Submit(m_SqureVA, m_TextureShader, transform);
 
 		PKEngine::Renderer::EndScene();
 	}
@@ -191,6 +231,8 @@ private:
 	PKEngine::Ref<PKEngine::Shader> m_SqureShader;
 	glm::vec3 m_SqureColor;
 
+	PKEngine::Ref<PKEngine::Shader> m_TextureShader;
+
 	PKEngine::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
 	float m_CameraMoveSpeed = 1.0f;
@@ -198,6 +240,7 @@ private:
 	float m_CameraRotation = 0.0f;
 	float m_CameraRotateSpeed = 120.0f;
 
+	PKEngine::Ref<PKEngine::Texture2D> m_Texture;
 };
 
 class Sandbox : public PKEngine::Application {
