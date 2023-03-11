@@ -21,8 +21,15 @@ namespace PKEngine {
 		auto shaderSrcMap = PreprocessSource(shaderSrc);
 		Compile(shaderSrcMap);
 
+		auto lastSplash = filename.find_last_of("/");
+		lastSplash = lastSplash == std::string::npos ? 0 : lastSplash;
+		auto namePos = lastSplash + 1;
+		auto lastDot = filename.rfind('.');
+		size_t count = lastDot == std::string::npos ? filename.size() - namePos : lastDot - namePos;
+
+		m_Name = filename.substr(namePos, count);
 	}
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc):m_Name(name)
 	{
 		std::unordered_map<GLenum, std::string> shaderMap;
 		shaderMap[GL_VERTEX_SHADER] = vertexSrc;

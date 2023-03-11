@@ -8,6 +8,7 @@ class ExampleLayer : public PKEngine::Layer {
 public:
 	ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) , m_CameraPosition(0.0f), m_SqureColor(0.0f)
 	{
+		//m_ShaderLibrary = new PKEngine::ShaderLibrary();
 		m_VertexArray.reset(PKEngine::VertexArray::Create());
 
 		float vertices[3 * 7] = {
@@ -108,23 +109,17 @@ public:
 			color = vec4(u_Color,1.0f);
 			};)";
 
-		m_Shader.reset(PKEngine::Shader::Create(vertexS, fragS));
-		m_SqureShader.reset(PKEngine::Shader::Create(vertexS2, fragS2));
+		m_Shader=PKEngine::Shader::Create("triangleShader", vertexS, fragS);
+		m_SqureShader=PKEngine::Shader::Create("squareShader", vertexS2, fragS2);
 
-		std::string vertexS3 = R"(
-			 )";
-
-		std::string fragS3 = R"(
-			)";
-
-		m_TextureShader.reset(PKEngine::Shader::Create("assets/shaders/TextureShader.glsl"));
-
-
+		auto textureShader = m_ShaderLibrary.Load("assets/shaders/TextureShader.glsl");
+		auto textureShader2 = m_ShaderLibrary.Load("assets/shaders/TextureShader.glsl");
+		
 		m_Texture = PKEngine::Texture2D::Create("assets/textures/emotion1.png");
 
-		m_TextureShader->Bind();
+		textureShader->Bind();
 		m_Texture->Bind();
-		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_TextureShader)->SetUniformi("u_Texture", 0);
+		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(textureShader)->SetUniformi("u_Texture", 0);
 	}
 	~ExampleLayer() {}
 	virtual void OnImGuiRender()override {
@@ -177,9 +172,9 @@ public:
 		//	
 		//}
 
-
+		auto textureShader = m_ShaderLibrary.Get("TextureShader");
 		auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
-		PKEngine::Renderer::Submit(m_SqureVA, m_TextureShader, transform);
+		PKEngine::Renderer::Submit(m_SqureVA, textureShader, transform);
 
 		PKEngine::Renderer::EndScene();
 	}
@@ -214,7 +209,7 @@ private:
 	PKEngine::Ref<PKEngine::Shader> m_SqureShader;
 	glm::vec3 m_SqureColor;
 
-	PKEngine::Ref<PKEngine::Shader> m_TextureShader;
+	PKEngine::ShaderLibrary m_ShaderLibrary;
 
 	PKEngine::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
