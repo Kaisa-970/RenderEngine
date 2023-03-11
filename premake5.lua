@@ -69,7 +69,7 @@ project "PKEngine"
 		}
 
 		filter "configurations:Debug"
-			defines "PK_DEBUG"
+			defines {"PK_DEBUG","PK_ENABLE_ASSERTS"}
 			runtime "Debug"
 			symbols "On"
 

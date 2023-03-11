@@ -113,7 +113,6 @@ public:
 		m_SqureShader=PKEngine::Shader::Create("squareShader", vertexS2, fragS2);
 
 		auto textureShader = m_ShaderLibrary.Load("assets/shaders/TextureShader.glsl");
-		auto textureShader2 = m_ShaderLibrary.Load("assets/shaders/TextureShader.glsl");
 		
 		m_Texture = PKEngine::Texture2D::Create("assets/textures/emotion1.png");
 
