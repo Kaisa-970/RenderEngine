@@ -8,6 +8,7 @@
 #include "Platform/OpenGL/OpenGLBuffer.h"
 #include "Renderer/Renderer.h"
 #include <PKEngine/Core/Timestep.h>
+#include "Renderer/Mesh.h"
 
 #define ASSERT(x) if(!(x)) __debugbreak();
 #define GLCALL(x) GLClearError(); \
@@ -43,7 +44,7 @@ namespace PKEngine {
 		//m_Window->SetVSync(false);
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
-
+		auto mesh = std::make_unique<Mesh>("123");
 	}
 	
 	Application::~Application() {

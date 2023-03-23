@@ -15,6 +15,7 @@ IncludeDir["GLFW"] = "PKEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "PKEngine/vendor/Glad/include"
 IncludeDir["imgui"] = "PKEngine/vendor/imgui"
 IncludeDir["glm"] = "PKEngine/vendor/glm"
+IncludeDir["assimp"] = "PKEngine/vendor/assimp/include"
 
 include "PKEngine/vendor/GLFW"
 include "PKEngine/vendor/Glad"
@@ -46,8 +47,10 @@ project "PKEngine"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.assimp}"
 	}
+
 
 	links{
 		"GLFW",
@@ -65,6 +68,8 @@ project "PKEngine"
 		}
 
 		filter "configurations:Debug"
+			libdirs{"PKEngine/vendor/assimp/lib"}
+			links{"assimp-vc140-mt.lib"}
 			defines "PK_DEBUG"
 			runtime "Debug"
 			symbols "On"

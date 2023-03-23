@@ -345,6 +345,8 @@ private:
 	std::shared_ptr<PKEngine::Shader> m_SqureShader;
 	std::shared_ptr<PKEngine::Shader> m_PBRShader;
 
+	std::shared_ptr<PKEngine::Mesh> m_Mesh;
+
 	PKEngine::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
 	float m_CameraMoveSpeed = 1.0f;
