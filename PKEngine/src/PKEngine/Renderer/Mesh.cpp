@@ -11,7 +11,13 @@ namespace PKEngine {
 		Assimp::Importer importer;
 		
 		const aiScene* scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
-		PK_CORE_INFO("Mesh Create!");
+		if (scene->HasMeshes()) {
+			
+			auto mesh0 = scene->mMeshes[0];
+			auto vCount = mesh0->mNumVertices;
+			PK_CORE_INFO("Load Mesh:Vertices count = {0}!",vCount);
+		}
+		
 	}
 	Mesh::~Mesh()
 	{

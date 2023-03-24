@@ -15,7 +15,7 @@ public:
 		//m_ShaderLibrary = new PKEngine::ShaderLibrary();
 		m_VertexArray = PKEngine::VertexArray::Create();
 
-		PKEngine::Ref<PKEngine::Mesh> m_Mesh =std::make_shared<PKEngine::Mesh>("assets/meshes/SPK_lt.FBX");
+		PKEngine::Ref<PKEngine::Mesh> m_Mesh =std::make_shared<PKEngine::Mesh>("assets/meshes/houtou.obj");
 		
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f,0.0f,1.0f,1.0f,
