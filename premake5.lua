@@ -107,7 +107,8 @@ project "Sandbox"
 		"PKEngine/vendor/GLFW/include",
 		"PKEngine/src",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.assimp}"
 	}
 
 
