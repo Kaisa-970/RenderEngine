@@ -16,6 +16,7 @@ IncludeDir["Glad"] = "PKEngine/vendor/Glad/include"
 IncludeDir["imgui"] = "PKEngine/vendor/imgui"
 IncludeDir["glm"] = "PKEngine/vendor/glm"
 IncludeDir["stb_image"] = "PKEngine/vendor/stb_image"
+IncludeDir["assimp"] = "PKEngine/vendor/assimp/include"
 
 include "PKEngine/vendor/GLFW"
 include "PKEngine/vendor/Glad"
@@ -51,6 +52,7 @@ project "PKEngine"
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.assimp}",
 	}
 
 	links{
@@ -69,7 +71,9 @@ project "PKEngine"
 		}
 
 		filter "configurations:Debug"
-			defines {"PK_DEBUG","PK_ENABLE_ASSERTS"}
+			libdirs{"PKEngine/vendor/assimp/lib"}
+			links{"assimp-vc140-mt.lib"}
+			defines "PK_DEBUG"
 			runtime "Debug"
 			symbols "On"
 
@@ -103,7 +107,8 @@ project "Sandbox"
 		"PKEngine/vendor/GLFW/include",
 		"PKEngine/src",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.assimp}"
 	}
 
 

@@ -13,6 +13,11 @@ namespace PKEngine {
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 	}
 
+	void Renderer::BeginScene(PerspectiveCamera& camera)
+	{
+		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+	}
+
 	void Renderer::EndScene()
 	{
 
