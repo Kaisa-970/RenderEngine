@@ -19,16 +19,19 @@ namespace PKEngine {
 
 			//unsigned int nCount = mesh0->n
 			auto normals = mesh0->mNormals;
-			m_Vertices = new float[m_verticesCount * 3 * 2];
+			auto uvs = mesh0->mTextureCoords[0];
+			m_Vertices = new float[m_verticesCount * (3 * 2 + 2)];
 			for (size_t i = 0; i < m_verticesCount; i++)
 			{
-				size_t idx = 6 * i;
+				size_t idx = 8 * i;
 				m_Vertices[idx] = vertices[i].x;
 				m_Vertices[idx +1] = vertices[i].y;
 				m_Vertices[idx +2] = vertices[i].z;
-				m_Vertices[idx + 3] = normals[i].x;
-				m_Vertices[idx + 4] = normals[i].y;
-				m_Vertices[idx + 5] = normals[i].z;
+				m_Vertices[idx + 3] = uvs[i].x;
+				m_Vertices[idx + 4] = uvs[i].y;
+				m_Vertices[idx + 5] = normals[i].x;
+				m_Vertices[idx + 6] = normals[i].y;
+				m_Vertices[idx + 7] = normals[i].z;
 				//PK_CORE_INFO("Vertex{0} = ({1},{2},{3})!", i, m_Vertices[idx], m_Vertices[idx + 1], m_Vertices[idx + 2]);
 			}
 			m_FaceCount = mesh0->mNumFaces;
@@ -39,7 +42,7 @@ namespace PKEngine {
 			{
 				size_t idx = 3 * i;
 				auto facei = faces[i];
-				PK_CORE_INFO("Per Face {0}!", facei.mNumIndices);
+
 				for (size_t j = 0; j < facei.mNumIndices; j++)
 				{
 					

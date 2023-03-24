@@ -42,10 +42,11 @@ public:
 		m_Mesh = std::make_shared<PKEngine::Mesh>("assets/meshes/houtou.obj");
 		m_MeshVA.reset(PKEngine::VertexArray::Create());
 		PKEngine::Ref<PKEngine::VertexBuffer> m_MeshBuffer;
-		m_MeshBuffer.reset(PKEngine::VertexBuffer::Create(m_Mesh->GetVertices(), m_Mesh->GetVerticesCount() * 3 * sizeof(float)));
+		m_MeshBuffer.reset(PKEngine::VertexBuffer::Create(m_Mesh->GetVertices(), m_Mesh->GetVerticesCount() * 8 * sizeof(float)));
 
 		PKEngine::BufferLayout meshlayout = {
 				{PKEngine::ShaderDataType::Float3,"a_Position"},
+				{PKEngine::ShaderDataType::Float2,"a_Texcoord"},
 				{PKEngine::ShaderDataType::Float3,"a_Normal"}
 		};
 		m_MeshBuffer->SetLayout(meshlayout);
@@ -97,6 +98,7 @@ public:
 		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(textureShader)->SetUniformi("u_Texture", 0);
 
 		MeshShader->Bind();
+		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(MeshShader)->SetUniformi("u_Texture", 0);
 	}
 	~ExampleLayer() {}
 	virtual void OnImGuiRender()override {
@@ -152,6 +154,7 @@ public:
 		auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 		//PKEngine::Renderer::Submit(m_SqureVA, meshShader, transform);
 
+		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(meshShader)->SetUniform3f("u_CameraPos", m_CameraPosition);
 		//auto meshShader = m_ShaderLibrary.Get("MeshShader");
 		PKEngine::Renderer::Submit(m_MeshVA, meshShader, transform);
 
