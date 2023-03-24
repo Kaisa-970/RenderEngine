@@ -3,12 +3,15 @@
 #include "RenderCommand.h"
 #include "OrthographicCamera.h"
 #include <PKEngine/Renderer/Shader.h>
+#include <PKEngine/Renderer/PerspectiveCamera.h>
+
 namespace PKEngine {
 
 	class Renderer {
 	public:
 		static void Init();
 		static void BeginScene(OrthographicCamera& camera);
+		static void BeginScene(PerspectiveCamera& camera);
 		static void EndScene();
 
 		static void SetViewport(uint32_t width, uint32_t height);

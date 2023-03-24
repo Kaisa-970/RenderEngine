@@ -32,4 +32,9 @@
 #include "PKEngine/Renderer/Mesh.h"
 
 #include "PKEngine/Renderer/OrthographicCamera.h"
+#include "PKEngine/Renderer/PerspectiveCamera.h"
+// ---------------------------------
+
+// ---Entry Point-------------------
+#include "PKEngine/EntryPoint.h"
 // ---------------------------------
