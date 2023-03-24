@@ -18,6 +18,7 @@ namespace PKEngine {
 			PK_CORE_INFO("Load Mesh:Vertices count = {0}!",vCount);
 		}
 		
+
 	}
 	Mesh::~Mesh()
 	{
