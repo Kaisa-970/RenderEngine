@@ -10,3 +10,6 @@
 [submodule "PKEngine/vendor/glm"]
 	path = PKEngine/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "PKEngine/vendor/assimp"]
+	path = PKEngine/vendor/assimp
+	url = https://github.com/Kaisa-970/assimp
