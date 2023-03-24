@@ -15,6 +15,8 @@ public:
 		//m_ShaderLibrary = new PKEngine::ShaderLibrary();
 		m_VertexArray = PKEngine::VertexArray::Create();
 
+		PKEngine::Ref<PKEngine::Mesh> m_Mesh =std::make_shared<PKEngine::Mesh>("assets/meshes/SPK_lt.FBX");
+		
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f,0.0f,1.0f,1.0f,
 			 0.5f, -0.5f, 0.0f, 0.0f,0.0f,1.0f,1.0f,
@@ -68,53 +70,6 @@ public:
 		PKEngine::Ref<PKEngine::IndexBuffer> squreIB;
 		squreIB.reset(PKEngine::IndexBuffer::Create(squreIndices, sizeof(squreIndices) / sizeof(uint32_t)));
 		m_SqureVA->SetIndexBuffer(squreIB);
-
-		std::string vertexS = R"(
-			#version 330 core
-			layout(location = 0) in vec4 position;
-			layout(location = 1) in vec4 a_Color;
-
-			uniform mat4 u_ViewProjectionMat;
-			uniform mat4 u_ModelMat;
-			out vec4 v_Color;
-			void main()
-			{
-			gl_Position =  u_ViewProjectionMat * u_ModelMat * position;
-			v_Color = a_Color;
-			}; )";
-
-		std::string fragS = R"(#version 330 core
-			out vec4 color;
-			in vec4 v_Color;
-			void main()
-			{
-			color = v_Color;//vec4(0.8f,0.3f,0.2f,1.0f);
-			};)";
-
-		std::string vertexS2 = R"(
-			#version 330 core
-			layout(location = 0) in vec4 a_position;
-			layout(location = 1) in vec2 a_TexCoord;
-			uniform mat4 u_ModelMat;
-			uniform mat4 u_ViewProjectionMat;
-			out vec2 o_TexCoord;
-			void main()
-			{
-			gl_Position = u_ViewProjectionMat * u_ModelMat * a_position;
-			o_TexCoord = a_TexCoord;
-			}; )";
-
-		std::string fragS2 = R"(#version 330 core
-			out vec4 color;
-			uniform vec3 u_Color;
-			in vec2 o_TexCoord;
-			void main()
-			{
-			color = vec4(u_Color,1.0f);
-			};)";
-
-		m_Shader=PKEngine::Shader::Create("triangleShader", vertexS, fragS);
-		m_SqureShader=PKEngine::Shader::Create("squareShader", vertexS2, fragS2);
 
 		auto textureShader = m_ShaderLibrary.Load("assets/shaders/TextureShader.glsl");
 		

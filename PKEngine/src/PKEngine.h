@@ -29,6 +29,7 @@
 #include "PKEngine/Renderer/VertexArray.h"
 #include "PKEngine/Renderer/Texture.h"
 #include "PKEngine/Renderer/FrameBuffer.h"
+#include "PKEngine/Renderer/Mesh.h"
 
 #include "PKEngine/Renderer/OrthographicCamera.h"
 // ---------------------------------

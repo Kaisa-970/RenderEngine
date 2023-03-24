@@ -1,10 +1,11 @@
 #pragma once
+#pragma once
 
 namespace PKEngine {
 	class Mesh {
 	public:
-		Mesh();
+		Mesh() = default;
+		Mesh(const std::string& filename);
 		~Mesh();
-		void Load(const std::string& filename);
 	};
 }

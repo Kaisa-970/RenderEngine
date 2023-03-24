@@ -18,6 +18,7 @@ IncludeDir["imgui"] = "PKEngine/vendor/imgui"
 IncludeDir["glm"] = "PKEngine/vendor/glm"
 IncludeDir["stb_image"] = "PKEngine/vendor/stb_image"
 IncludeDir["entt"] = "PKEngine/vendor/entt/include"
+IncludeDir["assimp"] = "PKEngine/vendor/assimp/include"
 
 group "Dependency"
 	include "PKEngine/vendor/GLFW"
@@ -55,7 +56,8 @@ project "PKEngine"
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.assimp}",
 	}
 
 	links{
@@ -74,7 +76,9 @@ project "PKEngine"
 		}
 
 		filter "configurations:Debug"
-			defines {"PK_DEBUG","PK_ENABLE_ASSERTS"}
+			libdirs{"PKEngine/vendor/assimp/lib"}
+			links{"assimp-vc140-mt.lib"}	
+			defines "PK_DEBUG"
 			runtime "Debug"
 			symbols "On"
 
