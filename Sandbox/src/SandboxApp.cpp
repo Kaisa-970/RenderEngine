@@ -11,7 +11,7 @@ public:
 		//m_ShaderLibrary = new PKEngine::ShaderLibrary();
 		m_VertexArray.reset(PKEngine::VertexArray::Create());
 
-		PKEngine::Ref<PKEngine::Mesh> m_Mesh =std::make_shared<PKEngine::Mesh>("assets/meshes/SPK_lt.FBX");
+		PKEngine::Ref<PKEngine::Mesh> m_Mesh =std::make_shared<PKEngine::Mesh>("assets/meshes/houtou.obj");
 		
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f,0.0f,1.0f,1.0f,
@@ -112,8 +112,8 @@ public:
 		PKEngine::RenderCommand::Clear();
 		PKEngine::Renderer::BeginScene(m_Camera);
 
-		m_SqureShader->Bind();
-		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform3f("u_Color", m_SqureColor);
+		//m_SqureShader->Bind();
+		//std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform3f("u_Color", m_SqureColor);
 		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
 		//auto scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
