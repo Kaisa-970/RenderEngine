@@ -43,7 +43,7 @@ public:
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		//*************
-		m_Mesh = std::make_shared<PKEngine::Mesh>("assets/meshes/houtou.obj");
+		m_Mesh = std::make_shared<PKEngine::Mesh>("assets/meshes/sphere.obj");
 		m_MeshVA.reset(PKEngine::VertexArray::Create());
 		PKEngine::Ref<PKEngine::VertexBuffer> m_MeshBuffer;
 		m_MeshBuffer.reset(PKEngine::VertexBuffer::Create(m_Mesh->GetVertices(), m_Mesh->GetVerticesCount() * 8 * sizeof(float)));
@@ -62,7 +62,8 @@ public:
 		m_MeshIndexBuffer.reset(PKEngine::IndexBuffer::Create(m_Mesh->GetIndices(), m_Mesh->GetFacesCount() * 3));
 		m_MeshVA->SetIndexBuffer(m_MeshIndexBuffer);
 		//************
-
+		auto p = glm::perspective(glm::radians(45.0f), 1.7f, 0.01f, 10.0f);
+		
 
 
 		m_SqureVA = PKEngine::VertexArray::Create();
@@ -107,7 +108,11 @@ public:
 	~ExampleLayer() {}
 	virtual void OnImGuiRender()override {
 		ImGui::Begin("Settings");
-		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SqureColor));
+		float minData = 0;
+		float maxData = 1;
+		ImGui::ColorEdit3("Light Color", glm::value_ptr(m_LightColor));
+		ImGui::SliderScalar("Roughness",ImGuiDataType_Float, &m_Roughness, &minData, &maxData);
+		ImGui::SliderScalar("Metallic", ImGuiDataType_Float, &m_Metallic, &minData, &maxData);
 		ImGui::End();
 	}
 
@@ -156,6 +161,13 @@ public:
 
 		auto textureShader = m_ShaderLibrary.Get("TextureShader");
 		auto meshShader = m_ShaderLibrary.Get("MeshShader");
+		meshShader->Bind();
+		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(meshShader)->
+			SetUniform3f("u_LightColor", m_LightColor);
+		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(meshShader)->
+			SetUniformf("u_Roughness", m_Roughness);
+		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(meshShader)->
+			SetUniformf("u_Metallic", m_Metallic);
 		auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 		//PKEngine::Renderer::Submit(m_SqureVA, meshShader, transform);
 
@@ -203,6 +215,10 @@ private:
 	PKEngine::Ref<PKEngine::Texture2D> m_Texture;
 
 	PKEngine::Ref<PKEngine::Mesh> m_Mesh;
+
+	float m_Roughness = 0.5;
+	float m_Metallic = 0;
+	glm::vec3 m_LightColor = glm::vec3(1.0f);
 };
 
 class Sandbox : public PKEngine::Application {
