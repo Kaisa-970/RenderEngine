@@ -25,6 +25,7 @@ in vec2 o_TexCoord;
 in vec3 o_Normal;
 in vec3 o_WorldPos;
 uniform vec3 u_CameraPos;
+uniform vec3 u_LightPos;
 uniform vec3 u_LightColor;
 uniform sampler2D u_Texture;
 uniform float u_Roughness;
@@ -38,8 +39,7 @@ float GGX(float rough,float dln);
 
 void main()
 {
-	
-	vec3 lightPos = vec3(0,2,0);
+	vec3 lightPos = u_LightPos;
 	vec3 lightColor = u_LightColor * 1.0;//颜色乘光强
 	vec3 normal = normalize(o_Normal);
 	vec3 lightDir = normalize(lightPos-o_WorldPos);
@@ -70,18 +70,18 @@ void main()
 	float kd = 1/PI;
 	vec3 abedo = texture(u_Texture,o_TexCoord).rgb;
 	
-	vec3 diffDirect = kd*abedo*attenuation*lightColor*dln;
+	vec3 diffDirect;// = kd*abedo*attenuation*lightColor*dln;
 
 	float F = Fresnel(dvn);
 	float D = NDF(roughness*roughness,dhn);
-	float G = GGX(roughness,dln)*GGX(roughness,dvn);
+	float G = GGX(roughness*roughness,dln)*GGX(roughness*roughness,dvn);
 	float ks = 1/(4*PI*dln*dvn);
 	vec3 specDirect = ks*F*D*G*(attenuation*lightColor)*dln;
 
 	color = vec4(ambDirect + diffDirect + specDirect,1.0f);
 	//**************************//
 	//color = vec4(o_Normal,1.0f);
-	//color = vec4(0.8,0.8,0.2,1.0f);
+	color = vec4(G,G,G,1.0f);
 };
 
 float Fresnel(float dvn)

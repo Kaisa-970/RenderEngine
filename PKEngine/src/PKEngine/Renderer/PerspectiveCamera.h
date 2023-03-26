@@ -13,6 +13,7 @@ namespace PKEngine {
 
 		void SetRotation(float rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
 		float GetRotation() const { return m_Rotation; }
+		//const glm::vec3& GetForwardDir() const { return m_Position; }
 
 		inline const glm::mat4& GetViewMatrix()const { return m_ViewMatrix; }
 		inline const glm::mat4& GetProjectionMatrix()const { return m_ProjectionMatrix; }
