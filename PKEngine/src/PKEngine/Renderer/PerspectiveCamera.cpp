@@ -17,7 +17,7 @@ namespace PKEngine {
 		//m_ViewMatrix = glm::inverse(transform);
 
 		glm::mat4 transform = glm::lookAt(m_Position,glm::vec3(0), glm::vec3(0.0f,1.0f,0.0f));
-		m_ViewMatrix = transform;
+		m_ViewMatrix = transform; 
 
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
