@@ -14,7 +14,7 @@ void main()
 {
 	o_WorldPos = (u_ModelMat * a_Position).xyz;
 	gl_Position = u_ViewProjectionMat * u_ModelMat * a_Position;
-	o_Normal = a_Normal.xyz*0.5+0.5;
+	o_Normal =  mat3(transpose(inverse(u_ModelMat))) * a_Normal;//(u_ModelMat * vec4(a_Normal,0)).xyz;
 	o_TexCoord = a_Texcoord;
 };
 
@@ -54,7 +54,7 @@ void main()
 	float metallic = u_Metallic;
 
 	float d = length(lightPos-o_WorldPos);
-	float attenuation = 1/(d*d);
+	float attenuation = 1;//1/(d*d);
 	//*******Blinn-phong********//
 	// vec3 envColor = texture(u_Texture,o_TexCoord).rgb * 0.1;
 	// float k = 1/(d*d);
@@ -68,9 +68,9 @@ void main()
 	vec3 ambDirect;
 
 	float kd = 1/PI;
-	vec3 abedo = texture(u_Texture,o_TexCoord).rgb;
+	vec3 abedo = vec3(1.0);//texture(u_Texture,o_TexCoord).rgb;
 	
-	vec3 diffDirect;// = kd*abedo*attenuation*lightColor*dln;
+	vec3 diffDirect = kd*abedo*attenuation*lightColor*dln;
 
 	float F = Fresnel(dvn);
 	float D = NDF(roughness*roughness,dhn);
@@ -81,7 +81,8 @@ void main()
 	color = vec4(ambDirect + diffDirect + specDirect,1.0f);
 	//**************************//
 	//color = vec4(o_Normal,1.0f);
-	color = vec4(G,G,G,1.0f);
+	float value = F;
+	//color = vec4(value,value,value,1.0f);
 };
 
 float Fresnel(float dvn)
