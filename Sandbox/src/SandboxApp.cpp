@@ -119,14 +119,15 @@ public:
 	~ExampleLayer() {}
 	virtual void OnImGuiRender()override {
 		ImGui::Begin("Settings");
+
 		float minData = 0;
 		float maxData = 1;
 		float lminData = 0;
 		float lmaxData = 10;
 		ImGui::ColorEdit3("Light Color", glm::value_ptr(m_LightColor));
-		ImGui::SliderScalar("Light Intensity", ImGuiDataType_Float, &m_LightIntensity, &lminData, &lmaxData);
-		ImGui::SliderScalar("Roughness",ImGuiDataType_Float, &m_Roughness, &minData, &maxData);
-		ImGui::SliderScalar("Metallic", ImGuiDataType_Float, &m_Metallic, &minData, &maxData);
+		ImGui::SliderFloat("Light Intensity", &m_LightIntensity, 0, 10);
+		ImGui::SliderFloat("Roughness", &m_Roughness, 0, 1);
+		ImGui::SliderFloat("Metallic",  &m_Metallic,  0, 1);
 		ImGui::End();
 	}
 
