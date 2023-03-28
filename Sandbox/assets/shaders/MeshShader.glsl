@@ -33,7 +33,7 @@ uniform float u_Metallic;
 
 #define PI 3.14159
 
-float Fresnel(float dvn);
+vec3 Fresnel(vec3 abedo,float metal,float dvn);
 float NDF(float rough2,float dhn);
 float GGX(float rough,float dln);
 
@@ -45,10 +45,10 @@ void main()
 	vec3 lightDir = normalize(lightPos-o_WorldPos);
 	vec3 viewDir = normalize(u_CameraPos-o_WorldPos);
 	vec3 halfVector = normalize(lightDir+viewDir);
-	float dhn = dot(halfVector,normal);
-	float dhv = dot(halfVector,viewDir);
-	float dln = dot(lightDir,normal);
-	float dvn = dot(viewDir,normal);
+	float dhn = max(dot(halfVector,normal),0.0001);
+	float dhv = max(dot(halfVector,viewDir),0.0001);
+	float dln = max(dot(lightDir,normal),0.0001);
+	float dvn = max(dot(viewDir,normal),0.0001);
 
 	float roughness = u_Roughness;
 	float metallic = u_Metallic;
@@ -72,27 +72,29 @@ void main()
 	
 	vec3 diffDirect = kd*abedo*attenuation*lightColor*dln;
 
-	float F = Fresnel(dvn);
+	vec3 F = Fresnel(abedo,metallic,dvn);
 	float D = NDF(roughness*roughness,dhn);
-	float G = GGX(roughness*roughness,dln)*GGX(roughness*roughness,dvn);
+	float G = GGX(roughness,dln)*GGX(roughness,dvn);
 	float ks = 1/(4*PI*dln*dvn);
 	vec3 specDirect = ks*F*D*G*(attenuation*lightColor)*dln;
 
 	color = vec4(ambDirect + diffDirect + specDirect,1.0f);
 	//**************************//
-	//color = vec4(o_Normal,1.0f);
-	float value = F;
+	//color = vec4(F,1.0f);
+	float value = D;
 	//color = vec4(value,value,value,1.0f);
 };
 
-float Fresnel(float dvn)
+vec3 Fresnel(vec3 abedo,float metal,float dvn)
 {
-	float F0 = 0.2;
-	return F0+(1-F0)*pow((1-dvn),5);
+	vec3 F0 = mix(vec3(0.04), abedo, metal);
+	return F0+(vec3(1)-F0)*pow((1-dvn),5);
 }
 
 float NDF(float rough2,float dhn){
-	return rough2/(PI*pow((dhn*dhn*(rough2-1)+1),2));
+	float clmr = clamp(rough2,0.002,1);
+	clmr = clmr*clmr;
+	return clmr/(PI*pow((dhn*dhn*(clmr-1)+1),2));
 }
 
 float GGX(float rough,float dln){
