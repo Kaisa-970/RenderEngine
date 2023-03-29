@@ -46,6 +46,7 @@ namespace PKEngine {
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
+		m_Minimize = false;
 	}
 	
 	Application::~Application() {
@@ -59,8 +60,10 @@ namespace PKEngine {
 			Timestep ts = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			for (Layer* layer : m_LayerStack) {
-				layer->OnUpdate(ts);
+			if (!m_Minimize) {
+				for (Layer* layer : m_LayerStack) {
+					layer->OnUpdate(ts);
+				}
 			}
 
 			m_ImGuiLayer->Begin();
@@ -76,6 +79,7 @@ namespace PKEngine {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
 			(*--it)->OnEvent(e);
@@ -101,5 +105,15 @@ namespace PKEngine {
 	{
 		m_Running = false;
 		return true;
+	}
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0) {
+			m_Minimize = true;
+		}
+		m_Minimize = false;
+
+		Renderer::SetViewport(e.GetWidth(), e.GetHeight());
+		return false;
 	}
 }

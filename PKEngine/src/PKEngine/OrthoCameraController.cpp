@@ -5,7 +5,7 @@
 
 namespace PKEngine {
 	OrthoCameraController::OrthoCameraController(float aspect,bool brot)
-		:m_Aspect(aspect),m_Camera(-aspect*m_ZoomLevel, aspect * m_ZoomLevel,-m_ZoomLevel,m_ZoomLevel),m_CanRot(brot)
+		:m_AspectRatio(aspect),m_Camera(-aspect*m_ZoomLevel, aspect * m_ZoomLevel,-m_ZoomLevel,m_ZoomLevel),m_CanRot(brot)
 	{
 
 	}
@@ -54,13 +54,16 @@ namespace PKEngine {
 
 		m_ZoomLevel -= e.GetYOffset() * 0.25f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.15f);
-		m_Camera.SetProjectionMatrix(-m_Aspect * m_ZoomLevel, m_Aspect * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		m_Camera.SetProjectionMatrix(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;
 	}
 	bool OrthoCameraController::OnWindowResize(WindowResizeEvent& e)
 	{
-		m_Aspect = e.GetWidth() * 1.0f / (e.GetHeight() * 1.0f);
-		m_Camera.SetProjectionMatrix(-m_Aspect * m_ZoomLevel, m_Aspect * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		m_AspectRatio = e.GetWidth() * 1.0f / (e.GetHeight() * 1.0f);
+		//float sw = e.GetWidth() / 1280.0f;
+		float sh = e.GetHeight() / 720.0f;
+		float tmpZoom = m_ZoomLevel * sh;
+		m_Camera.SetProjectionMatrix(-m_AspectRatio * tmpZoom, m_AspectRatio * tmpZoom, -tmpZoom, tmpZoom);
 		return false;
 	}
 }

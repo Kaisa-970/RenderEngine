@@ -22,7 +22,7 @@ namespace PKEngine {
 		bool OnMouseScroll(MouseScrolledEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
-		float m_Aspect;
+		float m_AspectRatio;
 		float m_ZoomLevel = 1.0f;
 		OrthographicCamera m_Camera;
 		bool m_CanRot;
