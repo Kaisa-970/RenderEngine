@@ -1,15 +1,18 @@
 #include <PKEngine.h>
+#include <PKEngine/Core/EntryPoint.h>
 #include <imgui.h>
-#include <glm/gtx/transform.hpp>
 #include <Platform/OpenGL/OpenGLShader.h>
+#include <glm/gtx/transform.hpp>
 #include "glm/gtc/type_ptr.hpp"
+
+#include "SandBox2D.h"
 
 class ExampleLayer : public PKEngine::Layer {
 public:
 	ExampleLayer() : m_CameraController(1280.0f/720.0f) , m_SqureColor(0.0f)
 	{
 		//m_ShaderLibrary = new PKEngine::ShaderLibrary();
-		m_VertexArray.reset(PKEngine::VertexArray::Create());
+		m_VertexArray = PKEngine::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f,0.0f,1.0f,1.0f,
@@ -38,7 +41,7 @@ public:
 
 
 
-		m_SqureVA.reset(PKEngine::VertexArray::Create());
+		m_SqureVA = PKEngine::VertexArray::Create();
 
 		float squreVertices[] = {
 	-0.5f, -0.5f, 0.0f, 0.0f,0.0f,
@@ -191,8 +194,9 @@ private:
 class Sandbox : public PKEngine::Application {
 public:
 	Sandbox() {
-		//PushOverlay(new PKEngine::ImGuiLayer());
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+
+		PushLayer(new SandBox2D());
 	}
 
 	~Sandbox() {

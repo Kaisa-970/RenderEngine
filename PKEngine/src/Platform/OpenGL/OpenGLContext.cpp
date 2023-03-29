@@ -3,7 +3,7 @@
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include <PKEngine/Core.h>
+#include <PKEngine/Core/Core.h>
 
 namespace PKEngine {
 	OpenGLContext::OpenGLContext(GLFWwindow* windowhandle):m_WindowHandle(windowhandle)

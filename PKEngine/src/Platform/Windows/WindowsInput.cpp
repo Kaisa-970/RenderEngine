@@ -1,7 +1,7 @@
 #include "pkpch.h"
 #include "WindowsInput.h"
 
-#include "PKEngine/Application.h"
+#include "PKEngine/COre/Application.h"
 #include <GLFW/glfw3.h>
 namespace PKEngine {
 	Input* Input::s_Instance = new WindowsInput();

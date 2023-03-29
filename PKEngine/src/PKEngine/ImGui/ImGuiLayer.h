@@ -1,6 +1,6 @@
 #pragma once
-#include "../Layer.h"
-#include "PKEngine/Core.h"
+#include "PKEngine/Core/Layer.h"
+#include "PKEngine/Core/Core.h"
 #include <PKEngine/Events/MouseEvent.h>
 #include <PKEngine/Events/KeyEvent.h>
 #include "PKEngine/Events/ApplicationEvent.h"

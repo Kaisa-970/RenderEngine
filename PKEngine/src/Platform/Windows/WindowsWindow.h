@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PKEngine/Window.h"
+#include "PKEngine/Core/Window.h"
 
 #include "GLFW/glfw3.h"
 #include "PKEngine/Renderer/GraphicsContext.h"

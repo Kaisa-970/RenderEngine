@@ -1,17 +1,17 @@
 #pragma once
 
 // For use by PKEngine applications
-#include "PKEngine/Application.h"
-#include "PKEngine/Layer.h"
-#include "PKEngine/Log.h"
+#include "PKEngine/Core/Application.h"
+#include "PKEngine/Core/Layer.h"
+#include "PKEngine/Core/Log.h"
 
 #include "PKEngine/Core/Timestep.h"
 
-#include "PKEngine/Input.h"
-#include "PKEngine/KeyCodes.h"
-#include "PKEngine/MouseButtonCodes.h"
+#include "PKEngine/Core/Input.h"
+#include "PKEngine/Core/KeyCodes.h"
+#include "PKEngine/Core/MouseButtonCodes.h"
 
-#include "PKEngine/OrthoCameraController.h"
+#include "PKEngine/Renderer/OrthoCameraController.h"
 
 #include "PKEngine/ImGui/ImGuiLayer.h"
 
@@ -25,8 +25,4 @@
 #include "PKEngine/Renderer/Texture.h"
 
 #include "PKEngine/Renderer/OrthographicCamera.h"
-// ---------------------------------
-
-// ---Entry Point-------------------
-#include "PKEngine/EntryPoint.h"
 // ---------------------------------

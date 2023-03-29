@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core.h"
+#include "PKEngine/Core/Core.h"
 
 
 namespace PKEngine {

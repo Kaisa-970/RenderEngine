@@ -1,6 +1,6 @@
 #pragma once
 #include "pkpch.h"
-#include "PKEngine/Core.h"
+#include "PKEngine/Core/Core.h"
 #include "PKEngine/Events/Event.h"
 
 namespace PKEngine {

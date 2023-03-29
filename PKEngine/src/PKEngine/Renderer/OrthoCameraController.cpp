@@ -1,7 +1,7 @@
 #include "pkpch.h"
 #include "OrthoCameraController.h"
-#include "PKEngine/Input.h"
-#include "PKEngine/KeyCodes.h"
+#include "PKEngine/Core/Input.h"
+#include "PKEngine/Core/KeyCodes.h"
 
 namespace PKEngine {
 	OrthoCameraController::OrthoCameraController(float aspect,bool brot)

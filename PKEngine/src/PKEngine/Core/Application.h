@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core.h"
-#include <PKEngine/Window.h>
+#include <PKEngine/Core/Window.h>
 #include "PKEngine/Events/ApplicationEvent.h"
-#include "PKEngine/LayerStack.h"
+#include "PKEngine/Core/LayerStack.h"
 
 #include "PKEngine/ImGui/ImGuiLayer.h"
 #include <PKEngine/Renderer/Shader.h>
@@ -11,7 +11,7 @@
 
 #include "PKEngine/Renderer/VertexArray.h"
 
-#include "Renderer/OrthographicCamera.h"
+#include "PKEngine/Renderer/OrthographicCamera.h"
 
 
 namespace PKEngine {
