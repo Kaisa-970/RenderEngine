@@ -6,7 +6,7 @@
 
 class ExampleLayer : public PKEngine::Layer {
 public:
-	ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) , m_CameraPosition(0.0f), m_SqureColor(0.0f)
+	ExampleLayer() : m_CameraController(1280.0f/720.0f) , m_SqureColor(0.0f)
 	{
 		//m_ShaderLibrary = new PKEngine::ShaderLibrary();
 		m_VertexArray.reset(PKEngine::VertexArray::Create());
@@ -130,36 +130,19 @@ public:
 	virtual void OnUpdate(PKEngine::Timestep ts) override {
 		//PK_TRACE("Delta time:{0}s ({1}ms)", ts.GetSeconds(), ts.GetMillionSeconds());
 		float deltaTime = ts;
-		if (PKEngine::Input::IsKeyPressed(PK_KEY_W)) {
-			m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
-		}
-		else if (PKEngine::Input::IsKeyPressed(PK_KEY_S)) {
-			m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
-		}
 
-		if (PKEngine::Input::IsKeyPressed(PK_KEY_A)) {
-			m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
-		}
-		else if (PKEngine::Input::IsKeyPressed(PK_KEY_D)) {
-			m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
-		}
-
-		if (PKEngine::Input::IsMouseButtonPressed(0)) {
-			m_CameraRotation -= deltaTime * m_CameraRotateSpeed;
-		}
-		else if (PKEngine::Input::IsMouseButtonPressed(1)) {
-			m_CameraRotation += deltaTime * m_CameraRotateSpeed;
-		}
+		//update
+		m_CameraController.Update(ts);
 
 
+		//render
 		PKEngine::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		PKEngine::RenderCommand::Clear();
-		PKEngine::Renderer::BeginScene(m_Camera);
+		PKEngine::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		m_SqureShader->Bind();
 		std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform3f("u_Color", m_SqureColor);
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
+
 		//auto scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		//for (int i = 0; i < 20; i++) {
 		//	for (int j = 0; j < 20; j++)
@@ -181,21 +164,11 @@ public:
 	virtual void OnEvent(PKEngine::Event& e) override {
 		//PKEngine::EventDispatcher dispatcher(e);
 		//dispatcher.Dispatch<PKEngine::KeyPressedEvent>(PK_BIND_EVENT_FN(ExampleLayer::OnKeyPressed));
+		m_CameraController.OnEvent(e);
 	}
 
 	bool OnKeyPressed(PKEngine::KeyPressedEvent& e) {
-		if (e.GetKeyCode() == PK_KEY_W) {
-			m_CameraPosition.y += m_CameraMoveSpeed;
-		}
-		else if (e.GetKeyCode() == PK_KEY_S) {
-			m_CameraPosition.y -= m_CameraMoveSpeed;
-		}
-		else if (e.GetKeyCode() == PK_KEY_A) {
-			m_CameraPosition.x -= m_CameraMoveSpeed;
-		}
-		else if (e.GetKeyCode() == PK_KEY_D) {
-			m_CameraPosition.x += m_CameraMoveSpeed;
-		}
+
 		return false;
 	}
 
@@ -210,12 +183,7 @@ private:
 
 	PKEngine::ShaderLibrary m_ShaderLibrary;
 
-	PKEngine::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed = 1.0f;
-
-	float m_CameraRotation = 0.0f;
-	float m_CameraRotateSpeed = 120.0f;
+	PKEngine::OrthoCameraController m_CameraController;
 
 	PKEngine::Ref<PKEngine::Texture2D> m_Texture;
 };
