@@ -4,6 +4,7 @@
 #include <glm/gtx/transform.hpp>
 #include "glm/gtc/type_ptr.hpp"
 
+
 SandBox2D::SandBox2D()
 	:Layer("SandBox2D"),m_CameraController(1280.0f / 720.0f), m_SqureColor(1.0f)
 {
@@ -38,8 +39,9 @@ void SandBox2D::OnAttach()
 	squreIB.reset(PKEngine::IndexBuffer::Create(squreIndices, sizeof(squreIndices) / sizeof(uint32_t)));
 	m_SqureVA->SetIndexBuffer(squreIB);
 
-
 	m_SqureShader = PKEngine::Shader::Create("assets/shaders/squareShader.glsl");
+
+	m_Texture = PKEngine::Texture2D::Create("assets/textures/emotion1.png");
 }
 
 void SandBox2D::OnDetach()
@@ -51,24 +53,37 @@ void SandBox2D::OnUpdate(PKEngine::Timestep ts)
 	//update
 	m_CameraController.Update(ts);
 
+	//rotate vector by this
+	//glm::quat rrot = glm::angleAxis(glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//glm::quat quat(0,glm::vec3(1.0f,0.0f,0.0f));
+	//auto m = glm::vec4(1.0f,0.0f,0,0) * rrot;
+	//PK_INFO("({0},{1},{2})", m.x, m.y, m.z);
 
 	//render
 	PKEngine::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	PKEngine::RenderCommand::Clear();
-	PKEngine::Renderer::BeginScene(m_CameraController.GetCamera());
+	PKEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-	m_SqureShader->Bind();
-	std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform4f("u_Color", m_SqureColor);
+	PKEngine::Renderer2D::DrawQuad(glm::vec2(0.0f,0.0f), glm::vec2(1.0f,1.0f), glm::vec4(1.0f));
+	PKEngine::Renderer2D::DrawQuad(glm::vec2(1.0f,1.0f), glm::vec2(0.5f,0.5f), glm::vec4(0.8f,0.3f,0.2f,1.0f));
+	PKEngine::Renderer2D::DrawQuad(glm::vec3(1.0f,1.0f,-0.1f), glm::vec2(10.0f,10.0f), m_Texture);
 
-	auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-	PKEngine::Renderer::Submit(m_SqureVA, m_SqureShader, transform);
+	PKEngine::Renderer2D::EndScene();
 
-	PKEngine::Renderer::EndScene();
+
+
+	//m_SqureShader->Bind();
+//std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform4f("u_Color", m_SqureColor);
+
+//auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+//PKEngine::Renderer::Submit(m_SqureVA, m_SqureShader, transform);
+
 }
 
 void SandBox2D::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
+	
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
 	ImGui::End();
 }

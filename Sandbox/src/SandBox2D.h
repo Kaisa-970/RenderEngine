@@ -17,6 +17,7 @@ private:
 	PKEngine::Ref<PKEngine::VertexArray> m_SqureVA;
 	PKEngine::Ref<PKEngine::Shader> m_SqureShader;
 	glm::vec4 m_SqureColor;
+	PKEngine::Ref<PKEngine::Texture2D> m_Texture;
 
 	//PKEngine::ShaderLibrary m_ShaderLibrary;
 

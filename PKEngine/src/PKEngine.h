@@ -17,6 +17,7 @@
 
 // ---Renderer-------------------
 #include "PKEngine/Renderer/Renderer.h"
+#include "PKEngine/Renderer/Renderer2D.h"
 #include "PKEngine/Renderer/RenderCommand.h"
 
 #include "PKEngine/Renderer/Buffer.h"

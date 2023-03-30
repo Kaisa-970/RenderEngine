@@ -16,6 +16,11 @@ namespace PKEngine {
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
+		virtual void SetInt(const std::string& name, int val) override;
+		virtual void SetFloat3(const std::string& name,const glm::vec3& val) override;
+		virtual void SetFloat4(const std::string& name,const glm::vec4& val) override;
+		virtual void SetMat4(const std::string& name,const glm::mat4& val) override;
+
 		virtual std::string GetName() const override { return m_Name; };
 
 		void SetUniformi(const std::string& name, int value);
