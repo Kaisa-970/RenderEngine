@@ -37,7 +37,11 @@ namespace PKEngine {
 	Application::Application()
 	{
 		PK_CORE_ASSERT(!s_Instance, "Application is already exist!");
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		WindowProps wp;
+		wp.Title = "PKEngine";
+		wp.Width = 1920;
+		wp.Height = 1080;
+		m_Window = std::unique_ptr<Window>(Window::Create(wp));
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 		s_Instance = this;
 		

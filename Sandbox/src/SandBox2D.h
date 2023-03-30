@@ -19,6 +19,13 @@ private:
 	glm::vec4 m_SqureColor;
 	PKEngine::Ref<PKEngine::Texture2D> m_Texture;
 
+	struct ProfileResult {
+		const char* name;
+		float time;
+	};
+
+	std::vector<ProfileResult> m_ProfileResults;
+
 	//PKEngine::ShaderLibrary m_ShaderLibrary;
 
 	PKEngine::OrthoCameraController m_CameraController;

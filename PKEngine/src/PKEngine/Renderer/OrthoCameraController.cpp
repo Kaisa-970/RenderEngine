@@ -61,7 +61,7 @@ namespace PKEngine {
 	{
 		m_AspectRatio = e.GetWidth() * 1.0f / (e.GetHeight() * 1.0f);
 		//float sw = e.GetWidth() / 1280.0f;
-		float sh = e.GetHeight() / 720.0f;
+		float sh = e.GetHeight() / 1080.0f;
 		float tmpZoom = m_ZoomLevel * sh;
 		m_Camera.SetProjectionMatrix(-m_AspectRatio * tmpZoom, m_AspectRatio * tmpZoom, -tmpZoom, tmpZoom);
 		return false;

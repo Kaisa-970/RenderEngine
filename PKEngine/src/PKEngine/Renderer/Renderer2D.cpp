@@ -60,9 +60,9 @@ namespace PKEngine {
 	}
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{	
+		
 		s_RenderData->TextureShader->Bind();
 		s_RenderData->TextureShader->SetMat4("u_ViewProjectionMat", camera.GetViewProjectionMatrix());
-
 	}
 
 	void Renderer2D::EndScene()
