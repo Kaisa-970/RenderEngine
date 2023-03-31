@@ -6,19 +6,18 @@
 
 int main(int argc,char** argv) {
 	PKEngine::Log::Init();
-	PK_CORE_WARN("Initialized!");
-	PK_INFO("Hello!Var = {0}",5);
 
-	//if (!glfwInit()) {
-	//	return -1;
-	//}
-	//auto window = glfwCreateWindow(1280, 760, "Window", NULL,NULL);
-
-	
-
+	PK_PROFILE_BEGIN_SESSION("Startup", "PKEngineProfile-Startup.json");
 	auto* app = PKEngine::CreateApplication();
+	PK_PROFILE_END_SESSION();
+
+	PK_PROFILE_BEGIN_SESSION("Startup", "PKEngineProfile-Runtime.json");
 	app->Run();
+	PK_PROFILE_END_SESSION();
+
+	PK_PROFILE_BEGIN_SESSION("Startup", "PKEngineProfile-Shutdown.json");
 	delete app;
+	PK_PROFILE_END_SESSION();
 }
 
 #endif // PK_PLATFORM_WINDOWS

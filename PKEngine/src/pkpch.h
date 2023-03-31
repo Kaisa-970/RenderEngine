@@ -18,3 +18,5 @@
 #endif // PK_PLATFORM_WINDOWS
 
 #include "PKEngine/Core/Log.h"
+
+#include "PKEngine/Debug/Instrumentator.h"
