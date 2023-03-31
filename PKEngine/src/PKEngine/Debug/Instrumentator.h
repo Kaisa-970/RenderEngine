@@ -203,6 +203,7 @@ namespace PKEngine {
 }
 
 #define PK_PROFILE 1
+
 #if PK_PROFILE
 #define PK_PROFILE_BEGIN_SESSION(name,filepath)	::PKEngine::Instrumentor::Get().BeginSession(name,filepath)
 #define PK_PROFILE_END_SESSION()	::PKEngine::Instrumentor::Get().EndSession()

@@ -177,6 +177,11 @@ namespace PKEngine {
 		SetUniformi(name, val);
 	}
 
+	void OpenGLShader::SetFloat(const std::string& name, float val)
+	{
+		SetUniformf(name, val);
+	}
+
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& val)
 	{
 		SetUniform3f(name, val);
