@@ -65,26 +65,45 @@ void SandBox2D::OnUpdate(PKEngine::Timestep ts)
 	//auto m = glm::vec4(1.0f,0.0f,0,0) * rrot;
 	//PK_INFO("({0},{1},{2})", m.x, m.y, m.z);
 
+	PKEngine::Renderer2D::ResetStats();
+
+	static float rotation = 0;
+	rotation += ts * 20.0f;
 	//render
 	{
 		PK_PROFILE_FUNCTION();
 		PKEngine::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		PKEngine::RenderCommand::Clear();
-		PKEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
 	}
 
 	{
 		PK_PROFILE_FUNCTION();
+		PKEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
 		PKEngine::Renderer2D::DrawQuad(glm::vec2(0.0f,0.0f), glm::vec2(1.0f,1.0f), glm::vec4(1.0f));
-		PKEngine::Renderer2D::DrawQuad(glm::vec2(-1.5,0.0f), glm::vec2(0.5f,0.5f), glm::vec4(0.8f,0.3f,0.2f,1.0f));
-		//PKEngine::Renderer2D::DrawQuad(glm::vec3(1.0f,1.0f,-0.1f), glm::vec2(10.0f,10.0f), m_Texture,10);
+		PKEngine::Renderer2D::DrawQuad(glm::vec2(-1.5,0.0f), glm::vec2(1.0f,0.5f), glm::vec4(0.8f,0.3f,0.2f,1.0f));
+		PKEngine::Renderer2D::DrawQuad(glm::vec3(0.0f,0.0f,-0.2f), glm::vec2(10.0f,10.0f), m_Texture,1);
 
 		//PKEngine::Renderer2D::DrawRotateQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec4(1.0f));
-		//PKEngine::Renderer2D::DrawRotateQuad(glm::vec2(1.0f, 1.0f), glm::vec2(0.5f, 0.5f), 45.0f, glm::vec4(0.8f, 0.3f, 0.2f, 1.0f));
-		////for(int i=0;i<10000;i++)
-		//PKEngine::Renderer2D::DrawRotateQuad(glm::vec3(1.0f, 1.0f, -0.1f), glm::vec2(10.0f, 10.0f), 60.0f, m_Texture, 10,glm::vec4(0.6f,0.3f,0.2f,0.8f));
+		PKEngine::Renderer2D::DrawRotateQuad(glm::vec2(1.0f, 1.0f), glm::vec2(0.5f, 0.5f), rotation, glm::vec4(0.8f, 0.3f, 0.2f, 1.0f));
+		//for(int i=0;i<9990;i++)
+		PKEngine::Renderer2D::DrawRotateQuad(glm::vec3(1.0f, 1.0f, -0.1f), glm::vec2(10.0f, 10.0f), rotation, m_Texture, 10,glm::vec4(0.6f,0.3f,0.2f,0.8f));
+
+		PKEngine::Renderer2D::EndScene();
 	}
-	PKEngine::Renderer2D::EndScene();
+
+	{
+		PKEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		for (float x = -5.0f; x < 5.0f; x+=0.5f)
+		{
+			for (float y = -5.0f; y < 5.0f; y += 0.5f)
+			{
+				glm::vec4 color = { (x + 5.0f) / 10.0f,0.4f,(y + 5.0f) / 10.0f ,1.0f };
+				PKEngine::Renderer2D::DrawQuad(glm::vec2(x, y), glm::vec2(0.45f), color);
+			}
+		}
+		PKEngine::Renderer2D::EndScene();
+	}
 
 	//m_SqureShader->Bind();
 //std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform4f("u_Color", m_SqureColor);
@@ -97,6 +116,12 @@ void SandBox2D::OnUpdate(PKEngine::Timestep ts)
 void SandBox2D::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
+	auto stats = PKEngine::Renderer2D::GetStats();
+	ImGui::Text("Renderer Stats:");
+	ImGui::Text("Draw Calls: %d",stats.DrawCalls);
+	ImGui::Text("Quads: %d", stats.QuadCount);
+	ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
+	ImGui::Text("Index Calls: %d", stats.GetIndexCount());
 	
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
 

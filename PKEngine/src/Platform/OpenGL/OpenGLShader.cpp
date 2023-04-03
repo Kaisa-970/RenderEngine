@@ -177,6 +177,11 @@ namespace PKEngine {
 		SetUniformi(name, val);
 	}
 
+	void OpenGLShader::SetIntArray(const std::string& name, const int* val, uint32_t count)
+	{
+		SetUniformiv(name, val, count);
+	}
+
 	void OpenGLShader::SetFloat(const std::string& name, float val)
 	{
 		SetUniformf(name, val);
@@ -201,6 +206,12 @@ namespace PKEngine {
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::SetUniformiv(const std::string& name, const int* value, uint32_t count)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1iv(location,count, value);
 	}
 
 	void OpenGLShader::SetUniform2i(const std::string& name, const glm::ivec2& value)
