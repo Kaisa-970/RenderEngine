@@ -25,6 +25,7 @@ namespace PKEngine {
 		static inline Application& Get() { return *s_Instance; }
 
 		void Run();
+		virtual void Close();
 
 		void OnEvent(Event& e);
 

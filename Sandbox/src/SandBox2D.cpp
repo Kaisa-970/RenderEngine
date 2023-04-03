@@ -115,18 +115,90 @@ void SandBox2D::OnUpdate(PKEngine::Timestep ts)
 
 void SandBox2D::OnImGuiRender()
 {
-	ImGui::Begin("Settings");
+	//ImGui::Begin("Settings");
+	//auto stats = PKEngine::Renderer2D::GetStats();
+	//ImGui::Text("Renderer Stats:");
+	//ImGui::Text("Draw Calls: %d",stats.DrawCalls);
+	//ImGui::Text("Quads: %d", stats.QuadCount);
+	//ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
+	//ImGui::Text("Index Calls: %d", stats.GetIndexCount());
+	//
+	//ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
+	//
+	//ImGui::End();
+
+
+	static bool opt_fullscreen = true;
+	static bool opt_padding = false;
+	static bool p_open = true;
+	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	if (opt_fullscreen)
+	{
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->WorkPos);
+		ImGui::SetNextWindowSize(viewport->WorkSize);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	}
+	else
+	{
+		dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
+	}
+
+	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+		window_flags |= ImGuiWindowFlags_NoBackground;
+
+	if (!opt_padding)
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("Settings", &p_open, window_flags);
+	if (!opt_padding)
+		ImGui::PopStyleVar();
+
+	if (opt_fullscreen)
+		ImGui::PopStyleVar(2);
+
+	// Submit the DockSpace
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+	{
+		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+	}
+
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Files"))
+		{
+
+			if (ImGui::MenuItem("Close", NULL, false, p_open != NULL))
+			{
+				PKEngine::Application::Get().Close();
+				p_open = false;
+
+			}
+			ImGui::EndMenu();
+		}
+
+
+		ImGui::EndMenuBar();
+	}
+
 	auto stats = PKEngine::Renderer2D::GetStats();
 	ImGui::Text("Renderer Stats:");
-	ImGui::Text("Draw Calls: %d",stats.DrawCalls);
+	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
 	ImGui::Text("Quads: %d", stats.QuadCount);
 	ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
 	ImGui::Text("Index Calls: %d", stats.GetIndexCount());
-	
+
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
 
 	ImGui::End();
-
 }
 
 void SandBox2D::OnEvent(PKEngine::Event& e)

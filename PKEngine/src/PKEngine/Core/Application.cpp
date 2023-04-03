@@ -79,6 +79,10 @@ namespace PKEngine {
 			m_Window->OnUpdate();
 		}
 	}
+	void Application::Close()
+	{
+		m_Running = false;
+	}
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
