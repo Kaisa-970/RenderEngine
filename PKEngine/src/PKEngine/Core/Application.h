@@ -18,8 +18,8 @@ namespace PKEngine {
 	class PKENGINE_API Application
 	{
 	public:
-		Application();
-
+		//Application() = default;
+		Application(const std::string& name = "PKEngine",uint32_t width = 1920,uint32_t height = 1080);
 		virtual ~Application();
 
 		static inline Application& Get() { return *s_Instance; }

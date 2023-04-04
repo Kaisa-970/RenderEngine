@@ -17,9 +17,11 @@ IncludeDir["imgui"] = "PKEngine/vendor/imgui"
 IncludeDir["glm"] = "PKEngine/vendor/glm"
 IncludeDir["stb_image"] = "PKEngine/vendor/stb_image"
 
-include "PKEngine/vendor/GLFW"
-include "PKEngine/vendor/Glad"
-include "PKEngine/vendor/imgui"
+group "Dependency"
+	include "PKEngine/vendor/GLFW"
+	include "PKEngine/vendor/Glad"
+	include "PKEngine/vendor/imgui"
+group ""
 
 project "PKEngine"
 	location "PKEngine"
@@ -106,7 +108,56 @@ project "Sandbox"
 		"%{IncludeDir.glm}"
 	}
 
+	links{
+		"PKEngine"
+	}
 
+	filter "system:windows"
+		systemversion "latest"
+
+		defines{
+			"PK_PLATFORM_WINDOWS"
+		}
+
+		filter "configurations:Debug"
+			defines "PK_DEBUG"
+			runtime "Debug"
+			symbols "On"
+
+		filter "configurations:Release"
+			defines "PK_RELEASE"
+			runtime "Release"
+			optimize "On"
+
+		filter "configurations:Dist"
+			defines "PK_DIST"
+			runtime "Release"
+			optimize "On"
+
+
+
+project "PK-Editor"
+	location "PK-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/"..outputdir.."/%{prj.name}")
+	objdir ("bin-int/"..outputdir.."/%{prj.name}")
+
+	files{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs{
+		"PKEngine/vendor/spdlog/include",
+		"PKEngine/vendor/GLFW/include",
+		"PKEngine/src",
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.glm}"
+	}
 
 	links{
 		"PKEngine"
