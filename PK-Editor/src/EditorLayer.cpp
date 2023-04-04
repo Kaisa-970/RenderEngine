@@ -188,6 +188,7 @@ namespace PKEngine {
 			ImGui::EndMenuBar();
 		}
 
+		// setting panel
 		ImGui::Begin("Settings");
 		auto stats = PKEngine::Renderer2D::GetStats();
 		ImGui::Text("Renderer Stats:");
@@ -195,11 +196,24 @@ namespace PKEngine {
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
 		ImGui::Text("Index Calls: %d", stats.GetIndexCount());
-
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
-		//ImGui::Image((void*)m_Texture->GetRenderID(), { 64,64 });
-		ImGui::Image((void*)m_FrameBuffer->GetColorAttachmentID(), { 1280,720 }, { 0,1 }, {1,0});
 		ImGui::End();
+
+		// viewport
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0});
+		ImGui::Begin("Viewport");
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		if (m_ViewportSize != *(glm::vec2*)&size)
+		{
+			m_ViewportSize.x = size.x;
+			m_ViewportSize.y = size.y;
+
+			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		}
+		//PK_WARN("Viewport Size:{0},{1}", size.x, size.y);
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
+		ImGui::Image((void*)m_FrameBuffer->GetColorAttachmentID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0,1 }, { 1,0 });
+		ImGui::End();
+		ImGui::PopStyleVar();
 
 		ImGui::End();
 	}

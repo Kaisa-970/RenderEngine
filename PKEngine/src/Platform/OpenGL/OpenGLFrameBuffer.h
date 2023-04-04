@@ -12,6 +12,9 @@ namespace PKEngine
 
 		virtual void Bind() override;
 		virtual void Unbind() override;
+
+		virtual void Resize(uint32_t width, uint32_t height) override;
+
 		virtual uint32_t GetColorAttachmentID() const { return m_ColorAttachment; };
 
 		virtual const FrameBufferParams& GetFrameBufferParams() const override { return m_FrameBufferParams; }
@@ -19,10 +22,10 @@ namespace PKEngine
 		void Resize();
 
 	private:
-		uint32_t m_RendererID;
+		uint32_t m_RendererID = 0;
 		FrameBufferParams m_FrameBufferParams;
-		uint32_t m_ColorAttachment;
-		uint32_t m_DepthAttachment;
+		uint32_t m_ColorAttachment = 0;
+		uint32_t m_DepthAttachment = 0;
 	};
 
 }

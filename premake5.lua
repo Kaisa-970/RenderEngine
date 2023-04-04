@@ -1,5 +1,6 @@
 workspace "PKEngine"
 	architecture "x64"
+	startproject "PK-Editor"
 
 	configurations
 	{

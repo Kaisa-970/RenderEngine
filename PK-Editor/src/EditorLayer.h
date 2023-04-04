@@ -20,6 +20,7 @@ namespace PKEngine{
 		glm::vec4 m_SqureColor;
 		Ref<Texture2D> m_Texture;
 		Ref<FrameBuffer> m_FrameBuffer;
+		glm::vec2 m_ViewportSize;
 
 		OrthoCameraController m_CameraController;
 	};
