@@ -15,6 +15,8 @@ namespace PKEngine {
 
 		void SetData(void* data, uint32_t size) override;
 
+		virtual uint32_t GetRenderID() const override { return m_RendererID; }
+
 		virtual void Bind(uint32_t slot = 0) const override;
 		virtual bool operator==(const Texture& otherTexture) const override
 		{

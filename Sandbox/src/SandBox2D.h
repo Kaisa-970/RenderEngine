@@ -18,6 +18,7 @@ private:
 	PKEngine::Ref<PKEngine::Shader> m_SqureShader;
 	glm::vec4 m_SqureColor;
 	PKEngine::Ref<PKEngine::Texture2D> m_Texture;
+	PKEngine::Ref<PKEngine::FrameBuffer> m_FrameBuffer;
 
 	PKEngine::OrthoCameraController m_CameraController;
 };

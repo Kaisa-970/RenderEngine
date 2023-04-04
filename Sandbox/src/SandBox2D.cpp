@@ -43,6 +43,11 @@ void SandBox2D::OnAttach()
 	m_SqureShader = PKEngine::Shader::Create("assets/shaders/squareShader.glsl");
 
 	m_Texture = PKEngine::Texture2D::Create("assets/textures/emotion1.png");
+
+	PKEngine::FrameBufferParams fbs;
+	fbs.Width = 1920;
+	fbs.Height = 1080;
+	m_FrameBuffer = PKEngine::FrameBuffer::Create(fbs);
 }
 
 void SandBox2D::OnDetach()
@@ -69,6 +74,8 @@ void SandBox2D::OnUpdate(PKEngine::Timestep ts)
 
 	static float rotation = 0;
 	rotation += ts * 20.0f;
+
+	m_FrameBuffer->Bind();
 	//render
 	{
 		PK_PROFILE_FUNCTION();
@@ -104,7 +111,7 @@ void SandBox2D::OnUpdate(PKEngine::Timestep ts)
 		}
 		PKEngine::Renderer2D::EndScene();
 	}
-
+	m_FrameBuffer->Unbind();
 	//m_SqureShader->Bind();
 //std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform4f("u_Color", m_SqureColor);
 
@@ -131,7 +138,7 @@ void SandBox2D::OnImGuiRender()
 	static bool opt_fullscreen = true;
 	static bool opt_padding = false;
 	static bool p_open = true;
-	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+	static ImGuiDockNodeFlags dockspace_flags =  ImGuiDockNodeFlags_None;
 
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 	if (opt_fullscreen)
@@ -155,7 +162,7 @@ void SandBox2D::OnImGuiRender()
 
 	if (!opt_padding)
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("Settings", &p_open, window_flags);
+	ImGui::Begin("Editor", &p_open, window_flags);
 	if (!opt_padding)
 		ImGui::PopStyleVar();
 
@@ -189,6 +196,7 @@ void SandBox2D::OnImGuiRender()
 		ImGui::EndMenuBar();
 	}
 
+	ImGui::Begin("Settings");
 	auto stats = PKEngine::Renderer2D::GetStats();
 	ImGui::Text("Renderer Stats:");
 	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
@@ -197,6 +205,9 @@ void SandBox2D::OnImGuiRender()
 	ImGui::Text("Index Calls: %d", stats.GetIndexCount());
 
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
+	//ImGui::Image((void*)m_Texture->GetRenderID(), { 64,64 });
+	ImGui::Image((void*)m_FrameBuffer->GetColorAttachmentID(), { 1280,720 });
+	ImGui::End();
 
 	ImGui::End();
 }
