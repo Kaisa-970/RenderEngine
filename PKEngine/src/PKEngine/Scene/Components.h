@@ -1,0 +1,32 @@
+#pragma once
+#include "glm/glm.hpp"
+#include <glm/gtx/transform.hpp>
+
+struct TransformComponent
+{
+	glm::vec3 Position;
+	glm::vec3 Rotation;
+	glm::vec3 Scale;
+
+	glm::mat4 GetMatrix()
+	{
+		return glm::translate(glm::mat4(1.0f),Position);
+	}
+
+	TransformComponent() = default;
+	TransformComponent(const TransformComponent& other) = default;
+	TransformComponent(const glm::vec3& pos = glm::vec3(0.0f), const glm::vec3& rot = glm::vec3(0.0f),const glm::vec3& scale = glm::vec3(1.0f))
+		:Position(pos),Rotation(rot),Scale(scale)
+	{}
+};
+
+struct SpriteComponent
+{
+	glm::vec4 Color;
+
+	SpriteComponent() = default;
+	SpriteComponent(const SpriteComponent& other) = default;
+	SpriteComponent(const glm::vec4& col = glm::vec4(1.0f))
+		:Color(col)
+	{}
+};

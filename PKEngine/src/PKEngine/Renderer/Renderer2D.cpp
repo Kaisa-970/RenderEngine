@@ -157,49 +157,11 @@ namespace PKEngine {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		if (s_RenderData.QuadIndexCount >= Renderer2DStorage::MaxIndices)
-		{
-			FlushAndReset();
-		}
-
-		float textureID = 0.0f;//white texure
-		float tillingFactor = 1.0f;
-
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), 0.0f,glm::vec3(0.0f,0.0f,1.0f))
 			* glm::scale(glm::mat4(1.0f), {size.x,size.y,1.0f});
 
-		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[0];
-		s_RenderData.QuadVertexBufferPtr->Color = color;
-		s_RenderData.QuadVertexBufferPtr->Texcoord = {0.0f,0.0f};
-		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
-		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
-		s_RenderData.QuadVertexBufferPtr++;
-
-		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[1];
-		s_RenderData.QuadVertexBufferPtr->Color = color;
-		s_RenderData.QuadVertexBufferPtr->Texcoord = { 1.0f,0.0f };
-		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
-		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
-		s_RenderData.QuadVertexBufferPtr++;
-
-		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[2];
-		s_RenderData.QuadVertexBufferPtr->Color = color;
-		s_RenderData.QuadVertexBufferPtr->Texcoord = { 1.0f,1.0f };
-		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
-		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
-		s_RenderData.QuadVertexBufferPtr++;
-
-		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[3];
-		s_RenderData.QuadVertexBufferPtr->Color = color;
-		s_RenderData.QuadVertexBufferPtr->Texcoord = { 0.0f,1.0f };
-		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
-		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
-		s_RenderData.QuadVertexBufferPtr++;
-
-		s_RenderData.QuadIndexCount += 6;
-
-		s_RenderData.Stats.QuadCount++;
+		DrawQuad(transform, color);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilling, const glm::vec4& tintColor)
@@ -209,65 +171,11 @@ namespace PKEngine {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilling, const glm::vec4& tintColor)
 	{
-		if (s_RenderData.QuadIndexCount >= Renderer2DStorage::MaxIndices)
-		{
-			FlushAndReset();
-		}
-		float textureID = 0.0f;
-		float tillingFactor = tilling;
-
-		glm::vec4 color(1.0f);
-
-		for (int i = 0; i < s_RenderData.TextureSlotIndex; i++)
-		{
-			if (*s_RenderData.TextureSlots[i] == *texture)
-			{
-				textureID = i;
-				break;
-			}
-		}
-
-		if (textureID == 0.0f)
-		{
-			textureID = s_RenderData.TextureSlotIndex;
-			s_RenderData.TextureSlots[s_RenderData.TextureSlotIndex++] = texture;
-		}
-
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
 
-		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[0];
-		s_RenderData.QuadVertexBufferPtr->Color = color;
-		s_RenderData.QuadVertexBufferPtr->Texcoord = { 0.0f,0.0f };
-		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
-		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
-		s_RenderData.QuadVertexBufferPtr++;
-
-		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[1];
-		s_RenderData.QuadVertexBufferPtr->Color = color;
-		s_RenderData.QuadVertexBufferPtr->Texcoord = { 1.0f,0.0f };
-		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
-		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
-		s_RenderData.QuadVertexBufferPtr++;
-
-		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[2];
-		s_RenderData.QuadVertexBufferPtr->Color = color;
-		s_RenderData.QuadVertexBufferPtr->Texcoord = { 1.0f,1.0f };
-		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
-		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
-		s_RenderData.QuadVertexBufferPtr++;
-
-		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[3];
-		s_RenderData.QuadVertexBufferPtr->Color = color;
-		s_RenderData.QuadVertexBufferPtr->Texcoord = { 0.0f,1.0f };
-		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
-		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
-		s_RenderData.QuadVertexBufferPtr++;
-
-		s_RenderData.QuadIndexCount += 6;
-
-		s_RenderData.Stats.QuadCount++;
+		DrawQuad(transform, texture, tilling, tintColor);
 	}
 
 	void Renderer2D::DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
@@ -355,6 +263,108 @@ namespace PKEngine {
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+
+		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[0];
+		s_RenderData.QuadVertexBufferPtr->Color = color;
+		s_RenderData.QuadVertexBufferPtr->Texcoord = { 0.0f,0.0f };
+		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
+		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
+		s_RenderData.QuadVertexBufferPtr++;
+
+		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[1];
+		s_RenderData.QuadVertexBufferPtr->Color = color;
+		s_RenderData.QuadVertexBufferPtr->Texcoord = { 1.0f,0.0f };
+		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
+		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
+		s_RenderData.QuadVertexBufferPtr++;
+
+		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[2];
+		s_RenderData.QuadVertexBufferPtr->Color = color;
+		s_RenderData.QuadVertexBufferPtr->Texcoord = { 1.0f,1.0f };
+		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
+		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
+		s_RenderData.QuadVertexBufferPtr++;
+
+		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[3];
+		s_RenderData.QuadVertexBufferPtr->Color = color;
+		s_RenderData.QuadVertexBufferPtr->Texcoord = { 0.0f,1.0f };
+		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
+		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
+		s_RenderData.QuadVertexBufferPtr++;
+
+		s_RenderData.QuadIndexCount += 6;
+
+		s_RenderData.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	{
+		if (s_RenderData.QuadIndexCount >= Renderer2DStorage::MaxIndices)
+		{
+			FlushAndReset();
+		}
+
+		float textureID = 0.0f;//white texure
+		float tillingFactor = 1.0f;
+
+		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[0];
+		s_RenderData.QuadVertexBufferPtr->Color = color;
+		s_RenderData.QuadVertexBufferPtr->Texcoord = { 0.0f,0.0f };
+		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
+		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
+		s_RenderData.QuadVertexBufferPtr++;
+
+		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[1];
+		s_RenderData.QuadVertexBufferPtr->Color = color;
+		s_RenderData.QuadVertexBufferPtr->Texcoord = { 1.0f,0.0f };
+		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
+		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
+		s_RenderData.QuadVertexBufferPtr++;
+
+		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[2];
+		s_RenderData.QuadVertexBufferPtr->Color = color;
+		s_RenderData.QuadVertexBufferPtr->Texcoord = { 1.0f,1.0f };
+		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
+		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
+		s_RenderData.QuadVertexBufferPtr++;
+
+		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[3];
+		s_RenderData.QuadVertexBufferPtr->Color = color;
+		s_RenderData.QuadVertexBufferPtr->Texcoord = { 0.0f,1.0f };
+		s_RenderData.QuadVertexBufferPtr->TextureID = textureID;
+		s_RenderData.QuadVertexBufferPtr->TillingFactor = tillingFactor;
+		s_RenderData.QuadVertexBufferPtr++;
+
+		s_RenderData.QuadIndexCount += 6;
+
+		s_RenderData.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilling, const glm::vec4& tintColor)
+	{
+		if (s_RenderData.QuadIndexCount >= Renderer2DStorage::MaxIndices)
+		{
+			FlushAndReset();
+		}
+		float textureID = 0.0f;
+		float tillingFactor = tilling;
+
+		glm::vec4 color(1.0f);
+
+		for (int i = 0; i < s_RenderData.TextureSlotIndex; i++)
+		{
+			if (*s_RenderData.TextureSlots[i] == *texture)
+			{
+				textureID = i;
+				break;
+			}
+		}
+
+		if (textureID == 0.0f)
+		{
+			textureID = s_RenderData.TextureSlotIndex;
+			s_RenderData.TextureSlots[s_RenderData.TextureSlotIndex++] = texture;
+		}
 
 		s_RenderData.QuadVertexBufferPtr->Position = transform * s_RenderData.QuadVertexPositions[0];
 		s_RenderData.QuadVertexBufferPtr->Color = color;

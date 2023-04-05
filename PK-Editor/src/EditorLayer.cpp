@@ -48,6 +48,8 @@ namespace PKEngine {
 		fbs.Width = 1920;
 		fbs.Height = 1080;
 		m_FrameBuffer = PKEngine::FrameBuffer::Create(fbs);
+
+		m_ActiveScene = CreateRef<Scene>();
 	}
 
 	void EditorLayer::OnDetach()
@@ -70,47 +72,30 @@ namespace PKEngine {
 		//glm::quat quat(0,glm::vec3(1.0f,0.0f,0.0f));
 		//auto m = glm::vec4(1.0f,0.0f,0,0) * rrot;
 		//PK_INFO("({0},{1},{2})", m.x, m.y, m.z);
+		static float rotation = 0;
+		rotation += ts * 20.0f;
 
 		Renderer2D::ResetStats();
 
-		static float rotation = 0;
-		rotation += ts * 20.0f;
 		m_FrameBuffer->Bind();
 		//render
-		{
-			PK_PROFILE_FUNCTION();
-			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-			RenderCommand::Clear();
-		}
+		RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		RenderCommand::Clear();
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		m_ActiveScene->OnUpdate(ts);
 
-		{
-			PK_PROFILE_FUNCTION();
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
+		Renderer2D::EndScene();
 
-			Renderer2D::DrawQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec4(1.0f));
-			Renderer2D::DrawQuad(glm::vec2(-1.5, 0.0f), glm::vec2(1.0f, 0.5f), glm::vec4(0.8f, 0.3f, 0.2f, 1.0f));
-			Renderer2D::DrawQuad(glm::vec3(0.0f, 0.0f, -0.2f), glm::vec2(10.0f, 10.0f), m_Texture, 1);
-
-			//Renderer2D::DrawRotateQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec4(1.0f));
-			Renderer2D::DrawRotateQuad(glm::vec2(1.0f, 1.0f), glm::vec2(0.5f, 0.5f), rotation, glm::vec4(0.8f, 0.3f, 0.2f, 1.0f));
-			//for(int i=0;i<9990;i++)
-			Renderer2D::DrawRotateQuad(glm::vec3(1.0f, 1.0f, -0.1f), glm::vec2(10.0f, 10.0f), rotation, m_Texture, 10, glm::vec4(0.6f, 0.3f, 0.2f, 0.8f));
-
-			Renderer2D::EndScene();
-		}
-
-		{
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			for (float x = -5.0f; x < 5.0f; x += 0.5f)
-			{
-				for (float y = -5.0f; y < 5.0f; y += 0.5f)
-				{
-					glm::vec4 color = { (x + 5.0f) / 10.0f,0.4f,(y + 5.0f) / 10.0f ,1.0f };
-					Renderer2D::DrawQuad(glm::vec2(x, y), glm::vec2(0.45f), color);
-				}
-			}
-			Renderer2D::EndScene();
-		}
+		//Renderer2D::BeginScene(m_CameraController.GetCamera());
+		//for (float x = -5.0f; x < 5.0f; x += 0.5f)
+		//{
+		//	for (float y = -5.0f; y < 5.0f; y += 0.5f)
+		//	{
+		//		glm::vec4 color = { (x + 5.0f) / 10.0f,0.4f,(y + 5.0f) / 10.0f ,1.0f };
+		//		Renderer2D::DrawQuad(glm::vec2(x, y), glm::vec2(0.45f), color);
+		//	}
+		//}
+		//Renderer2D::EndScene();
 		m_FrameBuffer->Unbind();
 	}
 

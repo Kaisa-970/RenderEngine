@@ -2,6 +2,7 @@
 #include <PKEngine.h>
 #include <glm/gtx/transform.hpp>
 #include "glm/gtc/type_ptr.hpp"
+#include "PKEngine/Scene/Scene.h"
 
 namespace PKEngine{
 	class EditorLayer : public PKEngine::Layer {
@@ -26,5 +27,7 @@ namespace PKEngine{
 		bool m_ViewportHovered = false;
 
 		OrthoCameraController m_CameraController;
+
+		Ref<Scene> m_ActiveScene;
 	};
 }

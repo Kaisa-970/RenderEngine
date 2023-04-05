@@ -15,6 +15,9 @@
 
 #include "PKEngine/ImGui/ImGuiLayer.h"
 
+#include "PKEngine/Scene/Scene.h"
+#include "PKEngine/Scene/Components.h"
+
 // ---Renderer-------------------
 #include "PKEngine/Renderer/Renderer.h"
 #include "PKEngine/Renderer/Renderer2D.h"
