@@ -11,7 +11,7 @@ int main(int argc,char** argv) {
 	auto* app = PKEngine::CreateApplication();
 	PK_PROFILE_END_SESSION();
 
-	PK_PROFILE_BEGIN_SESSION("Startup", "PKEngineProfile-Runtime.json");
+	PK_PROFILE_BEGIN_SESSION("Shutdown", "PKEngineProfile-Runtime.json");
 	app->Run();
 	PK_PROFILE_END_SESSION();
 

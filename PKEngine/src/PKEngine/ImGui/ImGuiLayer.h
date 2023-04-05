@@ -13,10 +13,13 @@ namespace PKEngine {
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		virtual void OnImGuiRender() override;
+		virtual void OnEvent(Event& e) override;
 
+		inline void BlockEvent(bool block) { m_BlockEvents = block; }
 		void Begin();
 		void End();
 	private:
 		float m_Time;
+		float m_BlockEvents = true;
 	};
 }

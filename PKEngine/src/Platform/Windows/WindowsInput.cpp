@@ -1,39 +1,37 @@
 #include "pkpch.h"
-#include "WindowsInput.h"
+#include "PKEngine/Core/Input.h"
 
-#include "PKEngine/COre/Application.h"
+#include "PKEngine/Core/Application.h"
 #include <GLFW/glfw3.h>
 namespace PKEngine {
-	Input* Input::s_Instance = new WindowsInput();
-
-	bool WindowsInput::IsKeyPressedImpl(int keycode)
+	bool Input::IsKeyPressed(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
-	bool WindowsInput::IsMouseButtonPressedImpl(int button)
+	bool Input::IsMouseButtonPressed(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
-	std::pair<float, float> WindowsInput::GetMousePositionImpl()
+	std::pair<float, float> Input::GetMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double px, py;
 		glfwGetCursorPos(window, &px, &py);
 		return { (float)px, (float)py };
 	}
-	float WindowsInput::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
-		auto v = GetMousePositionImpl();
+		auto v = GetMousePosition();
 		return std::get<0>(v);
 	}
-	float WindowsInput::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
-		auto v = GetMousePositionImpl();
+		auto v = GetMousePosition();
 		return std::get<1>(v);
 	}
 }

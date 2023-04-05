@@ -22,6 +22,9 @@ namespace PKEngine{
 		Ref<FrameBuffer> m_FrameBuffer;
 		glm::vec2 m_ViewportSize;
 
+		bool m_ViewportFocused = false;
+		bool m_ViewportHovered = false;
+
 		OrthoCameraController m_CameraController;
 	};
 }

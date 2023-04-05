@@ -62,7 +62,8 @@ namespace PKEngine {
 		//update
 		{
 			PK_PROFILE_FUNCTION();
-			m_CameraController.Update(ts);
+			if(m_ViewportFocused)
+				m_CameraController.Update(ts);
 		}
 		//rotate vector by this
 		//glm::quat rrot = glm::angleAxis(glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -196,11 +197,15 @@ namespace PKEngine {
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
 		ImGui::Text("Index Calls: %d", stats.GetIndexCount());
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
 		ImGui::End();
 
 		// viewport
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0});
 		ImGui::Begin("Viewport");
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->BlockEvent(m_ViewportFocused && m_ViewportHovered);
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		if (m_ViewportSize != *(glm::vec2*)&size)
 		{
@@ -210,7 +215,6 @@ namespace PKEngine {
 			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 		//PK_WARN("Viewport Size:{0},{1}", size.x, size.y);
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
 		ImGui::Image((void*)m_FrameBuffer->GetColorAttachmentID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0,1 }, { 1,0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
