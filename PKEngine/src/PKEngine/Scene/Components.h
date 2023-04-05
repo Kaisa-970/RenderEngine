@@ -15,7 +15,7 @@ struct TransformComponent
 
 	TransformComponent() = default;
 	TransformComponent(const TransformComponent& other) = default;
-	TransformComponent(const glm::vec3& pos = glm::vec3(0.0f), const glm::vec3& rot = glm::vec3(0.0f),const glm::vec3& scale = glm::vec3(1.0f))
+	TransformComponent(const glm::vec3& pos, const glm::vec3& rot = glm::vec3(0.0f),const glm::vec3& scale = glm::vec3(1.0f))
 		:Position(pos),Rotation(rot),Scale(scale)
 	{}
 };
@@ -26,7 +26,7 @@ struct SpriteComponent
 
 	SpriteComponent() = default;
 	SpriteComponent(const SpriteComponent& other) = default;
-	SpriteComponent(const glm::vec4& col = glm::vec4(1.0f))
+	SpriteComponent(const glm::vec4& col)
 		:Color(col)
 	{}
 };

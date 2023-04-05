@@ -50,6 +50,8 @@ namespace PKEngine {
 		m_FrameBuffer = PKEngine::FrameBuffer::Create(fbs);
 
 		m_ActiveScene = CreateRef<Scene>();
+		m_Actor = m_ActiveScene->CreateActor("Test Actor");
+		m_Actor.AddComponent<SpriteComponent>();
 	}
 
 	void EditorLayer::OnDetach()
@@ -182,7 +184,12 @@ namespace PKEngine {
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
 		ImGui::Text("Index Calls: %d", stats.GetIndexCount());
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
+		
+		if (m_Actor) {
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
+			m_Actor.GetComponent<SpriteComponent>().Color = m_SqureColor;
+		}
+		
 		ImGui::End();
 
 		// viewport

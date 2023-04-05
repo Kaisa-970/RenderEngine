@@ -29,5 +29,6 @@ namespace PKEngine{
 		OrthoCameraController m_CameraController;
 
 		Ref<Scene> m_ActiveScene;
+		Actor m_Actor;
 	};
 }
