@@ -69,7 +69,8 @@ namespace PKEngine {
 
 		m_Context = new OpenGLContext(m_Window);
 		m_Context->Init();
-
+		auto rendererInfo = glGetString(GL_RENDERER);
+		PK_CORE_INFO("Renderer:{0}", (const char*)rendererInfo);
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);

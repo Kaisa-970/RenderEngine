@@ -17,6 +17,7 @@ IncludeDir["Glad"] = "PKEngine/vendor/Glad/include"
 IncludeDir["imgui"] = "PKEngine/vendor/imgui"
 IncludeDir["glm"] = "PKEngine/vendor/glm"
 IncludeDir["stb_image"] = "PKEngine/vendor/stb_image"
+IncludeDir["entt"] = "PKEngine/vendor/entt/include"
 
 group "Dependency"
 	include "PKEngine/vendor/GLFW"
@@ -54,6 +55,7 @@ project "PKEngine"
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 
 	links{
@@ -106,7 +108,8 @@ project "Sandbox"
 		"PKEngine/vendor/GLFW/include",
 		"PKEngine/src",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links{
@@ -157,7 +160,8 @@ project "PK-Editor"
 		"PKEngine/vendor/GLFW/include",
 		"PKEngine/src",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links{

@@ -1,5 +1,11 @@
 #pragma once
 #include <memory>
+
+//#ifdef _WIN32
+//#ifdef _WIN64
+//#define PK_PLATFORM_WINDOWS
+//#endif
+//#endif
 #ifdef PK_PLATFORM_WINDOWS
 #ifdef PK_DYNAMIC_LINK
 	#ifdef PK_BUILD_DLL
