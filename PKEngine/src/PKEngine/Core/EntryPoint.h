@@ -7,15 +7,15 @@
 int main(int argc,char** argv) {
 	PKEngine::Log::Init();
 
-	PK_PROFILE_BEGIN_SESSION("Startup", "PKEngineProfile-Startup.json");
+	PK_PROFILE_BEGIN_SESSION("Startup", "profile/PKEngineProfile-Startup.json");
 	auto* app = PKEngine::CreateApplication();
 	PK_PROFILE_END_SESSION();
 
-	PK_PROFILE_BEGIN_SESSION("Shutdown", "PKEngineProfile-Runtime.json");
+	PK_PROFILE_BEGIN_SESSION("Shutdown", "profile/PKEngineProfile-Runtime.json");
 	app->Run();
 	PK_PROFILE_END_SESSION();
 
-	PK_PROFILE_BEGIN_SESSION("Startup", "PKEngineProfile-Shutdown.json");
+	PK_PROFILE_BEGIN_SESSION("Startup", "profile/PKEngineProfile-Shutdown.json");
 	delete app;
 	PK_PROFILE_END_SESSION();
 }
