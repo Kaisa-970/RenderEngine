@@ -36,6 +36,3 @@
 #include "PKEngine/Renderer/PerspectiveCamera.h"
 // ---------------------------------
 
-// ---Entry Point-------------------
-#include "PKEngine/EntryPoint.h"
-// ---------------------------------

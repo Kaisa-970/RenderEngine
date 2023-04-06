@@ -52,6 +52,8 @@ namespace PKEngine {
 		m_ActiveScene = CreateRef<Scene>();
 		m_Actor = m_ActiveScene->CreateActor("Test Actor");
 		m_Actor.AddComponent<SpriteComponent>();
+
+		m_Mesh = CreateRef<Mesh>("assets/meshes/sphere.obj");
 	}
 
 	void EditorLayer::OnDetach()

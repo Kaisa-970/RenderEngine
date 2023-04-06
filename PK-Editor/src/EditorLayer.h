@@ -26,6 +26,8 @@ namespace PKEngine{
 		bool m_ViewportFocused = false;
 		bool m_ViewportHovered = false;
 
+		Ref<Mesh> m_Mesh;
+
 		OrthoCameraController m_CameraController;
 
 		Ref<Scene> m_ActiveScene;
