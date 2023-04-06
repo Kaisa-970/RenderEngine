@@ -7,7 +7,8 @@
 
 namespace PKEngine {
 	EditorLayer::EditorLayer()
-		:Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f), m_SqureColor(1.0f)
+		:Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f), m_SqureColor(1.0f),m_PerspectiveCamera(glm::radians(45.0f), 1.7f, 0.01f, 100.0f)
+
 	{
 	}
 
@@ -53,7 +54,31 @@ namespace PKEngine {
 		m_Actor = m_ActiveScene->CreateActor("Test Actor");
 		m_Actor.AddComponent<SpriteComponent>();
 
+		// test mesh*********
 		m_Mesh = CreateRef<Mesh>("assets/meshes/sphere.obj");
+		m_MeshVA = PKEngine::VertexArray::Create();
+		PKEngine::Ref<PKEngine::VertexBuffer> m_MeshBuffer;
+		m_MeshBuffer.reset(PKEngine::VertexBuffer::Create(m_Mesh->GetVertices(), m_Mesh->GetVerticesCount() * 8 * sizeof(float)));
+
+		PKEngine::BufferLayout meshlayout = {
+				{PKEngine::ShaderDataType::Float3,"a_Position"},
+				{PKEngine::ShaderDataType::Float2,"a_Texcoord"},
+				{PKEngine::ShaderDataType::Float3,"a_Normal"}
+		};
+		m_MeshBuffer->SetLayout(meshlayout);
+
+		m_MeshVA->AddVertexBuffer(m_MeshBuffer);
+
+		PKEngine::Ref<PKEngine::IndexBuffer> m_MeshIndexBuffer;
+		PK_INFO("Mesh indices size:{0}", m_Mesh->GetFacesCount());
+		m_MeshIndexBuffer.reset(PKEngine::IndexBuffer::Create(m_Mesh->GetIndices(), m_Mesh->GetFacesCount() * 3));
+		m_MeshVA->SetIndexBuffer(m_MeshIndexBuffer);
+
+		auto MeshShader = m_ShaderLib.Load("assets/shaders/MeshShader.glsl");
+		m_WoodTexture = PKEngine::Texture2D::Create("assets/textures/floor.png");
+		MeshShader->Bind();
+		m_CameraController.GetCamera().SetPosition(glm::vec3(0, 0, 3));
+		//***********
 	}
 
 	void EditorLayer::OnDetach()
@@ -65,42 +90,119 @@ namespace PKEngine {
 	{
 		PK_PROFILE_FUNCTION();
 
-		//update
+		//draw 2D**************
 		{
-			PK_PROFILE_FUNCTION();
-			if(m_ViewportFocused)
-				m_CameraController.Update(ts);
+			////update
+			//{
+			//	PK_PROFILE_FUNCTION();
+			//	if (m_ViewportFocused)
+			//		m_CameraController.Update(ts);
+			//}
+
+			//static float rotation = 0;
+			//rotation += ts * 20.0f;
+
+			//Renderer2D::ResetStats();
+
+			//m_FrameBuffer->Bind();
+			////render
+			//RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+			//RenderCommand::Clear();
+			//Renderer2D::BeginScene(m_CameraController.GetCamera());
+			////m_ActiveScene->OnUpdate(ts);
+			//Renderer2D::EndScene();
+			
+			//m_FrameBuffer->Unbind();
 		}
-		//rotate vector by this
-		//glm::quat rrot = glm::angleAxis(glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		//glm::quat quat(0,glm::vec3(1.0f,0.0f,0.0f));
-		//auto m = glm::vec4(1.0f,0.0f,0,0) * rrot;
-		//PK_INFO("({0},{1},{2})", m.x, m.y, m.z);
-		static float rotation = 0;
-		rotation += ts * 20.0f;
+		//**************
 
-		Renderer2D::ResetStats();
+		//draw mesh
+		{
+			float deltaTime = ts;
+			glm::vec3 forward = -glm::normalize(m_PerspectiveCamera.GetPosition());
+			glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+			if (PKEngine::Input::IsKeyPressed(PK_KEY_W)) {
+				//m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition += forward * deltaTime * m_CameraMoveSpeed;
+			}
+			else if (PKEngine::Input::IsKeyPressed(PK_KEY_S)) {
+				//m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition -= forward * deltaTime * m_CameraMoveSpeed;
+			}
 
-		m_FrameBuffer->Bind();
-		//render
-		RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-		RenderCommand::Clear();
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		m_ActiveScene->OnUpdate(ts);
+			if (PKEngine::Input::IsKeyPressed(PK_KEY_A)) {
+				//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition -= right * deltaTime * m_CameraMoveSpeed;
+			}
+			else if (PKEngine::Input::IsKeyPressed(PK_KEY_D)) {
+				//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition += right * deltaTime * m_CameraMoveSpeed;
+			}
 
-		Renderer2D::EndScene();
+			if (PKEngine::Input::IsKeyPressed(PK_KEY_E)) {
+				//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
+			}
+			else if (PKEngine::Input::IsKeyPressed(PK_KEY_Q)) {
+				//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
+				//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition += right * deltaTime * m_CameraMoveSpeed;
+			}
 
-		//Renderer2D::BeginScene(m_CameraController.GetCamera());
-		//for (float x = -5.0f; x < 5.0f; x += 0.5f)
-		//{
-		//	for (float y = -5.0f; y < 5.0f; y += 0.5f)
-		//	{
-		//		glm::vec4 color = { (x + 5.0f) / 10.0f,0.4f,(y + 5.0f) / 10.0f ,1.0f };
-		//		Renderer2D::DrawQuad(glm::vec2(x, y), glm::vec2(0.45f), color);
-		//	}
-		//}
-		//Renderer2D::EndScene();
-		m_FrameBuffer->Unbind();
+			if (PKEngine::Input::IsKeyPressed(PK_KEY_E)) {
+				//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
+			}
+			else if (PKEngine::Input::IsKeyPressed(PK_KEY_Q)) {
+				//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
+				m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
+			}
+
+			float r = glm::distance(m_CameraPosition, glm::vec3(0, m_CameraPosition.y, 0));
+			if (PKEngine::Input::IsMouseButtonPressed(0)) {
+				m_CameraRotation -= deltaTime * m_CameraRotateSpeed;
+
+				m_CameraPosition.x = glm::cos(glm::radians(m_CameraRotation)) * r;
+				m_CameraPosition.z = glm::sin(glm::radians(m_CameraRotation)) * r;
+
+			}
+			else if (PKEngine::Input::IsMouseButtonPressed(1)) {
+				m_CameraRotation += deltaTime * m_CameraRotateSpeed;
+
+				m_CameraPosition.x = glm::cos(glm::radians(m_CameraRotation)) * r;
+				m_CameraPosition.z = glm::sin(glm::radians(m_CameraRotation)) * r;
+
+			}
+
+			//render
+			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+			RenderCommand::Clear();
+			Renderer::BeginScene(m_PerspectiveCamera);
+
+			//m_SqureShader->Bind();
+			//std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform3f("u_Color", m_SqureColor);
+			m_PerspectiveCamera.SetPosition(m_CameraPosition);
+
+			auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+
+			auto meshShader = m_ShaderLib.Get("MeshShader");
+			meshShader->Bind();
+			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
+				SetUniform3f("u_LightPos", m_LightPos);
+			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
+				SetUniform3f("u_LightColor", m_LightColor * m_LightIntensity);
+			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
+				SetUniformf("u_Roughness", m_Roughness);
+			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
+				SetUniformf("u_Metallic", m_Metallic);
+			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->SetUniform3f("u_CameraPos", m_PerspectiveCamera.GetPosition());
+			//auto meshShader = m_ShaderLibrary.Get("MeshShader");
+			Renderer::Submit(m_MeshVA, meshShader, transform);
+
+			Renderer::EndScene();
+		}
+
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -209,7 +311,7 @@ namespace PKEngine {
 			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 		//PK_WARN("Viewport Size:{0},{1}", size.x, size.y);
-		ImGui::Image((void*)m_FrameBuffer->GetColorAttachmentID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0,1 }, { 1,0 });
+		//ImGui::Image((void*)m_FrameBuffer->GetColorAttachmentID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0,1 }, { 1,0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
 
