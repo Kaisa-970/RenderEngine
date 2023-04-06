@@ -55,7 +55,7 @@ namespace PKEngine {
 		m_Actor.AddComponent<SpriteComponent>();
 
 		// test mesh*********
-		m_Mesh = CreateRef<Mesh>("assets/meshes/sphere.obj");
+		m_Mesh = CreateRef<Mesh>("assets/meshes/houtou.obj");
 		m_MeshVA = PKEngine::VertexArray::Create();
 		PKEngine::Ref<PKEngine::VertexBuffer> m_MeshBuffer;
 		m_MeshBuffer.reset(PKEngine::VertexBuffer::Create(m_Mesh->GetVertices(), m_Mesh->GetVerticesCount() * 8 * sizeof(float)));
@@ -117,69 +117,72 @@ namespace PKEngine {
 
 		//draw mesh
 		{
-			float deltaTime = ts;
-			glm::vec3 forward = -glm::normalize(m_PerspectiveCamera.GetPosition());
-			glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
-			if (PKEngine::Input::IsKeyPressed(PK_KEY_W)) {
-				//m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition += forward * deltaTime * m_CameraMoveSpeed;
-			}
-			else if (PKEngine::Input::IsKeyPressed(PK_KEY_S)) {
-				//m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition -= forward * deltaTime * m_CameraMoveSpeed;
-			}
+			if (m_ViewportFocused) 
+			{
+				float deltaTime = ts;
+				glm::vec3 forward = -glm::normalize(m_PerspectiveCamera.GetPosition());
+				glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+				if (PKEngine::Input::IsKeyPressed(PK_KEY_W)) {
+					//m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition += forward * deltaTime * m_CameraMoveSpeed;
+				}
+				else if (PKEngine::Input::IsKeyPressed(PK_KEY_S)) {
+					//m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition -= forward * deltaTime * m_CameraMoveSpeed;
+				}
 
-			if (PKEngine::Input::IsKeyPressed(PK_KEY_A)) {
-				//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition -= right * deltaTime * m_CameraMoveSpeed;
-			}
-			else if (PKEngine::Input::IsKeyPressed(PK_KEY_D)) {
-				//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition += right * deltaTime * m_CameraMoveSpeed;
-			}
+				if (PKEngine::Input::IsKeyPressed(PK_KEY_A)) {
+					//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition -= right * deltaTime * m_CameraMoveSpeed;
+				}
+				else if (PKEngine::Input::IsKeyPressed(PK_KEY_D)) {
+					//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition += right * deltaTime * m_CameraMoveSpeed;
+				}
 
-			if (PKEngine::Input::IsKeyPressed(PK_KEY_E)) {
-				//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
+				if (PKEngine::Input::IsKeyPressed(PK_KEY_E)) {
+					//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
+				}
+				else if (PKEngine::Input::IsKeyPressed(PK_KEY_Q)) {
+					//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
+					//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition += right * deltaTime * m_CameraMoveSpeed;
+				}
+
+				if (PKEngine::Input::IsKeyPressed(PK_KEY_E)) {
+					//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
+				}
+				else if (PKEngine::Input::IsKeyPressed(PK_KEY_Q)) {
+					//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
+				}
+
+				float r = glm::distance(m_CameraPosition, glm::vec3(0, m_CameraPosition.y, 0));
+				if (PKEngine::Input::IsMouseButtonPressed(0)) {
+					m_CameraRotation -= deltaTime * m_CameraRotateSpeed;
+
+					m_CameraPosition.x = glm::cos(glm::radians(m_CameraRotation)) * r;
+					m_CameraPosition.z = glm::sin(glm::radians(m_CameraRotation)) * r;
+
+				}
+				else if (PKEngine::Input::IsMouseButtonPressed(1)) {
+					m_CameraRotation += deltaTime * m_CameraRotateSpeed;
+
+					m_CameraPosition.x = glm::cos(glm::radians(m_CameraRotation)) * r;
+					m_CameraPosition.z = glm::sin(glm::radians(m_CameraRotation)) * r;
+
+				}
+
+				m_PerspectiveCamera.SetPosition(m_CameraPosition);
 			}
-			else if (PKEngine::Input::IsKeyPressed(PK_KEY_Q)) {
-				//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
-				//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition += right * deltaTime * m_CameraMoveSpeed;
-			}
-
-			if (PKEngine::Input::IsKeyPressed(PK_KEY_E)) {
-				//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
-			}
-			else if (PKEngine::Input::IsKeyPressed(PK_KEY_Q)) {
-				//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
-				m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
-			}
-
-			float r = glm::distance(m_CameraPosition, glm::vec3(0, m_CameraPosition.y, 0));
-			if (PKEngine::Input::IsMouseButtonPressed(0)) {
-				m_CameraRotation -= deltaTime * m_CameraRotateSpeed;
-
-				m_CameraPosition.x = glm::cos(glm::radians(m_CameraRotation)) * r;
-				m_CameraPosition.z = glm::sin(glm::radians(m_CameraRotation)) * r;
-
-			}
-			else if (PKEngine::Input::IsMouseButtonPressed(1)) {
-				m_CameraRotation += deltaTime * m_CameraRotateSpeed;
-
-				m_CameraPosition.x = glm::cos(glm::radians(m_CameraRotation)) * r;
-				m_CameraPosition.z = glm::sin(glm::radians(m_CameraRotation)) * r;
-
-			}
-
-			m_PerspectiveCamera.SetPosition(m_CameraPosition);
 
 			//render
 			m_FrameBuffer->Bind();
 
-			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.3f, 0.1f, 1.0f));
+			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			RenderCommand::Clear();
 			Renderer::BeginScene(m_PerspectiveCamera);
 			//m_SqureShader->Bind();
@@ -292,6 +295,11 @@ namespace PKEngine {
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
 		ImGui::Text("Index Calls: %d", stats.GetIndexCount());
+
+		ImGui::ColorEdit3("Light Color", glm::value_ptr(m_LightColor));
+		ImGui::SliderFloat("Light Intensity", &m_LightIntensity, 0, 10);
+		ImGui::SliderFloat("Roughness", &m_Roughness, 0, 1);
+		ImGui::SliderFloat("Metallic", &m_Metallic, 0, 1);
 		//ImGui::Text("CameraPos: (%f,%f,%f)", m_CameraPosition.x, m_CameraPosition.y, m_CameraPosition.z);
 		
 		if (m_Actor) {
