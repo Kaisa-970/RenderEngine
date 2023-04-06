@@ -11,11 +11,11 @@ int main(int argc,char** argv) {
 	auto* app = PKEngine::CreateApplication();
 	PK_PROFILE_END_SESSION();
 
-	PK_PROFILE_BEGIN_SESSION("Shutdown", "profile/PKEngineProfile-Runtime.json");
+	PK_PROFILE_BEGIN_SESSION("Runtime", "profile/PKEngineProfile-Runtime.json");
 	app->Run();
 	PK_PROFILE_END_SESSION();
 
-	PK_PROFILE_BEGIN_SESSION("Startup", "profile/PKEngineProfile-Shutdown.json");
+	PK_PROFILE_BEGIN_SESSION("Shutdown", "profile/PKEngineProfile-Shutdown.json");
 	delete app;
 	PK_PROFILE_END_SESSION();
 }
