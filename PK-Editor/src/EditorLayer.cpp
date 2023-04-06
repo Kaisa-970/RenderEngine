@@ -77,7 +77,6 @@ namespace PKEngine {
 		auto MeshShader = m_ShaderLib.Load("assets/shaders/MeshShader.glsl");
 		m_WoodTexture = PKEngine::Texture2D::Create("assets/textures/floor.png");
 		MeshShader->Bind();
-		m_CameraController.GetCamera().SetPosition(glm::vec3(0, 0, 3));
 		//***********
 	}
 
@@ -175,14 +174,16 @@ namespace PKEngine {
 
 			}
 
+			m_PerspectiveCamera.SetPosition(m_CameraPosition);
+
 			//render
-			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+			m_FrameBuffer->Bind();
+
+			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.3f, 0.1f, 1.0f));
 			RenderCommand::Clear();
 			Renderer::BeginScene(m_PerspectiveCamera);
-
 			//m_SqureShader->Bind();
 			//std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform3f("u_Color", m_SqureColor);
-			m_PerspectiveCamera.SetPosition(m_CameraPosition);
 
 			auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 
@@ -197,10 +198,13 @@ namespace PKEngine {
 			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
 				SetUniformf("u_Metallic", m_Metallic);
 			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->SetUniform3f("u_CameraPos", m_PerspectiveCamera.GetPosition());
-			//auto meshShader = m_ShaderLibrary.Get("MeshShader");
+
+			m_SqureShader->Bind();
 			Renderer::Submit(m_MeshVA, meshShader, transform);
 
 			Renderer::EndScene();
+
+			m_FrameBuffer->Unbind();
 		}
 
 	}
@@ -288,6 +292,7 @@ namespace PKEngine {
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
 		ImGui::Text("Index Calls: %d", stats.GetIndexCount());
+		//ImGui::Text("CameraPos: (%f,%f,%f)", m_CameraPosition.x, m_CameraPosition.y, m_CameraPosition.z);
 		
 		if (m_Actor) {
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
@@ -310,8 +315,7 @@ namespace PKEngine {
 
 			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
-		//PK_WARN("Viewport Size:{0},{1}", size.x, size.y);
-		//ImGui::Image((void*)m_FrameBuffer->GetColorAttachmentID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0,1 }, { 1,0 });
+		ImGui::Image((void*)m_FrameBuffer->GetColorAttachmentID(), { m_ViewportSize.x, m_ViewportSize.y }, { 0,1 }, { 1,0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
 

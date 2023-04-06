@@ -1,7 +1,7 @@
 
 #type vertex
 #version 330 core
-layout(location = 0) in vec4 a_Position;
+layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec2 a_Texcoord;
 layout(location = 2) in vec3 a_Normal;
 //layout(location = 1) in vec2 a_TexCoord;
@@ -12,8 +12,8 @@ out vec3 o_Normal;
 out vec3 o_WorldPos;
 void main()
 {
-	o_WorldPos = (u_ModelMat * a_Position).xyz;
-	gl_Position = u_ViewProjectionMat * u_ModelMat * a_Position;
+	o_WorldPos = (u_ModelMat * vec4(a_Position,1.0)).xyz;
+	gl_Position = u_ViewProjectionMat * u_ModelMat * vec4(a_Position, 1.0);
 	o_Normal =  mat3(transpose(inverse(u_ModelMat))) * a_Normal;//(u_ModelMat * vec4(a_Normal,0)).xyz;
 	o_TexCoord = a_Texcoord;
 };
@@ -83,7 +83,7 @@ void main()
 	//color = vec4(F,1.0f);
 	float value = 0.6;
 	//color = vec4(value,value,value,1.0f);
-	color = vec4(value, value, value, 1.0f);
+	//color = vec4(value, value, value, 1.0f);
 };
 
 vec3 Fresnel(vec3 abedo,float metal,float dvn)
