@@ -25,9 +25,12 @@ namespace PKEngine {
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 		//io.ConfigViewportsNoAutoMerge = true;
 		//io.ConfigViewportsNoTaskBarIcon = true;
-
-		float fontSize = 20.0f;// *2.0f;
-		io.Fonts->AddFontFromFileTTF("../PK-Editor/assets/fonts/msyh.ttc", fontSize);
+		//io.FontDefault
+		float fontSize = 24.0f;// *2.0f;
+		//io.Fonts->AddFontFromFileTTF("../PK-Editor/assets/fonts/Roboto-Medium.ttf", fontSize); 
+		//io.Fonts->AddFontFromFileTTF("../PK-Editor/assets/fonts/Cousine-Regular.ttf", fontSize);
+		//io.Fonts->AddFontFromFileTTF("../PK-Editor/assets/fonts/DroidSans.ttf", fontSize);
+		io.Fonts->AddFontFromFileTTF("../PK-Editor/assets/fonts/Karla-Regular.ttf", fontSize);
 		//io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", fontSize);
 		
 
