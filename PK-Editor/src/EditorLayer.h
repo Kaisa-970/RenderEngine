@@ -3,6 +3,7 @@
 #include <glm/gtx/transform.hpp>
 #include "glm/gtc/type_ptr.hpp"
 #include "PKEngine/Scene/Scene.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace PKEngine{
 	class EditorLayer : public PKEngine::Layer {
@@ -50,6 +51,8 @@ namespace PKEngine{
 		OrthoCameraController m_CameraController;
 
 		Ref<Scene> m_ActiveScene;
-		Actor m_Actor;
+		Ref<Actor> m_Actor;
+		Ref<SceneHierarchyPanel> m_SceneHierarchyPanel;
+		
 	};
 }

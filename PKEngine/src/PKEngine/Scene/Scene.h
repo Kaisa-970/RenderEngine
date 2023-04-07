@@ -12,11 +12,14 @@ namespace PKEngine {
 
 		void OnUpdate(Timestep ts);
 
-		Actor CreateActor(const std::string& name = "Actor");
+		Ref<Actor> CreateActor(const std::string& name = "Actor");
+
+		std::vector<Ref<Actor>>& GetAllActors() { return m_Actors; }
 
 		const entt::registry& GetReg() { return m_Registry; }
 	private:
 		entt::registry m_Registry;
+		std::vector<Ref<Actor>> m_Actors;
 
 		friend class Actor;
 	};

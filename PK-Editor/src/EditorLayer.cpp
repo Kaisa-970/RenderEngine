@@ -52,7 +52,9 @@ namespace PKEngine {
 
 		m_ActiveScene = CreateRef<Scene>();
 		m_Actor = m_ActiveScene->CreateActor("Test Actor");
-		m_Actor.AddComponent<SpriteComponent>();
+		m_Actor->AddComponent<SpriteComponent>();
+
+		m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_ActiveScene);
 
 		// test mesh*********
 		m_Mesh = CreateRef<Mesh>("assets/meshes/houtou.obj");
@@ -304,10 +306,12 @@ namespace PKEngine {
 		
 		if (m_Actor) {
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SqureColor));
-			m_Actor.GetComponent<SpriteComponent>().Color = m_SqureColor;
+			m_Actor->GetComponent<SpriteComponent>().Color = m_SqureColor;
 		}
 		
 		ImGui::End();
+
+		m_SceneHierarchyPanel->OnImGuiRender();
 
 		// viewport
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0});

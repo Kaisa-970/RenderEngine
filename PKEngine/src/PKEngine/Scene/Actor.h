@@ -35,8 +35,15 @@ namespace PKEngine
 			m_Scene->m_Registry.remove<T>(m_Handle);
 		}
 
+		std::string GetName() { return m_Name; }
+
 		operator bool() const { return (uint32_t)m_Handle != entt::null; }
 
+		bool operator==(const Actor* other) { 
+			if (other == nullptr) { return false; } 
+			return m_Handle == other->m_Handle && m_Scene == other->m_Scene; 
+		}
+		bool operator!=(const Actor* other) { return !operator==(other); }
 	private:
 		entt::entity m_Handle{entt::null};
 		Scene* m_Scene = nullptr;

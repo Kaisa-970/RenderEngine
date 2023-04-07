@@ -30,10 +30,11 @@ namespace PKEngine {
 		//auto group = m_Registry.group<TransformComponent,SpriteComponent>(en)
 		
 	}
-	Actor Scene::CreateActor(const std::string& name)
+	Ref<Actor> Scene::CreateActor(const std::string& name)
 	{
-		Actor actor(m_Registry.create(), this, name);
-		actor.AddComponent<TransformComponent>();
+		Ref<Actor> actor = CreateRef<Actor>(m_Registry.create(), this, name);
+		actor->AddComponent<TransformComponent>();
+		m_Actors.push_back(actor);
 		return actor;
 	}
 }

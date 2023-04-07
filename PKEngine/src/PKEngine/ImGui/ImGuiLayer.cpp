@@ -26,8 +26,8 @@ namespace PKEngine {
 		//io.ConfigViewportsNoAutoMerge = true;
 		//io.ConfigViewportsNoTaskBarIcon = true;
 
-		//float fontSize = 18.0f;// *2.0f;
-		//io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", fontSize);
+		float fontSize = 20.0f;// *2.0f;
+		io.Fonts->AddFontFromFileTTF("../PK-Editor/assets/fonts/msyh.ttc", fontSize);
 		//io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", fontSize);
 		
 
