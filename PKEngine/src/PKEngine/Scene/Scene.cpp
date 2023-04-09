@@ -33,7 +33,7 @@ namespace PKEngine {
 	Ref<Actor> Scene::CreateActor(const std::string& name)
 	{
 		Ref<Actor> actor = CreateRef<Actor>(m_Registry.create(), this, name);
-		actor->AddComponent<TransformComponent>();
+		//actor->AddComponent<TransformComponent>(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 		m_Actors.push_back(actor);
 		return actor;
 	}

@@ -10,56 +10,73 @@ namespace PKEngine {
 	{
 		Assimp::Importer importer;
 		
-		m_Scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
-		if (m_Scene->HasMeshes()) {
-			
+		auto m_Scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
+		
+		if (!m_Scene || m_Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_Scene->mRootNode)
+		{
+			PK_CORE_ERROR("ERROR::ASSIMP::{0}", importer.GetErrorString());
+			//PK_CORE_ASSERT(false, "Import mesh failed!");
+			return;
+		}
+		if (m_Scene->HasMeshes()) 
+		{
 			auto mesh0 = m_Scene->mMeshes[0];
-			m_verticesCount = mesh0->mNumVertices;
-			auto vertices = mesh0->mVertices;
 
-			//unsigned int nCount = mesh0->n
+			m_VerticesCount = mesh0->mNumVertices;
+			m_Vertices = new Vertex[m_VerticesCount];
+
+			auto vertices = mesh0->mVertices;
 			auto normals = mesh0->mNormals;
 			auto uvs = mesh0->mTextureCoords[0];
-			m_Vertices = new float[m_verticesCount * (3 * 2 + 2)];
-			for (size_t i = 0; i < m_verticesCount; i++)
-			{
-				size_t idx = 8 * i;
-				m_Vertices[idx] = vertices[i].x;
-				m_Vertices[idx +1] = vertices[i].y;
-				m_Vertices[idx +2] = vertices[i].z;
-				m_Vertices[idx + 3] = uvs[i].x;
-				m_Vertices[idx + 4] = uvs[i].y;
-				m_Vertices[idx + 5] = normals[i].x;
-				m_Vertices[idx + 6] = normals[i].y;
-				m_Vertices[idx + 7] = normals[i].z;
-				//PK_CORE_INFO("Vertex{0} = ({1},{2},{3})!", i, m_Vertices[idx], m_Vertices[idx + 1], m_Vertices[idx + 2]);
-			}
-			m_FaceCount = mesh0->mNumFaces;
-			auto faces = mesh0->mFaces;
-			m_Faces = new unsigned int[m_FaceCount * 3];
-			//m_Faces = faces->mIndices;
-			for (size_t i = 0; i < m_FaceCount; i++)
-			{
-				size_t idx = 3 * i;
-				auto facei = faces[i];
 
-				for (size_t j = 0; j < facei.mNumIndices; j++)
-				{
-					
-					m_Faces[idx + j] = facei.mIndices[j];
-				}
-				//PK_CORE_INFO("Face{0} = ({1},{2},{3})!",i, m_Faces[idx], m_Faces[idx + 1], m_Faces[idx + 2]);
+			for (size_t i = 0; i < m_VerticesCount; i++)
+			{
+				m_Vertices[i].Position = glm::vec3(vertices[i].x, vertices[i].y, vertices[i].z);
+				m_Vertices[i].Texcoord = glm::vec2(uvs[i].x, uvs[i].y);
+				m_Vertices[i].Normal = glm::vec3(normals[i].x, normals[i].y, normals[i].z);
+			}
+
+			m_TriangleCount = mesh0->mNumFaces;
+			m_Triangles = new Triangle[m_TriangleCount];
+
+			auto faces = mesh0->mFaces;
+			//m_Faces = faces->mIndices;
+			for (size_t i = 0; i < m_TriangleCount; i++)
+			{
+				m_Triangles[i].Indices = glm::uvec3(faces[i].mIndices[0], faces[i].mIndices[1], faces[i].mIndices[2]);
+
 			}
 			
-			PK_CORE_INFO("Load Mesh:Vertices count = {0}, Faces count = {1}!", m_verticesCount, m_FaceCount);
+			PK_CORE_INFO("Load Mesh:Vertices count = {0}, Triangles count = {1}!", m_VerticesCount, m_TriangleCount);
+			
+			SetRenderData();
 		}
-		
-
 	}
+
 	Mesh::~Mesh()
 	{
 		//delete m_Scene;
 		delete[] m_Vertices;
-		delete[] m_Faces;
+		delete[] m_Triangles;
+	}
+
+	void Mesh::SetRenderData()
+	{
+		m_VertexArray = PKEngine::VertexArray::Create();
+		PKEngine::Ref<PKEngine::VertexBuffer> m_MeshBuffer;
+		m_MeshBuffer.reset(PKEngine::VertexBuffer::Create((float*)m_Vertices, m_VerticesCount * sizeof(Vertex)));
+
+		PKEngine::BufferLayout meshlayout = {
+				{PKEngine::ShaderDataType::Float3,"a_Position"},
+				{PKEngine::ShaderDataType::Float2,"a_Texcoord"},
+				{PKEngine::ShaderDataType::Float3,"a_Normal"}
+		};
+		m_MeshBuffer->SetLayout(meshlayout);
+
+		m_VertexArray->AddVertexBuffer(m_MeshBuffer);
+
+		PKEngine::Ref<PKEngine::IndexBuffer> m_MeshIndexBuffer;
+		m_MeshIndexBuffer.reset(PKEngine::IndexBuffer::Create((uint32_t*)m_Triangles, m_TriangleCount * 3));
+		m_VertexArray->SetIndexBuffer(m_MeshIndexBuffer);
 	}
 }

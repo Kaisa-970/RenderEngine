@@ -80,7 +80,8 @@ void main()
 
 	color = vec4(ambDirect + diffDirect + specDirect,1.0f);
 	//**************************//
-	//color = vec4(F,1.0f);
+
+	//color = vec4(normal,1.0f);
 	float value = 0.6;
 	//color = vec4(value,value,value,1.0f);
 	//color = vec4(value, value, value, 1.0f);

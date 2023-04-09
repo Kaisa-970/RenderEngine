@@ -1,25 +1,44 @@
 #pragma once
 
 #include <assimp/scene.h>
+#include "glm/glm.hpp"
+#include "PKEngine/Renderer/VertexArray.h"
 
 namespace PKEngine {
+	struct Vertex
+	{
+		glm::vec3 Position;
+		glm::vec2 Texcoord;
+		glm::vec3 Normal;
+	};
+
+	struct Triangle
+	{
+		glm::uvec3 Indices;
+	};
+
 	class Mesh {
 	public:
 		Mesh() = default;
 		Mesh(const std::string& filename);
 		~Mesh();
 
-		inline float* GetVertices() { return m_Vertices; }
-		inline unsigned int* GetIndices() { return m_Faces; }
+		const Vertex* GetVertices() const{ return m_Vertices; }
+		const Triangle* GetTriangles() const { return m_Triangles; }
 
-		inline int GetVerticesCount(){ return m_verticesCount; }
-		inline int GetFacesCount() { return m_FaceCount; }
+		uint32_t GetVerticesCount()const{ return m_VerticesCount; }
+		uint32_t GetTrianglesCount() const{ return m_TriangleCount; }
+
+		Ref<VertexArray> GetVertexArray() const { return m_VertexArray; }
+	
+	private:
+		void SetRenderData();
 
 	private:
-		const aiScene* m_Scene;
-		float* m_Vertices;
-		unsigned int* m_Faces;
-		unsigned int m_verticesCount;
-		unsigned int m_FaceCount;
+		Vertex* m_Vertices;
+		Triangle* m_Triangles;
+		uint32_t m_VerticesCount;
+		uint32_t m_TriangleCount;
+		Ref<VertexArray> m_VertexArray;
 	};
 }

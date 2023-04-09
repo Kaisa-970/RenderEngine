@@ -78,7 +78,7 @@ project "PKEngine"
 		filter "configurations:Debug"
 			libdirs{"PKEngine/vendor/assimp/lib"}
 			links{"assimp-vc140-mt.lib"}	
-			defines "PK_DEBUG"
+			defines {"PK_DEBUG","PK_ENABLE_ASSERTS"}
 			runtime "Debug"
 			symbols "On"
 

@@ -1,5 +1,7 @@
 #pragma once
 #include "Scene.h"
+#include "glm/glm.hpp"
+#include "PKEngine/Scene/Components.h"
 
 namespace PKEngine
 {
@@ -44,9 +46,20 @@ namespace PKEngine
 			return m_Handle == other->m_Handle && m_Scene == other->m_Scene; 
 		}
 		bool operator!=(const Actor* other) { return !operator==(other); }
+	
+	public:
+		void SetActorPosition(const glm::vec3& pos);
+		void SetActorRotation(const glm::vec3& rot);
+		void SetActorScale(const glm::vec3& sac);
+
+		glm::vec3 GetActorPosition()const{return m_RootTransform->Position;};
+		glm::vec3 GetActorRotation()const{return m_RootTransform->Rotation;};
+		glm::vec3 GetActorScale()const   {return m_RootTransform->Scale;};
+
 	private:
 		entt::entity m_Handle{entt::null};
 		Scene* m_Scene = nullptr;
 		std::string m_Name;
+		TransformComponent* m_RootTransform;
 	};
 }

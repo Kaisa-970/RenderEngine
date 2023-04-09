@@ -4,6 +4,7 @@
 #include <glm/gtx/transform.hpp>
 #include "glm/gtc/type_ptr.hpp"
 #include <chrono>
+#include <PKEngine/Scene/MeshComponent.h>
 
 namespace PKEngine {
 	EditorLayer::EditorLayer()
@@ -51,7 +52,7 @@ namespace PKEngine {
 		m_FrameBuffer = PKEngine::FrameBuffer::Create(fbs);
 
 		m_ActiveScene = CreateRef<Scene>();
-		m_Actor = m_ActiveScene->CreateActor("Test Actor");
+		m_Actor = m_ActiveScene->CreateActor("MeshActor");
 		m_Actor->AddComponent<SpriteComponent>();
 
 		m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_ActiveScene);
@@ -60,7 +61,7 @@ namespace PKEngine {
 		m_Mesh = CreateRef<Mesh>("assets/meshes/houtou.obj");
 		m_MeshVA = PKEngine::VertexArray::Create();
 		PKEngine::Ref<PKEngine::VertexBuffer> m_MeshBuffer;
-		m_MeshBuffer.reset(PKEngine::VertexBuffer::Create(m_Mesh->GetVertices(), m_Mesh->GetVerticesCount() * 8 * sizeof(float)));
+		m_MeshBuffer.reset(PKEngine::VertexBuffer::Create((float*)m_Mesh->GetVertices(), m_Mesh->GetVerticesCount()*sizeof(Vertex)));
 
 		PKEngine::BufferLayout meshlayout = {
 				{PKEngine::ShaderDataType::Float3,"a_Position"},
@@ -72,13 +73,13 @@ namespace PKEngine {
 		m_MeshVA->AddVertexBuffer(m_MeshBuffer);
 
 		PKEngine::Ref<PKEngine::IndexBuffer> m_MeshIndexBuffer;
-		PK_INFO("Mesh indices size:{0}", m_Mesh->GetFacesCount());
-		m_MeshIndexBuffer.reset(PKEngine::IndexBuffer::Create(m_Mesh->GetIndices(), m_Mesh->GetFacesCount() * 3));
+		m_MeshIndexBuffer.reset(PKEngine::IndexBuffer::Create((uint32_t*)m_Mesh->GetTriangles(), m_Mesh->GetTrianglesCount() * 3));
 		m_MeshVA->SetIndexBuffer(m_MeshIndexBuffer);
 
 		auto MeshShader = m_ShaderLib.Load("assets/shaders/MeshShader.glsl");
 		m_WoodTexture = PKEngine::Texture2D::Create("assets/textures/floor.png");
 		MeshShader->Bind();
+		m_Actor->AddComponent<MeshComponent>(m_Mesh,MeshShader);
 		//***********
 	}
 
@@ -86,36 +87,10 @@ namespace PKEngine {
 	{
 	}
 
-
+	float time = 0;
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
 		PK_PROFILE_FUNCTION();
-
-		//draw 2D**************
-		{
-			////update
-			//{
-			//	PK_PROFILE_FUNCTION();
-			//	if (m_ViewportFocused)
-			//		m_CameraController.Update(ts);
-			//}
-
-			//static float rotation = 0;
-			//rotation += ts * 20.0f;
-
-			//Renderer2D::ResetStats();
-
-			//m_FrameBuffer->Bind();
-			////render
-			//RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-			//RenderCommand::Clear();
-			//Renderer2D::BeginScene(m_CameraController.GetCamera());
-			////m_ActiveScene->OnUpdate(ts);
-			//Renderer2D::EndScene();
-			
-			//m_FrameBuffer->Unbind();
-		}
-		//**************
 
 		//draw mesh
 		{
@@ -181,32 +156,29 @@ namespace PKEngine {
 				m_PerspectiveCamera.SetPosition(m_CameraPosition);
 			}
 
+			time += ts.GetSeconds();
+			auto rotation = m_Actor->GetActorRotation();
+			rotation.y += ts.GetSeconds() * 60.0f;
+			m_Actor->SetActorRotation(rotation);
 			//render
 			m_FrameBuffer->Bind();
 
 			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			RenderCommand::Clear();
 			Renderer::BeginScene(m_PerspectiveCamera);
-			//m_SqureShader->Bind();
-			//std::dynamic_pointer_cast<PKEngine::OpenGLShader>(m_SqureShader)->SetUniform3f("u_Color", m_SqureColor);
 
-			auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+			auto transform = m_Actor->GetComponent<TransformComponent>().GetMatrix();
 
-			auto meshShader = m_ShaderLib.Get("MeshShader");
+			auto meshShader = m_Actor->GetComponent<MeshComponent>().GetMaterial();
 			meshShader->Bind();
-			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
-				SetUniform3f("u_LightPos", m_LightPos);
-			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
-				SetUniform3f("u_LightColor", m_LightColor * m_LightIntensity);
-			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
-				SetUniformf("u_Roughness", m_Roughness);
-			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->
-				SetUniformf("u_Metallic", m_Metallic);
-			std::dynamic_pointer_cast<OpenGLShader>(meshShader)->SetUniform3f("u_CameraPos", m_PerspectiveCamera.GetPosition());
+			
+			meshShader->SetFloat3("u_LightPos", m_LightPos);
+			meshShader->SetFloat3("u_LightColor", m_LightColor * m_LightIntensity);
+			meshShader->SetFloat("u_Roughness", m_Roughness);
+			meshShader->SetFloat("u_Metallic", m_Metallic);
+			meshShader->SetFloat3("u_CameraPos", m_PerspectiveCamera.GetPosition());
 
-			m_SqureShader->Bind();
-			Renderer::Submit(m_MeshVA, meshShader, transform);
-
+			Renderer::Submit(m_Mesh, meshShader, transform);
 			Renderer::EndScene();
 
 			m_FrameBuffer->Unbind();

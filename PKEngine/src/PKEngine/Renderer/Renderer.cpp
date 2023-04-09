@@ -39,4 +39,14 @@ namespace PKEngine {
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetUniformMat4f("u_ModelMat", transform);
 		RenderCommand::DrawIndexed(vertexArray);
 	}
+
+	void Renderer::Submit(const Ref<Mesh>& mesh, const Ref<Shader>& shader, const glm::mat4& transform)
+	{
+		mesh->GetVertexArray()->Bind();
+
+		shader->Bind();
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetUniformMat4f("u_ViewProjectionMat", s_SceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetUniformMat4f("u_ModelMat", transform);
+		RenderCommand::DrawIndexed(mesh->GetVertexArray());
+	}
 }
