@@ -27,7 +27,8 @@ namespace PKEngine
 		template<typename T>
 		bool HasComponent()
 		{
-			return m_Scene->m_Registry.has<T>(m_Handle);
+			return m_Scene->m_Registry.all_of<T>(m_Handle);
+			//return m_Scene->m_Registry.has<T>(m_Handle);
 		}
 
 		template<typename T>
@@ -38,6 +39,7 @@ namespace PKEngine
 		}
 
 		std::string GetName() { return m_Name; }
+		void SetName(const std::string& name) { m_Name = name; }
 
 		operator bool() const { return (uint32_t)m_Handle != entt::null; }
 

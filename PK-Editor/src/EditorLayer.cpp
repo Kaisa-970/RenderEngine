@@ -167,8 +167,8 @@ namespace PKEngine {
 					//PK_CORE_INFO("mouse pos:({0},{1})", deltaX, deltaY);
 					//m_CameraRotation.y += deltaTime * m_CameraRotateSpeed;
 					//auto [x, y] = Input::GetMousePosition();
-					m_CameraRotation.y -= deltaX * deltaTime * m_CameraRotateSpeed * 0.02f;
-					m_CameraRotation.x -= deltaY * deltaTime * m_CameraRotateSpeed * 0.02f;
+					m_CameraRotation.y -= deltaX * deltaTime * m_CameraRotateSpeed * 0.04f;
+					m_CameraRotation.x -= deltaY * deltaTime * m_CameraRotateSpeed * 0.04f;
 				}
 
 				if (PKEngine::Input::IsKeyPressed(PK_KEY_SPACE)) {

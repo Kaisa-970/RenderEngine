@@ -29,7 +29,22 @@ namespace PKEngine
 		{
 			DrawTreeNode(actor);
 		}
+
+		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+		{
+			m_SelectedActor = nullptr;
+		}
 		ImGui::End();
+
+
+
+		ImGui::Begin("Properties");
+		if (m_SelectedActor)
+		{
+			DrawComponents(m_SelectedActor);
+		}
+		ImGui::End();
+
 	}
 	void SceneHierarchyPanel::DrawTreeNode(Ref<Actor> actor)
 	{
@@ -42,7 +57,34 @@ namespace PKEngine
 
 		if(bopen)
 		{
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+			bool opd = ImGui::TreeNodeEx((void*)41478, flags, actor->GetName().c_str());
+			if (opd)
+			{
+				ImGui::TreePop();
+			}
 			ImGui::TreePop();
+		}
+	}
+	void SceneHierarchyPanel::DrawComponents(Ref<Actor> actor)
+	{
+		char buffer[256];
+		memset(buffer, 0, sizeof(buffer));
+		strcpy_s(buffer, actor->GetName().c_str());
+		if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+		{
+			actor->SetName(std::string(buffer));
+		}
+		if (actor->HasComponent<TransformComponent>())
+		{
+			if (ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen)) 
+			{
+				auto& transform = actor->GetComponent<TransformComponent>();
+				ImGui::DragFloat3("Position", glm::value_ptr(transform.Position), 0.1f);
+				ImGui::DragFloat3("Rotation", glm::value_ptr(transform.Rotation), 0.1f);
+				ImGui::DragFloat3("Scale", glm::value_ptr(transform.Scale), 0.1f);
+				ImGui::TreePop();
+			}
 		}
 	}
 }

@@ -13,6 +13,7 @@ namespace PKEngine
 
 		void OnImGuiRender();
 		void DrawTreeNode(Ref<Actor> actor);
+		void DrawComponents(Ref<Actor> actor);
 
 	private:
 		Ref<Scene> m_SceneContext;
