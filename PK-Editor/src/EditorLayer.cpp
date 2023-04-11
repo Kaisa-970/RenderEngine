@@ -3,6 +3,8 @@
 #include <Platform/OpenGL/OpenGLShader.h>
 #include <glm/gtx/transform.hpp>
 #include "glm/gtc/type_ptr.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "glm/gtx/quaternion.hpp"
 #include <chrono>
 #include <PKEngine/Scene/MeshComponent.h>
 
@@ -18,10 +20,10 @@ namespace PKEngine {
 		m_SqureVA = VertexArray::Create();
 
 		float squreVertices[] = {
-	-0.5f, -0.5f, 0.0f, 0.0f,0.0f,
-	 0.5f, -0.5f, 0.0f,	1.0f,0.0f,
-	 0.5f,  0.5f, 0.0f,	1.0f,1.0f,
-	 -0.5f, 0.5f, 0.0f,	0.0f,1.0f
+	-20.0f, -1.0f, -20.0f, 0.0f,0.0f, 0.0f,1.0f,0.0f,
+	 20.0f, -1.0f, -20.0f, 1.0f,0.0f, 0.0f,1.0f,0.0f,
+	 20.0f, -1.0f,  20.0f, 1.0f,1.0f, 0.0f,1.0f,0.0f,
+	-20.0f, -1.0f,  20.0f, 0.0f,1.0f, 0.0f,1.0f,0.0f
 		};
 
 		uint32_t squreIndices[6] = {
@@ -33,7 +35,8 @@ namespace PKEngine {
 		squreVB.reset(VertexBuffer::Create(squreVertices, sizeof(squreVertices)));
 		BufferLayout squreLayout = {
 		{ShaderDataType::Float3,"a_Position"},
-		{ShaderDataType::Float2,"a_TexCoord"}
+		{ShaderDataType::Float2,"a_TexCoord"},
+		{ShaderDataType::Float3,"a_Normal"}
 		};
 		squreVB->SetLayout(squreLayout);
 		m_SqureVA->AddVertexBuffer(squreVB);
@@ -77,8 +80,12 @@ namespace PKEngine {
 		m_MeshVA->SetIndexBuffer(m_MeshIndexBuffer);
 
 		auto MeshShader = m_ShaderLib.Load("assets/shaders/MeshShader.glsl");
+
+		auto floorShader = m_ShaderLib.Load("assets/shaders/FloorShader.glsl");
 		m_WoodTexture = PKEngine::Texture2D::Create("assets/textures/floor.png");
-		MeshShader->Bind();
+		m_WoodTexture->Bind(1);
+		floorShader->Bind();
+		floorShader->SetInt("u_Texture", 1);
 		m_Actor->AddComponent<MeshComponent>(m_Mesh,MeshShader);
 		//***********
 	}
@@ -97,9 +104,11 @@ namespace PKEngine {
 			if (m_ViewportFocused) 
 			{
 				float deltaTime = ts;
-				glm::vec3 forward = -glm::normalize(m_PerspectiveCamera.GetPosition());
-				glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+				glm::vec3 forward = m_PerspectiveCamera.GetForward();
+				glm::vec3 right = m_PerspectiveCamera.GetRight();
+				m_CameraPosition = m_PerspectiveCamera.GetPosition();
 				if (PKEngine::Input::IsKeyPressed(PK_KEY_W)) {
+					//PK_CORE_INFO("forward:({0},{1},{2})", forward.x, forward.y, forward.z);
 					//m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
 					m_CameraPosition += forward * deltaTime * m_CameraMoveSpeed;
 				}
@@ -124,34 +133,35 @@ namespace PKEngine {
 				else if (PKEngine::Input::IsKeyPressed(PK_KEY_Q)) {
 					//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
 					m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
-					//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
-					m_CameraPosition += right * deltaTime * m_CameraMoveSpeed;
+
 				}
 
-				if (PKEngine::Input::IsKeyPressed(PK_KEY_E)) {
-					//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
-					m_CameraPosition.y += deltaTime * m_CameraMoveSpeed;
-				}
-				else if (PKEngine::Input::IsKeyPressed(PK_KEY_Q)) {
-					//m_CameraPosition.x += deltaTime * m_CameraMoveSpeed;
-					m_CameraPosition.y -= deltaTime * m_CameraMoveSpeed;
-				}
+				float xPos = Input::GetMouseX();
+				float yPos = Input::GetMouseY();
+				float deltaX = xPos - m_LastMousePosX;
+				float deltaY = yPos - m_LastMousePosY;
+				m_LastMousePosX = xPos;
+				m_LastMousePosY = yPos;
 
-				float r = glm::distance(m_CameraPosition, glm::vec3(0, m_CameraPosition.y, 0));
+				m_CameraRotation = m_PerspectiveCamera.GetRotation();
 				if (PKEngine::Input::IsMouseButtonPressed(0)) {
-					m_CameraRotation -= deltaTime * m_CameraRotateSpeed;
-
-					m_CameraPosition.x = glm::cos(glm::radians(m_CameraRotation)) * r;
-					m_CameraPosition.z = glm::sin(glm::radians(m_CameraRotation)) * r;
-
+					//m_CameraRotation.y -= deltaTime * m_CameraRotateSpeed;
 				}
 				else if (PKEngine::Input::IsMouseButtonPressed(1)) {
-					m_CameraRotation += deltaTime * m_CameraRotateSpeed;
-
-					m_CameraPosition.x = glm::cos(glm::radians(m_CameraRotation)) * r;
-					m_CameraPosition.z = glm::sin(glm::radians(m_CameraRotation)) * r;
-
+					//PK_CORE_INFO("mouse pos:({0},{1})", deltaX, deltaY);
+					//m_CameraRotation.y += deltaTime * m_CameraRotateSpeed;
+					//auto [x, y] = Input::GetMousePosition();
+					m_CameraRotation.y -= deltaX * deltaTime * m_CameraRotateSpeed * 0.02f;
+					m_CameraRotation.x -= deltaY * deltaTime * m_CameraRotateSpeed * 0.02f;
 				}
+
+				if (PKEngine::Input::IsKeyPressed(PK_KEY_SPACE)) {
+					//m_CameraPosition.x -= deltaTime * m_CameraMoveSpeed;
+					m_CameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
+					m_CameraRotation = glm::vec3(0.0f);
+				}
+
+				m_PerspectiveCamera.SetRotation(m_CameraRotation);
 
 				m_PerspectiveCamera.SetPosition(m_CameraPosition);
 			}
@@ -159,7 +169,7 @@ namespace PKEngine {
 			time += ts.GetSeconds();
 			auto rotation = m_Actor->GetActorRotation();
 			rotation.y += ts.GetSeconds() * 60.0f;
-			m_Actor->SetActorRotation(rotation);
+			//m_Actor->SetActorRotation(rotation);
 			//render
 			m_FrameBuffer->Bind();
 
@@ -178,7 +188,21 @@ namespace PKEngine {
 			meshShader->SetFloat("u_Metallic", m_Metallic);
 			meshShader->SetFloat3("u_CameraPos", m_PerspectiveCamera.GetPosition());
 
+			auto floorShader = m_ShaderLib.Get("FloorShader");
+			Renderer::Submit(m_SqureVA, floorShader, glm::mat4(1.0f));
+
 			Renderer::Submit(m_Mesh, meshShader, transform);
+
+			{
+				auto floorShader = m_ShaderLib.Get("FloorShader");
+				floorShader->Bind();
+				floorShader->SetFloat3("u_LightPos", m_LightPos);
+				floorShader->SetFloat3("u_LightColor", m_LightColor * m_LightIntensity);
+
+				floorShader->SetFloat3("u_CameraPos", m_PerspectiveCamera.GetPosition());
+
+				Renderer::Submit(m_SqureVA, floorShader, glm::mat4(1.0f));
+			}
 			Renderer::EndScene();
 
 			m_FrameBuffer->Unbind();
@@ -274,6 +298,10 @@ namespace PKEngine {
 		ImGui::SliderFloat("Light Intensity", &m_LightIntensity, 0, 10);
 		ImGui::SliderFloat("Roughness", &m_Roughness, 0, 1);
 		ImGui::SliderFloat("Metallic", &m_Metallic, 0, 1);
+
+		auto& trans = m_Actor->GetComponent<TransformComponent>();
+		ImGui::DragFloat3("Rotation", &trans.Rotation.x);
+
 		//ImGui::Text("CameraPos: (%f,%f,%f)", m_CameraPosition.x, m_CameraPosition.y, m_CameraPosition.z);
 		
 		if (m_Actor) {

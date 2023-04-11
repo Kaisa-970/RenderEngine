@@ -12,6 +12,5 @@ namespace PKEngine {
 		static float GetMouseX();
 							   
 		static float GetMouseY();
-
 	};
 }

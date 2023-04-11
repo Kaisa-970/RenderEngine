@@ -44,8 +44,11 @@ namespace PKEngine{
 		glm::vec3 m_CameraPosition = glm::vec3(0, 0, -3);
 		float m_CameraMoveSpeed = 1.0f;
 
-		float m_CameraRotation = 0.0f;
+		glm::vec3 m_CameraRotation = glm::vec3(0, 0, 0);
 		float m_CameraRotateSpeed = 120.0f;
+
+		float m_LastMousePosX;
+		float m_LastMousePosY;
 		//********
 
 		OrthoCameraController m_CameraController;

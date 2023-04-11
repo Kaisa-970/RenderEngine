@@ -11,9 +11,12 @@ namespace PKEngine {
 		void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
 		const glm::vec3& GetPosition() const { return m_Position; }
 
-		void SetRotation(float rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
-		float GetRotation() const { return m_Rotation; }
+		void SetRotation(const glm::vec3& rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
+		glm::vec3 GetRotation() const { return m_Rotation; }
 		//const glm::vec3& GetForwardDir() const { return m_Position; }
+
+		glm::vec3 GetForward() const;
+		glm::vec3 GetRight() const;
 
 		inline const glm::mat4& GetViewMatrix()const { return m_ViewMatrix; }
 		inline const glm::mat4& GetProjectionMatrix()const { return m_ProjectionMatrix; }
@@ -27,7 +30,7 @@ namespace PKEngine {
 		glm::mat4 m_ViewMatrix;
 		glm::mat4 m_ViewProjectionMatrix;
 
-		glm::vec3 m_Position = { 0.0f,0.0f,0.0f };
-		float m_Rotation = 0.0f;
+		glm::vec3 m_Position = { 0.0f, 0.0f, 3.0f };
+		glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
 	};
 }

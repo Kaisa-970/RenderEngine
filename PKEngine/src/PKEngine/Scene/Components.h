@@ -1,6 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
 #include <glm/gtx/transform.hpp>
+#include "glm/gtc/type_ptr.hpp"
 
 struct TransformComponent
 {
@@ -10,8 +11,8 @@ struct TransformComponent
 
 	glm::mat4 GetMatrix()
 	{
-		return glm::translate(glm::mat4(1.0f),Position)
-			* glm::rotate(glm::mat4(1.0f),glm::radians(Rotation.y), glm::vec3(0.0f,1.0f,0.0f))
+		return glm::translate(glm::mat4(1.0f), Position)
+			* glm::mat4_cast(glm::quat(glm::radians(Rotation)))
 			* glm::scale(glm::mat4(1.0f), Scale);
 	}
 
