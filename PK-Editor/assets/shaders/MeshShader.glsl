@@ -68,7 +68,7 @@ void main()
 	vec3 ambDirect;
 
 	float kd = 1/PI;
-	vec3 abedo = vec3(1.0);//texture(u_Texture,o_TexCoord).rgb;
+	vec3 abedo = texture(u_Texture,o_TexCoord).rgb;
 	
 	vec3 diffDirect = kd*abedo*attenuation*lightColor*dln;
 

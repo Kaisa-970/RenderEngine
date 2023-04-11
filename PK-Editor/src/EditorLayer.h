@@ -43,12 +43,18 @@ namespace PKEngine{
 		PerspectiveCamera m_PerspectiveCamera;
 		glm::vec3 m_CameraPosition = glm::vec3(0, 0, -3);
 		float m_CameraMoveSpeed = 1.0f;
+		float m_CameraFov = 45.0f;
+		float m_CameraAspect = 1.778f;
 
 		glm::vec3 m_CameraRotation = glm::vec3(0, 0, 0);
 		float m_CameraRotateSpeed = 120.0f;
 
 		float m_LastMousePosX;
 		float m_LastMousePosY;
+
+		std::vector<Ref<Mesh>> m_MeshArray;
+
+		Ref<Texture2D> m_WhiteTexture;
 		//********
 
 		OrthoCameraController m_CameraController;
@@ -56,6 +62,6 @@ namespace PKEngine{
 		Ref<Scene> m_ActiveScene;
 		Ref<Actor> m_Actor;
 		Ref<SceneHierarchyPanel> m_SceneHierarchyPanel;
-		
+		std::vector<Ref<Actor>> m_ActorArray;
 	};
 }

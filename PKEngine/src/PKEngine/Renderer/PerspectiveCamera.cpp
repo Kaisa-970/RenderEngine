@@ -7,7 +7,7 @@
 namespace PKEngine {
 
 	PerspectiveCamera::PerspectiveCamera(float fovy, float aspect, float znear, float zfar)
-		:m_ProjectionMatrix(glm::perspective(fovy, aspect, znear, zfar)),
+		:m_Fov(fovy),m_AspectRatio(aspect),m_Near(znear),m_Far(zfar), m_ProjectionMatrix(glm::perspective(fovy, aspect, znear, zfar)),
 		m_ViewMatrix(1.0f)
 	{
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
@@ -34,5 +34,40 @@ namespace PKEngine {
 		m_ViewMatrix = glm::inverse(transform); 
 
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+	}
+
+	void PerspectiveCamera::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<MouseScrolledEvent>(PK_BIND_EVENT_FN(PerspectiveCamera::OnMouseScroll));
+		dispatcher.Dispatch<WindowResizeEvent>(PK_BIND_EVENT_FN(PerspectiveCamera::OnWindowResize));
+	}
+	void PerspectiveCamera::SetFov(float fov)
+	{
+		 m_Fov = glm::radians(fov); 
+		 m_ProjectionMatrix = glm::perspective(m_Fov, m_AspectRatio, m_Near, m_Far);
+		 RecalculateViewMatrix();
+	}
+	void PerspectiveCamera::SetAspect(float aspect)
+	{
+		m_AspectRatio = aspect;
+		m_ProjectionMatrix = glm::perspective(m_Fov, m_AspectRatio, m_Near, m_Far);
+		RecalculateViewMatrix();
+	}
+	bool PerspectiveCamera::OnMouseScroll(MouseScrolledEvent& e)
+	{
+		m_ProjectionMatrix = glm::perspective(m_Fov, m_AspectRatio, m_Near, m_Far);
+		RecalculateViewMatrix();
+		return false;
+	}
+	bool PerspectiveCamera::OnWindowResize(WindowResizeEvent& e)
+	{
+		m_AspectRatio = e.GetWidth() * 1.0f / (e.GetHeight() * 1.0f);
+		//float sw = e.GetWidth() / 1280.0f;
+		float sh = e.GetHeight() / 1080.0f;
+		//float tmpZoom = m_ZoomLevel * sh;
+		m_ProjectionMatrix = glm::perspective(m_Fov, m_AspectRatio, m_Near, m_Far);
+		RecalculateViewMatrix();
+		return false;
 	}
 }

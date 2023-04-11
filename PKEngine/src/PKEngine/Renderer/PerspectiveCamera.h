@@ -1,6 +1,8 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include <PKEngine/Events/MouseEvent.h>
+#include <PKEngine/Events/ApplicationEvent.h>
 
 namespace PKEngine {
 	class PerspectiveCamera {
@@ -22,6 +24,16 @@ namespace PKEngine {
 		inline const glm::mat4& GetProjectionMatrix()const { return m_ProjectionMatrix; }
 		inline const glm::mat4& GetViewProjectionMatrix()const { return m_ViewProjectionMatrix; }
 
+		void SetFov(float fov);
+		void SetAspect(float aspect);
+
+		void OnEvent(Event& e);
+
+		bool OnMouseScroll(MouseScrolledEvent& e);
+
+		bool OnWindowResize(WindowResizeEvent& e);
+
+
 	private:
 		void RecalculateViewMatrix();
 
@@ -32,5 +44,10 @@ namespace PKEngine {
 
 		glm::vec3 m_Position = { 0.0f, 0.0f, 3.0f };
 		glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
+
+		float m_AspectRatio;
+		float m_Near;
+		float m_Far;
+		float m_Fov;
 	};
 }
