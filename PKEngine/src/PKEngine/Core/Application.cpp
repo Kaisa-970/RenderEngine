@@ -42,6 +42,7 @@ namespace PKEngine {
 		wp.Width = width;
 		wp.Height = height;
 		m_Window = std::unique_ptr<Window>(Window::Create(wp));
+		
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 		s_Instance = this;
 		

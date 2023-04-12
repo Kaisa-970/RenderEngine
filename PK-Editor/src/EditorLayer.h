@@ -42,7 +42,7 @@ namespace PKEngine{
 
 		PerspectiveCamera m_PerspectiveCamera;
 		glm::vec3 m_CameraPosition = glm::vec3(0, 0, -3);
-		float m_CameraMoveSpeed = 2.0f;
+		float m_CameraMoveSpeed = 3.0f;
 		float m_CameraFov = 45.0f;
 		float m_CameraAspect = 1.778f;
 
