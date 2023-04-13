@@ -21,6 +21,7 @@ void main()
 #version 330 core
 out vec4 color;
 uniform sampler2D u_Texture;
+uniform samplerCube u_Skybox;
 uniform vec3 u_CameraPos;
 uniform vec3 u_LightPos;
 uniform vec3 u_LightColor;
@@ -43,11 +44,12 @@ void main()
 	float d = length(lightPos-o_WorldPos);
 	float attenuation = 1/(d*d);
 	//*******Blinn-phong********//
-	vec3 envColor = texture(u_Texture,o_TexCoord).rgb * 0.5;
-	float k = 1/(d*d);
-	vec3 diffColor = k * lightColor * dln;
-
-	vec3 specColor = k * vec3(1,1,1) * pow(max(dhn,0),8);
+	vec3 envColor = 0.1 * vec3(1.0);
+	vec3 kd = texture(u_Texture,o_TexCoord).rgb;
+	vec3 diffColor = kd * attenuation * lightColor * dln;
+	float ks = 0.5;
+	vec3 specColor = ks * attenuation * vec3(1,1,1) * pow(max(dhn,0),8);
 	color = vec4(envColor + diffColor + specColor,1.0f);
-	//color = texture(u_Texture, o_TexCoord);//vec4(o_TexCoord,0.0f,1.0f);
+	//float dep = gl_FragCoord.z;
+	//color = vec4(dep,dep,dep,1);
 };
