@@ -21,6 +21,9 @@ namespace PKEngine {
 
 		static void Submit(const Ref<Mesh>& mesh, const Ref<Shader>& shader, const glm::mat4& transform = glm::mat4(1.0f));
 
+		//static void DrawSky(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform = glm::mat4(1.0f));
+		static void SetViewProjectionMatrix(const glm::mat4& vpmat);
+
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
 	private:

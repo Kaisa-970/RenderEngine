@@ -32,4 +32,9 @@ namespace PKEngine {
 		glDrawElements(GL_TRIANGLES, idxCount, GL_UNSIGNED_INT, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+
+	void OpenGLRendererAPI::DepthWrite(bool bwrt)
+	{
+		glDepthMask(bwrt ? GL_TRUE : GL_FALSE);
+	}
 }

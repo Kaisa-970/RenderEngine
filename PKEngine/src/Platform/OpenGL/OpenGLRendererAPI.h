@@ -11,5 +11,7 @@ namespace PKEngine {
 		virtual void Init() override;
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray,uint32_t count = 0) override;
+
+		virtual void DepthWrite(bool bwrt) override;
 	};
 }

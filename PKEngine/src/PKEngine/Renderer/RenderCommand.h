@@ -4,14 +4,15 @@
 namespace PKEngine {
 	class RenderCommand {
 	public:
-		inline static void Init() { s_RendererAPI->Init(); };
-		inline static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) { s_RendererAPI->SetViewport(x,y,width,height); };
-		inline static void SetClearColor(const glm::vec4& color) { s_RendererAPI->SetClearColor(color); };
-		inline static void Clear() { s_RendererAPI->Clear(); };
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray,uint32_t count = 0) {
+		static void Init() { s_RendererAPI->Init(); };
+		static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) { s_RendererAPI->SetViewport(x,y,width,height); };
+		static void SetClearColor(const glm::vec4& color) { s_RendererAPI->SetClearColor(color); };
+		static void Clear() { s_RendererAPI->Clear(); };
+		static void DrawIndexed(const Ref<VertexArray>& vertexArray,uint32_t count = 0) {
 			s_RendererAPI->DrawIndexed(vertexArray,count);
 		}
 
+		static void DepthWrite(bool bwrt = true) { s_RendererAPI->DepthWrite(bwrt); };
 		//inline static void Blend() { s_RendererAPI->Blend(); };
 		//inline static RendererAPI* GetAPI() { return s_RendererAPI; }
 	private:

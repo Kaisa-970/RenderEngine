@@ -55,6 +55,9 @@ namespace PKEngine{
 		std::vector<Ref<Mesh>> m_MeshArray;
 
 		Ref<Texture2D> m_WhiteTexture;
+
+		Ref<Texture3D> m_Skybox;
+		Ref<VertexArray> m_SkyVA;
 		//********
 
 		OrthoCameraController m_CameraController;

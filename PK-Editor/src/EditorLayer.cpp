@@ -10,7 +10,7 @@
 
 namespace PKEngine {
 	EditorLayer::EditorLayer()
-		:Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f), m_SqureColor(1.0f),m_PerspectiveCamera(glm::radians(45.0f), 1.778f, 0.01f, 100.0f)
+		:Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f), m_SqureColor(1.0f),m_PerspectiveCamera(glm::radians(45.0f), 1.778f, 0.01f, 1000.0f)
 
 	{
 	}
@@ -103,7 +103,87 @@ namespace PKEngine {
 		m_Actor->AddComponent<MeshComponent>(m_Mesh,MeshShader);
 		sphereActor->AddComponent<MeshComponent>(m_SphereMesh, MeshShader);
 
+		std::vector<std::string> skyboxPath = 
+		{
+			"assets/textures/skybox/right.jpg",
+			"assets/textures/skybox/left.jpg",
+			"assets/textures/skybox/bottom.jpg",
+			"assets/textures/skybox/top.jpg",
+			"assets/textures/skybox/front.jpg",
+			"assets/textures/skybox/back.jpg"
+		};
+		m_Skybox = Texture3D::Create(skyboxPath);
+		m_Skybox->Bind();
+		auto skyshader = m_ShaderLib.Load("assets/shaders/SkyboxShader.glsl");
+		skyshader->Bind();
+		skyshader->SetInt("u_Texture", 0);
+
+		m_SkyVA = VertexArray::Create();
+
+		float skyVertices[] = {
+	-1.0f,  1.0f, -1.0f,
+	-1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+
+	-1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+
+	-1.0f, -1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+
+	-1.0f,  1.0f, -1.0f,
+	 1.0f,  1.0f, -1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f, -1.0f,
+
+	-1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f
+		};
+
+		uint32_t skyIndices[36];
+		for (int i = 0; i < 36; i++)
+		{
+			skyIndices[i] = i;
+		}
+
+		Ref<VertexBuffer> skyVB;
+		skyVB.reset(VertexBuffer::Create(skyVertices, sizeof(skyVertices)));
+		BufferLayout skyLayout = {
+		{ShaderDataType::Float3,"a_Position"},
+		};
+		skyVB->SetLayout(skyLayout);
+		m_SkyVA->AddVertexBuffer(skyVB);
+
+		Ref<IndexBuffer> skyIB;
+		skyIB.reset(IndexBuffer::Create(skyIndices, sizeof(skyIndices) / sizeof(uint32_t)));
+		m_SkyVA->SetIndexBuffer(skyIB);
 		//***********
+
+		
 	}
 
 	void EditorLayer::OnDetach()
@@ -115,9 +195,9 @@ namespace PKEngine {
 	{
 		PK_PROFILE_FUNCTION();
 
-		//draw mesh
+		//scene tick
 		{
-			if (m_ViewportFocused) 
+			if (m_ViewportFocused)
 			{
 				float deltaTime = ts;
 				glm::vec3 forward = m_PerspectiveCamera.GetForward();
@@ -181,6 +261,12 @@ namespace PKEngine {
 
 				m_PerspectiveCamera.SetPosition(m_CameraPosition);
 			}
+		}
+
+
+		//render
+		{
+			
 
 			time += ts.GetSeconds();
 			auto rotation = m_Actor->GetActorRotation();
@@ -193,6 +279,18 @@ namespace PKEngine {
 			RenderCommand::Clear();
 			Renderer::BeginScene(m_PerspectiveCamera);
 
+			//draw skybox
+			{
+				RenderCommand::DepthWrite(false);
+				auto vp = m_PerspectiveCamera.GetProjectionMatrix() * glm::mat4(glm::mat3(m_PerspectiveCamera.GetViewMatrix()));
+				Renderer::SetViewProjectionMatrix(vp);
+
+				auto skyShader = m_ShaderLib.Get("SkyboxShader");
+				Renderer::Submit(m_SkyVA, skyShader);
+
+				RenderCommand::DepthWrite(true);
+				Renderer::BeginScene(m_PerspectiveCamera);
+			}
 
 			for (int i = 0; i < m_ActorArray.size(); i++)
 			{
@@ -211,7 +309,6 @@ namespace PKEngine {
 				Renderer::Submit(m_MeshArray[i], meshShader, transform);
 			}
 				
-
 			{
 				auto floorShader = m_ShaderLib.Get("FloorShader");
 				floorShader->Bind();
@@ -222,6 +319,7 @@ namespace PKEngine {
 
 				Renderer::Submit(m_SqureVA, floorShader, glm::mat4(1.0f));
 			}
+
 			Renderer::EndScene();
 
 			m_FrameBuffer->Unbind();
