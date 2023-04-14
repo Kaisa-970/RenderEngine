@@ -24,6 +24,8 @@ namespace PKEngine {
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_MULTISAMPLE);
+
+		glEnable(GL_CULL_FACE);
 	}
 
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count)

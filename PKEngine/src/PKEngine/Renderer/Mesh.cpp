@@ -10,7 +10,7 @@ namespace PKEngine {
 	{
 		Assimp::Importer importer;
 		
-		auto m_Scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
+		auto m_Scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		
 		if (!m_Scene || m_Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_Scene->mRootNode)
 		{
@@ -28,12 +28,14 @@ namespace PKEngine {
 			auto vertices = mesh0->mVertices;
 			auto normals = mesh0->mNormals;
 			auto uvs = mesh0->mTextureCoords[0];
+			auto tangents = mesh0->mTangents;
 
 			for (size_t i = 0; i < m_VerticesCount; i++)
 			{
 				m_Vertices[i].Position = glm::vec3(vertices[i].x, vertices[i].y, vertices[i].z);
 				m_Vertices[i].Texcoord = glm::vec2(uvs[i].x, uvs[i].y);
 				m_Vertices[i].Normal = glm::vec3(normals[i].x, normals[i].y, normals[i].z);
+				m_Vertices[i].Tangent = glm::vec3(tangents[i].x, tangents[i].y, tangents[i].z);
 			}
 
 			m_TriangleCount = mesh0->mNumFaces;
@@ -69,7 +71,8 @@ namespace PKEngine {
 		PKEngine::BufferLayout meshlayout = {
 				{PKEngine::ShaderDataType::Float3,"a_Position"},
 				{PKEngine::ShaderDataType::Float2,"a_Texcoord"},
-				{PKEngine::ShaderDataType::Float3,"a_Normal"}
+				{PKEngine::ShaderDataType::Float3,"a_Normal"},
+				{PKEngine::ShaderDataType::Float3,"a_Tangent"}
 		};
 		m_MeshBuffer->SetLayout(meshlayout);
 

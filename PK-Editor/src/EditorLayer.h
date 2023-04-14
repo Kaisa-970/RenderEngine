@@ -58,6 +58,10 @@ namespace PKEngine{
 
 		Ref<Texture3D> m_Skybox;
 		Ref<VertexArray> m_SkyVA;
+
+		Ref<Mesh> m_XiangZi;
+		Ref<Texture2D> m_DiffXZ;
+		Ref<Texture2D> m_NormXZ;
 		//********
 
 		OrthoCameraController m_CameraController;

@@ -10,6 +10,7 @@ namespace PKEngine {
 		glm::vec3 Position;
 		glm::vec2 Texcoord;
 		glm::vec3 Normal;
+		glm::vec3 Tangent;
 	};
 
 	struct Triangle

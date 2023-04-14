@@ -20,10 +20,10 @@ namespace PKEngine {
 		m_SqureVA = VertexArray::Create();
 
 		float squreVertices[] = {
-	-20.0f, -1.0f, -20.0f, 0.0f,0.0f, 0.0f,1.0f,0.0f,
-	 20.0f, -1.0f, -20.0f, 1.0f,0.0f, 0.0f,1.0f,0.0f,
-	 20.0f, -1.0f,  20.0f, 1.0f,1.0f, 0.0f,1.0f,0.0f,
-	-20.0f, -1.0f,  20.0f, 0.0f,1.0f, 0.0f,1.0f,0.0f
+	-20.0f, -1.0f, 20.0f, 0.0f,0.0f, 0.0f,1.0f,0.0f,
+	 20.0f, -1.0f, 20.0f, 1.0f,0.0f, 0.0f,1.0f,0.0f,
+	 20.0f, -1.0f, -20.0f, 1.0f,1.0f, 0.0f,1.0f,0.0f,
+	-20.0f, -1.0f, -20.0f, 0.0f,1.0f, 0.0f,1.0f,0.0f
 		};
 
 		uint32_t squreIndices[6] = {
@@ -101,6 +101,7 @@ namespace PKEngine {
 		floorShader->Bind();
 		floorShader->SetInt("u_Texture", 2);
 		m_Actor->AddComponent<MeshComponent>(m_Mesh,MeshShader);
+		m_Actor->SetActorPosition(glm::vec3(-1.5f, 0.0f, -2.0f));
 		sphereActor->AddComponent<MeshComponent>(m_SphereMesh, MeshShader);
 
 		std::vector<std::string> skyboxPath = 
@@ -181,6 +182,14 @@ namespace PKEngine {
 		Ref<IndexBuffer> skyIB;
 		skyIB.reset(IndexBuffer::Create(skyIndices, sizeof(skyIndices) / sizeof(uint32_t)));
 		m_SkyVA->SetIndexBuffer(skyIB);
+
+		m_XiangZi = CreateRef<Mesh>("assets/models/box/treasure_chest.fbx");
+		m_DiffXZ = Texture2D::Create("assets/models/box/treasure_chest_diff_1k.jpg");
+		m_DiffXZ->Bind(3);
+
+		m_NormXZ = Texture2D::Create("assets/models/box/treasure_chest_nor_gl_1k.jpg");
+		m_NormXZ->Bind(4);
+
 		//***********
 
 		
@@ -314,10 +323,16 @@ namespace PKEngine {
 				floorShader->Bind();
 				floorShader->SetFloat3("u_LightPos", m_LightPos);
 				floorShader->SetFloat3("u_LightColor", m_LightColor * m_LightIntensity);
-
+				m_WoodTexture->Bind(2);
+				floorShader->SetInt("u_Texture", 2);
 				floorShader->SetFloat3("u_CameraPos", m_PerspectiveCamera.GetPosition());
 
 				Renderer::Submit(m_SqureVA, floorShader, glm::mat4(1.0f));
+
+				m_DiffXZ->Bind(3);
+				floorShader->SetInt("u_Texture", 3);
+				floorShader->SetInt("u_NormMap", 4);
+				Renderer::Submit(m_XiangZi, floorShader, glm::mat4(1.0f));
 			}
 
 			Renderer::EndScene();
