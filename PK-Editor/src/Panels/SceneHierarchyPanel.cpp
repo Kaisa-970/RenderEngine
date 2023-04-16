@@ -89,15 +89,19 @@ namespace PKEngine
 			}
 		}
 
-		//if (actor->HasComponent<MeshComponent>())
-		//{
-		//	if (ImGui::TreeNodeEx("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
-		//	{
-		//		auto& mesh = actor->GetComponent<MeshComponent>();
-	
-		//		ImGui::TreePop();
-		//	}
-		//}
+		if (actor->HasComponent<MeshComponent>())
+		{
+			if (ImGui::TreeNodeEx("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				auto& mesh = actor->GetComponent<MeshComponent>();
+				auto shader = mesh.GetMaterial();
+				auto& sps = mesh.GetShaderParameters();
+				ImGui::SliderFloat("Roughness", &sps.Roughness, 0, 1);
+				ImGui::SliderFloat("Metallic", &sps.Metallic, 0, 1);
+
+				ImGui::TreePop();
+			}
+		}
 
 		if (actor->HasComponent<LightComponent>())
 		{

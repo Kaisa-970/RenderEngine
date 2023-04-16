@@ -29,12 +29,6 @@ namespace PKEngine{
 		ShaderLibrary m_ShaderLib;
 		Ref<Texture2D> m_WoodTexture;
 
-		float m_Roughness = 0.5;
-		float m_Metallic = 0;
-		glm::vec3 m_LightColor = glm::vec3(1.0f);
-		glm::vec3 m_LightPos = glm::vec3(1.0f, 2.0f, 0.0f);
-		float m_LightIntensity = 3.0f;
-
 		Ref<PerspectiveCamera> m_PerspectiveCamera;
 		glm::vec3 m_CameraPosition = glm::vec3(0, 0, -3);
 		float m_CameraMoveSpeed = 3.0f;
@@ -46,8 +40,6 @@ namespace PKEngine{
 
 		float m_LastMousePosX;
 		float m_LastMousePosY;
-
-		std::vector<Ref<Mesh>> m_MeshArray;
 
 		Ref<Texture2D> m_WhiteTexture;
 

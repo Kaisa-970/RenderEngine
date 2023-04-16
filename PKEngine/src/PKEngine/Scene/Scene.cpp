@@ -101,14 +101,6 @@ namespace PKEngine {
 	}
 	void Scene::OnUpdate(Timestep ts)
 	{
-		//auto group = m_Registry.group<TransformComponent>(entt::get<SpriteComponent>);
-		//for(auto enti:group)
-		//{
-		//	auto& [tran, sprit] = group.get<TransformComponent, SpriteComponent>(enti);
-
-		//	Renderer2D::DrawQuad(tran.GetMatrix(), sprit.Color);
-		//}
-
 		{
 			RenderCommand::DepthWrite(false);
 			auto vp = m_SceneCamera->GetProjectionMatrix() * glm::mat4(glm::mat3(m_SceneCamera->GetViewMatrix()));
@@ -120,20 +112,18 @@ namespace PKEngine {
 			Renderer::BeginScene(*m_SceneCamera);
 		}
 
+		
 		Ref<Actor> lightActor;
 		for (auto actor : m_Actors)
 		{
 			if (actor->HasComponent<LightComponent>())
 			{
+				// Handle only one light
+				// TODO::Handle multiple lights
 				lightActor = actor;
 				break;
 			}
 		}
-		//if (lightActor)
-		//{
-
-		//}
-
 
 		for (auto actor : m_Actors)
 		{
@@ -143,14 +133,15 @@ namespace PKEngine {
 				auto& transf = actor->GetComponent<TransformComponent>();
 				auto shader = Mesh.GetMaterial();
 				shader->Bind();
+				auto sp = Mesh.GetShaderParameters();
 				if (lightActor)
 				{
 					auto& light = lightActor->GetComponent<LightComponent>();
 					shader->SetFloat3("u_LightPos", lightActor->GetActorPosition());
 					auto pos = lightActor->GetActorPosition();
 					shader->SetFloat3("u_LightColor", light.GetColor()*light.GetIntensity());
-					shader->SetFloat("u_Roughness", 0.5f);
-					shader->SetFloat("u_Metallic", 0.0f);
+					shader->SetFloat("u_Roughness", sp.Roughness);
+					shader->SetFloat("u_Metallic", sp.Metallic);
 					shader->SetFloat3("u_CameraPos", m_SceneCamera->GetPosition());
 				}
 				Renderer::Submit(Mesh.GetMesh(), shader, transf.GetMatrix());

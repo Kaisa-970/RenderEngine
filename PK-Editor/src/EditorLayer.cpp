@@ -83,7 +83,6 @@ namespace PKEngine {
 		// houtou
 		auto houtouActor = m_ActiveScene->CreateActor("Houtou");
 		auto houtouMesh = CreateRef<Mesh>("assets/meshes/houtou.obj");
-		m_MeshArray.push_back(houtouMesh);
 		houtouActor->AddComponent<MeshComponent>(houtouMesh, MeshShader);
 		houtouActor->SetActorPosition(glm::vec3(-1.5f, 0.0f, -2.0f));
 		m_ActorArray.push_back(houtouActor);
@@ -91,7 +90,6 @@ namespace PKEngine {
 
 		// sphere
 		auto m_SphereMesh = CreateRef<Mesh>("assets/meshes/sphere.obj");
-		m_MeshArray.push_back(m_SphereMesh);
 		auto sphereActor = m_ActiveScene->CreateActor("Sphere");
 		sphereActor->AddComponent<MeshComponent>(m_SphereMesh, MeshShader);
 		sphereActor->SetActorPosition(glm::vec3(2.0f, 0.5f, -2.5f));
@@ -206,39 +204,6 @@ namespace PKEngine {
 			Renderer::BeginScene(*m_PerspectiveCamera);
 
 			m_ActiveScene->OnUpdate(ts);
-			//for (int i = 0; i < m_ActorArray.size(); i++)
-			//{
-			//	auto transform = m_ActorArray[i]->GetComponent<TransformComponent>().GetMatrix();
-			//	auto meshShader = m_ActorArray[i]->GetComponent<MeshComponent>().GetMaterial();
-			//	meshShader->Bind();
-
-			//	meshShader->SetFloat3("u_LightPos", m_LightPos);
-			//	meshShader->SetFloat3("u_LightColor", m_LightColor * m_LightIntensity);
-			//	meshShader->SetFloat("u_Roughness", m_Roughness);
-			//	meshShader->SetFloat("u_Metallic", m_Metallic);
-			//	meshShader->SetFloat3("u_CameraPos", m_PerspectiveCamera->GetPosition());
-			//	if (i == 0)
-			//		m_WhiteTexture->Bind();
-			//	meshShader->SetInt("u_Texture", i);
-			//	Renderer::Submit(m_MeshArray[i], meshShader, transform);
-			//}
-			//	
-			//{
-			//	auto floorShader = m_ShaderLib.Get("FloorShader");
-			//	floorShader->Bind();
-			//	floorShader->SetFloat3("u_LightPos", m_LightPos);
-			//	floorShader->SetFloat3("u_LightColor", m_LightColor * m_LightIntensity);
-			//	m_WoodTexture->Bind(2);
-			//	floorShader->SetInt("u_Texture", 2);
-			//	floorShader->SetFloat3("u_CameraPos", m_PerspectiveCamera->GetPosition());
-
-			//	Renderer::Submit(m_SqureVA, floorShader, glm::mat4(1.0f));
-
-			//	m_DiffXZ->Bind(3);
-			//	floorShader->SetInt("u_Texture", 3);
-			//	floorShader->SetInt("u_NormMap", 4);
-			//	Renderer::Submit(m_XiangZi, floorShader, glm::mat4(1.0f));
-			//}
 
 			Renderer::EndScene();
 
@@ -318,17 +283,6 @@ namespace PKEngine {
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertex Count: %d", stats.GetVertexCount());
 		ImGui::Text("Index Calls: %d", stats.GetIndexCount());
-
-
-		//ImGui::ColorEdit3("Light Color", glm::value_ptr(m_LightColor));
-		//ImGui::SliderFloat("Light Intensity", &m_LightIntensity, 0, 10);
-
-		//auto& light = m_PointLight->GetComponent<LightComponent>();
-		//light.SetColor(m_LightColor);
-		//light.SetIntensity(m_LightIntensity);
-
-		ImGui::SliderFloat("Roughness", &m_Roughness, 0, 1);
-		ImGui::SliderFloat("Metallic", &m_Metallic, 0, 1);
 
 		ImGui::SliderFloat("Camera Fov", &m_CameraFov, 5, 75);
 		m_PerspectiveCamera->SetFov(m_CameraFov);

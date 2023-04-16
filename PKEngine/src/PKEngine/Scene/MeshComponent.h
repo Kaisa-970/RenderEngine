@@ -4,6 +4,12 @@
 
 namespace PKEngine
 {
+	struct ShaderParameters
+	{
+		float Roughness;
+		float Metallic;
+	};
+
 	class MeshComponent
 	{
 	public:
@@ -17,9 +23,11 @@ namespace PKEngine
 		Ref<Mesh> GetMesh() const { return m_Mesh; };
 		Ref<Shader> GetMaterial() const { return m_Shader; };
 
+		ShaderParameters& GetShaderParameters() { return m_ShaderParam; }
+		void SetShaderParameters(const ShaderParameters& sps) { m_ShaderParam = sps; }
 	private:
 		Ref<Mesh> m_Mesh;
 		Ref<Shader> m_Shader;
-
+		ShaderParameters m_ShaderParam{ 0.5f,0.0f };
 	};
 }
