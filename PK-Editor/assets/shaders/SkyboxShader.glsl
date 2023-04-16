@@ -25,5 +25,5 @@ void main()
 {
 	//TODO:Texture Tilling
 	vec3 dir = normalize(o_TexCoord);
-	color = texture(u_Texture,-o_TexCoord);
+	color = texture(u_Texture,o_TexCoord);
 };

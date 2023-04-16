@@ -42,6 +42,7 @@ namespace PKEngine
 
 	void OpenGLTexture3D::Bind(uint32_t slot) const
 	{
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+		glBindTextureUnit(slot, m_RendererID);
 	}
 }

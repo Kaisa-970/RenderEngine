@@ -2,6 +2,8 @@
 #include "SceneHierarchyPanel.h"
 #include "imgui.h"
 #include "PKEngine/Scene/Actor.h"
+#include <PKEngine/Scene/LightComponent.h>
+#include <PKEngine/Scene/MeshComponent.h>
 namespace PKEngine
 {
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene> scene)
@@ -83,6 +85,32 @@ namespace PKEngine
 				ImGui::DragFloat3("Position", glm::value_ptr(transform.Position), 0.1f);
 				ImGui::DragFloat3("Rotation", glm::value_ptr(transform.Rotation), 0.1f);
 				ImGui::DragFloat3("Scale", glm::value_ptr(transform.Scale), 0.1f);
+				ImGui::TreePop();
+			}
+		}
+
+		//if (actor->HasComponent<MeshComponent>())
+		//{
+		//	if (ImGui::TreeNodeEx("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+		//	{
+		//		auto& mesh = actor->GetComponent<MeshComponent>();
+	
+		//		ImGui::TreePop();
+		//	}
+		//}
+
+		if (actor->HasComponent<LightComponent>())
+		{
+			if (ImGui::TreeNodeEx("Light", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				auto& light = actor->GetComponent<LightComponent>();
+				glm::vec3 color = light.GetColor();
+				ImGui::ColorEdit3("Color", &color[0]);
+				light.SetColor(color);
+				float inten = light.GetIntensity();
+				ImGui::SliderFloat("Intensity", &inten,0.01f,10.0f);
+				light.SetIntensity(inten);
+
 				ImGui::TreePop();
 			}
 		}

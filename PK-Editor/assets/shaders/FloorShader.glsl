@@ -44,7 +44,7 @@ void main()
 	texNorm = normalize(o_BTN*texNorm);
 	vec3 lightPos = u_LightPos;
 	vec3 lightColor = u_LightColor * 2.0;//颜色乘光强
-	vec3 normal = normalize(texNorm);
+	vec3 normal = normalize(o_Normal);
 	vec3 lightDir = normalize(lightPos-o_WorldPos);
 	vec3 viewDir = normalize(u_CameraPos-o_WorldPos);
 	vec3 halfVector = normalize(lightDir+viewDir);

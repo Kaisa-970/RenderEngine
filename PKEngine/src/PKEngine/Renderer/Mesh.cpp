@@ -55,11 +55,21 @@ namespace PKEngine {
 		}
 	}
 
+	Mesh::Mesh(Ref<VertexArray> va)
+	{
+		m_Vertices = nullptr;
+		m_Triangles = nullptr;
+		m_VertexArray = va;
+	}
+
 	Mesh::~Mesh()
 	{
 		//delete m_Scene;
-		delete[] m_Vertices;
-		delete[] m_Triangles;
+		if(m_Vertices)
+			delete[] m_Vertices;
+
+		if(m_Triangles)
+			delete[] m_Triangles;
 	}
 
 	void Mesh::SetRenderData()

@@ -22,6 +22,7 @@ namespace PKEngine {
 	public:
 		Mesh() = default;
 		Mesh(const std::string& filename);
+		Mesh(Ref<VertexArray> va);
 		~Mesh();
 
 		const Vertex* GetVertices() const{ return m_Vertices; }

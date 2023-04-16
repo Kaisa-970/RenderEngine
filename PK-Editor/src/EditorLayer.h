@@ -17,9 +17,6 @@ namespace PKEngine{
 		virtual void OnEvent(PKEngine::Event& e) override;
 
 	private:
-		Ref<VertexArray> m_SqureVA;
-		Ref<Shader> m_SqureShader;
-		glm::vec4 m_SqureColor;
 		Ref<Texture2D> m_Texture;
 		Ref<FrameBuffer> m_FrameBuffer;
 		glm::vec2 m_ViewportSize;
@@ -28,8 +25,6 @@ namespace PKEngine{
 		bool m_ViewportHovered = false;
 
 		// Mesh*****
-		Ref<Mesh> m_Mesh;
-		Ref<VertexArray> m_MeshVA;
 
 		ShaderLibrary m_ShaderLib;
 		Ref<Texture2D> m_WoodTexture;
@@ -40,7 +35,7 @@ namespace PKEngine{
 		glm::vec3 m_LightPos = glm::vec3(1.0f, 2.0f, 0.0f);
 		float m_LightIntensity = 3.0f;
 
-		PerspectiveCamera m_PerspectiveCamera;
+		Ref<PerspectiveCamera> m_PerspectiveCamera;
 		glm::vec3 m_CameraPosition = glm::vec3(0, 0, -3);
 		float m_CameraMoveSpeed = 3.0f;
 		float m_CameraFov = 45.0f;
@@ -56,19 +51,14 @@ namespace PKEngine{
 
 		Ref<Texture2D> m_WhiteTexture;
 
-		Ref<Texture3D> m_Skybox;
-		Ref<VertexArray> m_SkyVA;
-
 		Ref<Mesh> m_XiangZi;
 		Ref<Texture2D> m_DiffXZ;
 		Ref<Texture2D> m_NormXZ;
 		//********
 
-		OrthoCameraController m_CameraController;
-
 		Ref<Scene> m_ActiveScene;
-		Ref<Actor> m_Actor;
 		Ref<SceneHierarchyPanel> m_SceneHierarchyPanel;
 		std::vector<Ref<Actor>> m_ActorArray;
+		Ref<Actor> m_PointLight;
 	};
 }
