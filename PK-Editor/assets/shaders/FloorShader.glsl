@@ -7,10 +7,14 @@ layout(location = 2) in vec3 a_Normal;
 layout(location = 3) in vec3 a_Tangent;
 uniform mat4 u_ModelMat;
 uniform mat4 u_ViewProjectionMat;
+
+uniform mat4 u_LightSpaceMatrix;
+
 out vec2 o_TexCoord;
 out vec3 o_Normal;
 out vec3 o_WorldPos;
 out mat3 o_BTN;
+out vec4 o_LightSpacePos;
 void main()
 {
 	gl_Position = u_ViewProjectionMat * u_ModelMat * a_Position;
@@ -22,6 +26,8 @@ void main()
 	vec3 N = normalize(vec3(u_ModelMat * vec4(a_Normal,0.0)));
 	vec3 B = normalize(vec3(u_ModelMat * vec4(cross(N,T),0.0)));
 	o_BTN = mat3(T,B,N);
+
+	o_LightSpacePos = u_LightSpaceMatrix * a_Position;
 };
 
 #type fragment
@@ -37,6 +43,14 @@ in vec2 o_TexCoord;
 in vec3 o_Normal;
 in vec3 o_WorldPos;
 in mat3 o_BTN;
+in vec4 o_LightSpacePos;
+
+uniform sampler2D depthMap;
+uniform float near_plane;
+uniform float far_plane;
+
+//float LinearizeDepth(float depth);
+float ShawdowCalculation(vec4 lightSpacePos);
 void main()
 {
 	vec3 texNorm = texture(u_NormMap,o_TexCoord).rgb;
@@ -61,7 +75,25 @@ void main()
 	vec3 diffColor = kd * attenuation * lightColor * dln;
 	float ks = 0.5;
 	vec3 specColor = ks * attenuation * vec3(1,1,1) * pow(max(dhn,0),8);
-	color = vec4(envColor + diffColor + specColor,1.0f);
-	//float dep = gl_FragCoord.z;
-	//color = vec4(dep,dep,dep,1);
+	vec3 finalColor = (envColor + diffColor + specColor);// * ShawdowCalculation(o_LightSpacePos);
+	color = vec4(finalColor ,1.0f);
+	// float dep = ShawdowCalculation(o_LightSpacePos);
+	// color = vec4(dep,dep,dep,1);
 };
+
+float LinearizeDepth(float depth)
+{
+    float z = depth * 2.0 - 1.0; // Back to NDC 
+    return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));
+}
+
+float ShawdowCalculation(vec4 lightSpacePos)
+{
+	vec3 ndcPos = lightSpacePos.xyz/lightSpacePos.w;
+	ndcPos = ndcPos*0.5+0.5;
+	float currentDep = ndcPos.z;
+
+	float lightDep = texture(depthMap,ndcPos.xy).r;
+
+	return currentDep>lightDep?0.0:1.0;
+}

@@ -15,7 +15,8 @@ namespace PKEngine
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
 
-		virtual uint32_t GetColorAttachmentID() const { return m_ColorAttachment; };
+		virtual uint32_t GetColorAttachmentID() const override { return m_ColorAttachment; };
+		virtual uint32_t GetDepthAttachmentID() const override { return m_DepthAttachment; };
 
 		virtual const FrameBufferParams& GetFrameBufferParams() const override { return m_FrameBufferParams; }
 

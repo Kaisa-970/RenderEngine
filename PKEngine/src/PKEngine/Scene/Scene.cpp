@@ -6,6 +6,7 @@
 #include "Actor.h"
 #include "MeshComponent.h"
 #include "LightComponent.h"
+//#include "glad/glad.h"
 
 namespace PKEngine {
 	Scene::Scene()
@@ -93,6 +94,10 @@ namespace PKEngine {
 		skyIB.reset(IndexBuffer::Create(skyIndices, sizeof(skyIndices) / sizeof(uint32_t)));
 		m_SkyVA->SetIndexBuffer(skyIB);
 		m_SkyboxMesh = CreateRef<Mesh>(m_SkyVA);
+
+
+		m_DepthBuffer = FrameBuffer::Create({1920,1080});
+		m_DepthShader = Shader::Create("assets/shaders/DepthShader.glsl");
 	}
 
 	Scene::~Scene()
@@ -125,6 +130,10 @@ namespace PKEngine {
 			}
 		}
 
+		auto lightProjection = glm::perspective(glm::radians(45.0f), (float)1920 / (float)1080, 0.01f, 1000.0f); // Note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene.
+		auto lightView = glm::lookAt(lightActor->GetActorPosition(), glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		auto lightSpaceMatrix = lightProjection * lightView;
+
 		for (auto actor : m_Actors)
 		{
 			if (actor->HasComponent<MeshComponent>())
@@ -143,6 +152,11 @@ namespace PKEngine {
 					shader->SetFloat("u_Roughness", sp.Roughness);
 					shader->SetFloat("u_Metallic", sp.Metallic);
 					shader->SetFloat3("u_CameraPos", m_SceneCamera->GetPosition());
+
+					shader->SetMat4("u_LightSpaceMatrix", lightSpaceMatrix);
+					//glBindTexture(GL_TEXTURE_2D, m_DepthBuffer->GetDepthAttachmentID());
+					//glBindTextureUnit(10, m_DepthBuffer->GetDepthAttachmentID());
+					shader->SetInt("depthMap", 10);
 				}
 				Renderer::Submit(Mesh.GetMesh(), shader, transf.GetMatrix());
 			}
@@ -154,5 +168,51 @@ namespace PKEngine {
 		//actor->AddComponent<TransformComponent>(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 		m_Actors.push_back(actor);
 		return actor;
+	}
+
+	void Scene::ShadowPass()
+	{
+		Ref<Actor> lightActor;
+		for (auto actor : m_Actors)
+		{
+			if (actor->HasComponent<LightComponent>())
+			{
+				// Handle only one light
+				// TODO::Handle multiple lights
+				lightActor = actor;
+				break;
+			}
+		}
+
+		auto lightProjection = glm::perspective(45.0f, (float)1920 / (float)1080, 0.01f, 1000.0f); // Note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene.
+		auto lightView = glm::lookAt(lightActor->GetActorPosition(), glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		auto lightSpaceMatrix = lightProjection * lightView;
+		
+		//auto vp = m_SceneCamera->GetProjectionMatrix() * glm::mat4(glm::mat3(m_SceneCamera->GetViewMatrix()));
+
+		m_DepthBuffer->Bind();
+
+		RenderCommand::Clear();
+
+		Renderer::SetViewProjectionMatrix(lightSpaceMatrix);
+
+		auto shader = m_DepthShader;
+		shader->Bind();
+
+		for (auto actor : m_Actors)
+		{
+			if (actor->HasComponent<MeshComponent>())
+			{
+				shader->Bind();
+				auto& Mesh = actor->GetComponent<MeshComponent>();
+				auto& transf = actor->GetComponent<TransformComponent>();
+
+				Renderer::Submit(Mesh.GetMesh(), shader);
+			}
+		}
+
+		Renderer::EndScene();
+
+		m_DepthBuffer->Unbind();
 	}
 }

@@ -4,6 +4,7 @@
 layout(location = 0) in vec4 a_Position;
 uniform mat4 u_ModelMat;
 uniform mat4 u_ViewProjectionMat;
+
 void main()
 {
 	gl_Position = u_ViewProjectionMat * u_ModelMat * a_Position;
@@ -11,7 +12,10 @@ void main()
 
 #type fragment
 #version 330 core
+
 void main()
 {
-	//color = vec4(o_TexCoord,0.0f,1.0f);
+	// float dep = LinearizeDepth(gl_FragCoord.z) / far_plane;
+	// gl_FragColor = vec4(vec3(dep),1.0f);
 };
+

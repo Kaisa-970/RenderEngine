@@ -5,6 +5,7 @@
 #include "PKEngine/Renderer/Texture.h"
 #include "PKEngine/Renderer/Shader.h"
 #include "PKEngine/Renderer/Mesh.h"
+#include <PKEngine/Renderer/FrameBuffer.h>
 
 namespace PKEngine {
 	class Actor;
@@ -23,6 +24,9 @@ namespace PKEngine {
 		const entt::registry& GetReg() { return m_Registry; }
 
 		Ref<PerspectiveCamera> GetSceneCamera() const { return m_SceneCamera; }
+
+		void ShadowPass();
+		Ref<FrameBuffer> GetDepthFrameBuffer() { return m_DepthBuffer; }
 	private:
 		friend class Actor;
 
@@ -33,5 +37,8 @@ namespace PKEngine {
 		Ref<Texture3D> m_SkyboxTexture;
 		Ref<Shader> m_SkyShader;
 		Ref<Mesh> m_SkyboxMesh;
+
+		Ref<FrameBuffer> m_DepthBuffer;
+		Ref<Shader> m_DepthShader;
 	};
 }

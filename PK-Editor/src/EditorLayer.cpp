@@ -68,8 +68,8 @@ namespace PKEngine {
 		auto floorActor = m_ActiveScene->CreateActor("Floor");
 		floorActor->AddComponent<MeshComponent>(floorMesh, floorShader);
 
-		m_Texture = Texture2D::Create("assets/textures/emotion1.png");
-		m_Texture->Bind(3);
+		//m_Texture = Texture2D::Create("assets/textures/emotion1.png");
+		//m_Texture->Bind(3);
 
 		PKEngine::FrameBufferParams fbs;
 		fbs.Width = 1920;
@@ -196,6 +196,7 @@ namespace PKEngine {
 
 		//render
 		{
+			m_ActiveScene->ShadowPass();
 			
 			m_FrameBuffer->Bind();
 
