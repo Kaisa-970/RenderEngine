@@ -5,6 +5,7 @@ bin-int/
 Sandbox/profile/
 PK-Editor/profile/
 .idea/
+build/
 
 # Files
 *.user
