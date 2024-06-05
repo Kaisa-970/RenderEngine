@@ -4,7 +4,7 @@
 
 __跟随YouTube大佬TheCherno的GameEngine系列课程搭建的基于OpenGL的渲染引擎框架，同时尝试实现基础的PBR（基于物理的渲染）技术。__  
 
-![alt text](image.png)
+![alt text](Readme/image.png)
 
 ## 构建
 
