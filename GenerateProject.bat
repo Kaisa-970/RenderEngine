@@ -12,7 +12,7 @@ if %ERRORLEVEL% equ 0 (
 
 :SUCCESS
     echo=
-    echo Generate project to %ROOT_DIR%/build
+    echo Generate project to %ROOT_DIR%\build
     pause
     exit /b 0
 

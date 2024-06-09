@@ -7,7 +7,7 @@ __跟随YouTube大佬TheCherno的GameEngine系列课程搭建的基于OpenGL的�
 ![alt text](Readme/image.png)
 
 ## 构建
-
+__需要提前安装`git`和`cmake`。__
 ### 初始设置
 
 运行`Setup.bat`来进行初始设置。
