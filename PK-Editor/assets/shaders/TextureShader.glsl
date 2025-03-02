@@ -1,6 +1,6 @@
 
 #type vertex
-#version 330 core
+#version 410 core
 layout(location = 0) in vec4 a_Position;
 layout(location = 1) in vec4 a_Color;
 layout(location = 2) in vec2 a_TexCoord;
@@ -22,7 +22,7 @@ void main()
 };
 
 #type fragment
-#version 330 core
+#version 410 core
 out vec4 color;
 uniform sampler2D u_Texture[32];
 in vec2 o_TexCoord;
