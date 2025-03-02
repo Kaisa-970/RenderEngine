@@ -1,9 +1,11 @@
 # Directories
 .vs/
+.vscode/
 bin/
 bin-int/
 Sandbox/profile/
 PK-Editor/profile/
+PKEngine/vendor/assimp/
 .idea/
 build/
 
