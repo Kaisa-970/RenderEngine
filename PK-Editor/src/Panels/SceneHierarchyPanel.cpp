@@ -72,7 +72,7 @@ namespace PKEngine
 	{
 		char buffer[256];
 		memset(buffer, 0, sizeof(buffer));
-		strcpy_s(buffer, actor->GetName().c_str());
+		strcpy(buffer, actor->GetName().c_str());
 		if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
 		{
 			actor->SetName(std::string(buffer));

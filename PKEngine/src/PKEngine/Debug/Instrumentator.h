@@ -204,11 +204,18 @@ namespace PKEngine {
 
 #define PK_PROFILE 1
 
+#ifdef _MSC_VER
+    #define PK_FUNC_SIG __FUNCSIG__
+#else
+    #define PK_FUNC_SIG __PRETTY_FUNCTION__
+#endif
+
+#define PK_PROFILE_FUNCTION() PK_PROFILE_SCOPE(PK_FUNC_SIG)
 #if PK_PROFILE
 #define PK_PROFILE_BEGIN_SESSION(name,filepath)	::PKEngine::Instrumentor::Get().BeginSession(name,filepath)
 #define PK_PROFILE_END_SESSION()	::PKEngine::Instrumentor::Get().EndSession()
 #define PK_PROFILE_SCOPE(name)	::PKEngine::InstrumentationTimer Timer##__LINE__(name);
-#define PK_PROFILE_FUNCTION() PK_PROFILE_SCOPE(__FUNCSIG__)
+#define PK_PROFILE_FUNCTION() PK_PROFILE_SCOPE(PK_FUNC_SIG)
 #else
 #define PK_PROFILE_BEGIN_SESSION(name,filepath)
 #define PK_PROFILE_END_SESSION()

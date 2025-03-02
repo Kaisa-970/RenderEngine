@@ -45,31 +45,43 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${VENDOR_DIR}/assimp/include    
     ${VENDOR_DIR}/entt/include    
     ${VENDOR_DIR}/stb_image)
-    
-target_link_libraries(${PROJECT_NAME} PRIVATE    
-    GLFW    
+      
+target_link_libraries(${PROJECT_NAME} 
+PRIVATE    
     Glad    
-    opengl32.lib    
-    imgui)
-     
+    imgui
+PUBLIC 
+    GLFW    
+    assimp
+)
+
 if(WIN32)     
     message("Platform:WIndows!")
     target_compile_definitions(${PROJECT_NAME} PRIVATE PK_PLATFORM_WINDOWS PK_BUILD_DLL)       
     target_compile_options(${PROJECT_NAME} PRIVATE /W3)        
     target_compile_options(${PROJECT_NAME} PRIVATE /EHsc)
+    target_link_libraries(${PROJECT_NAME} PRIVATE opengl32.lib)
+elseif(UNIX)
+    message("Platform: Linux!")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE PK_PLATFORM_LINUX PK_BUILD_DLL)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -msse2)
+    find_package(OpenGL REQUIRED)
+    find_package(X11 REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL X11 dl)
+    # Additional options can be added here
 endif()
     
 if(CMAKE_BUILD_TYPE MATCHES Debug)    
     message("Build:Debug!")
     target_compile_definitions(${PROJECT_NAME} PRIVATE PK_DEBUG PK_ENABLE_ASSERTS)
-    #target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/assimp/lib)    
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${VENDOR_DIR}/assimp/lib/assimp-vc140-mt.lib)
+    # target_link_libraries(${PROJECT_NAME} PUBLIC ${VENDOR_DIR}/assimp/lib/assimp-vc140-mt.lib)
 elseif(CMAKE_BUILD_TYPE MATCHES Release)
     message("Build:Release!")
     target_compile_definitions(${PROJECT_NAME} PRIVATE PK_RELEASE)
-    #target_compile_options(${PROJECT_NAME} PRIVATE /O2)
 endif()
 
+set(GLFW_BUILD_WAYLAND OFF)
+add_subdirectory(${VENDOR_DIR}/assimp)
 add_subdirectory(${VENDOR_DIR}/spdlog)
 add_subdirectory(${VENDOR_DIR}/GLFW)
 add_subdirectory(${VENDOR_DIR}/GLAD)

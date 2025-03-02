@@ -40,7 +40,7 @@ namespace PKEngine {
 	std::string OpenGLShader::ReadFile(const std::string& filename)
 	{
 		std::string result;
-		std::ifstream in(filename, std::ios::in, std::ios::binary);
+		std::ifstream in(filename, std::ios::binary);
 		if (in) {
 			in.seekg(0, std::ios::end);
 			result.resize(in.tellg());

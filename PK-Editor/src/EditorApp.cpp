@@ -10,7 +10,7 @@
 namespace PKEngine {
 
 
-	class PKEditor : public PKEngine::Application {
+	class PKEditor : public Application {
 	public:
 		PKEditor():Application("PKEditor",2560,1440)
 		{
@@ -25,7 +25,7 @@ namespace PKEngine {
 		}
 	};
 
-	PKEngine::Application* PKEngine::CreateApplication() {
+	Application* CreateApplication() {
 
 		return new PKEditor();
 	}
